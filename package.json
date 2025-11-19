@@ -1,0 +1,32 @@
+{
+  "name": "epta_kiosk_qa",
+  "version": "1.0.0",
+  "description": "Electron kiosk Q&A experience inspired by epta_kiosk_content.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "npm run build:renderer && electron .",
+    "dev": "concurrently -k \"npm run build:renderer:watch\" \"NODE_ENV=development electron .\"",
+    "build:renderer": "esbuild src/renderer/index.jsx --bundle --platform=browser --format=esm --sourcemap --outfile=dist/renderer.js --loader:.svg=dataurl",
+    "build:renderer:watch": "npm run build:renderer -- --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "config": {
+    "autoUpdate": {
+      "githubOwner": "your-github-owner",
+      "githubRepo": "your-release-repo",
+      "releaseType": "release",
+      "private": false
+    }
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "electron": "^39.1.2",
+    "esbuild": "^0.27.0"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}
