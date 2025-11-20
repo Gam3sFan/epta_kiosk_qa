@@ -25,7 +25,6 @@ export const LanguageToggle = ({ language, onSelect, languageOptions = [] }) => 
         aria-expanded={open}
       >
         <img src={language.flag} alt="" className="flag-icon" />
-        <span>{language.label}</span>
       </button>
       {open && (
         <div className="language-toggle__menu language-toggle__menu--up" role="listbox">

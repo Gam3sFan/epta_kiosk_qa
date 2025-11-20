@@ -152,7 +152,7 @@ const createWindow = () => {
     backgroundColor: '#f3f3f3',
     show: false,
     kiosk: false,
-    fullscreen: false,
+    fullscreen: true,
     autoHideMenuBar: true,
     fullscreenable: true,
     icon: iconPath,

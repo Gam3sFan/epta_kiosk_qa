@@ -99,12 +99,13 @@ const App = () => {
   const questionAVisible = screen === SCREENS.QUESTION_A;
   const questionBVisible = screen === SCREENS.QUESTION_B;
   const resultVisible = screen === SCREENS.RESULT;
+  const showLogo = !questionAVisible && !questionBVisible;
 
   return (
     <div className="kiosk-shell">
       <div className="device">
         <div className="panel">
-          <LogoHeader />
+          {showLogo && <LogoHeader />}
           <div className="panel-content">
             {heroVisible && <HeroScreen copy={strings.hero} onStart={handleStart} ctaLabel={strings.buttons.start} />}
 
