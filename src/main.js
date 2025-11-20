@@ -142,6 +142,8 @@ const initAutoUpdater = () => {
 };
 
 const createWindow = () => {
+  const iconPath = path.join(__dirname, 'epta_icon_qa.ico');
+
   mainWindow = new BrowserWindow({
     width: 1080,
     height: 1920,
@@ -149,9 +151,11 @@ const createWindow = () => {
     minHeight: 1280,
     backgroundColor: '#f3f3f3',
     show: false,
-    fullscreen: true,
+    kiosk: false,
+    fullscreen: false,
     autoHideMenuBar: true,
     fullscreenable: true,
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
