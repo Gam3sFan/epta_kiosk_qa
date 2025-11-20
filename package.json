@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build:renderer && electron .",
     "dev": "concurrently -k \"npm run build:renderer:watch\" \"NODE_ENV=development electron .\"",
-    "build:renderer": "esbuild src/renderer/index.jsx --bundle --platform=browser --format=esm --sourcemap --outfile=dist/renderer.js --loader:.svg=dataurl",
+    "build:renderer": "esbuild src/renderer/index.jsx --bundle --platform=browser --format=esm --sourcemap --outfile=dist/renderer.js --loader:.svg=dataurl --loader:.mp4=file",
     "build:renderer:watch": "npm run build:renderer -- --watch"
   },
   "author": "",

@@ -33,7 +33,7 @@ export const LANGUAGES = [
 export const TEXTS = {
   en: {
     hero: {
-      eyebrow: 'Welcome to EuroShop 2025',
+      eyebrow: 'Welcome to EuroShop 2026',
       title: 'Shape your booth experience',
       subtitle:
         'A guided kiosk inspired by the Epta experience. Tap start and answer two quick questions to craft your visit.',
@@ -146,7 +146,7 @@ export const TEXTS = {
   },
   it: {
     hero: {
-      eyebrow: 'Benvenuto a EuroShop 2025',
+      eyebrow: 'Benvenuto a EuroShop 2026',
       title: 'Personalizza la tua esperienza allo stand',
       subtitle:
         "Un kiosk guidato ispirato all'esperienza Epta. Premi Start e rispondi a due domande veloci per progettare la tua visita.",
@@ -259,7 +259,7 @@ export const TEXTS = {
   },
   es: {
     hero: {
-      eyebrow: 'Bienvenido a EuroShop 2025',
+      eyebrow: 'Bienvenido a EuroShop 2026',
       title: 'Diseña tu experiencia en el stand',
       subtitle:
         'Un quiosco guiado inspirado en la experiencia Epta. Pulsa iniciar y responde dos preguntas rápidas para definir tu visita.',
@@ -372,7 +372,7 @@ export const TEXTS = {
   },
   fr: {
     hero: {
-      eyebrow: 'Bienvenue à EuroShop 2025',
+      eyebrow: 'Bienvenue à EuroShop 2026',
       title: 'Composez votre expérience sur le stand',
       subtitle:
         "Un kiosque guidé inspiré par l'expérience Epta. Appuyez sur Start et répondez à deux questions rapides pour préparer votre visite.",
@@ -485,7 +485,7 @@ export const TEXTS = {
   },
   de: {
     hero: {
-      eyebrow: 'Willkommen auf der EuroShop 2025',
+      eyebrow: 'Willkommen auf der EuroShop 2026',
       title: 'Gestalte dein Booth-Erlebnis',
       subtitle:
         'Ein geführtes Kiosk inspiriert von der Epta Experience. Tippe auf Start und beantworte zwei kurze Fragen für deinen Rundgang.',
