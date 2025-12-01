@@ -4,6 +4,11 @@
   font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: #4c5362;
   background-color: #eceff3;
+  --avatar-width: clamp(320px, 68vw, 640px);
+  --avatar-max-height: clamp(420px, 55vh, 720px);
+  --avatar-height: min(var(--avatar-max-height), calc(var(--avatar-width) * 1.399));
+  --avatar-gap-below: 0px;
+  --avatar-top: 60px;
 }
 
 * {
@@ -168,19 +173,24 @@ position: absolute;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   align-items: center;
   text-align: center;
-  gap: 18px;
+  gap: clamp(18px, 4vh, 32px);
+  justify-content: flex-start;
+  position: relative;
 }
 
 .hero-avatar-video {
-  width: min(420px, 80%);
-  max-width: 100%;
+  width: var(--avatar-width);
+  height: var(--avatar-height);
+  max-height: var(--avatar-max-height);
+  aspect-ratio: 772 / 1080;
   display: block;
   position: absolute;
+  top: var(--avatar-top);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1;
-  top: 32px;
   overflow: hidden;
   isolation: isolate;
 }
@@ -201,19 +211,42 @@ position: absolute;
 }
 .hero-center {
   z-index: 1;
-   background: linear-gradient(0deg, rgba(255, 255, 255, 1) 79%, rgba(255, 255, 255, 0) 100%);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  padding-bottom: 60px;
+  position: relative;
 }
+.hero-center::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 1) 40%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
 .hero-center h1 {
   margin: 16px 0 12px;
   font-size: clamp(2.3rem, 4vw, 3.1rem);
   color: #3c414f;
+  position: relative;
+  z-index: 1;
 }
 
 .subtitle {
-  margin: 0 auto;
+  margin: 0 auto 24px;
   max-width: 580px;
   color: #6b7382;
   line-height: 1.6;
+  position: relative;
+  z-index: 1;
 }
 
 .eyebrow {
@@ -236,6 +269,8 @@ position: absolute;
   cursor: pointer;
   text-transform: uppercase;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .primary-cta:disabled {
@@ -246,6 +281,10 @@ position: absolute;
 
 .primary-cta:not(:disabled):hover {
   transform: translateY(-2px);
+}
+.hero-screen .primary-cta {
+  padding: 20px 48px;
+  font-size: 1.05rem;
 }
 .logo-tagline__image {
   height: 100px;
@@ -318,14 +357,33 @@ position: absolute;
   gap: 18px;
 }
 
+.option-stack--compact {
+  gap: 10px;
+}
+
+.option-stack--grid {
+  width: min(760px, 100%);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.option-stack--list {
+  width: min(760px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .option-card {
+  width: 100%;
   border: none;
   border-radius: 28px;
   padding: 24px 28px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 18px;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
   background: linear-gradient(120deg, rgba(239, 242, 249, 0.9), rgba(255, 255, 255, 0.9));
   box-shadow: inset 0 0 0 1px rgba(105, 116, 142, 0.08);
   text-align: left;
@@ -375,7 +433,8 @@ position: absolute;
 
 .question-step-header {
   width: min(820px, 100%);
-  margin: 0 auto 8px;
+  margin: 0 auto;
+  padding-top: 20px;
   text-align: center;
   position: relative;
   z-index: 2;
@@ -383,8 +442,15 @@ position: absolute;
 
 .question-screen .hero-avatar-video {
   aspect-ratio: 772 / 1080;
-  position: relative;
-  transform: translateY(-25%);
+  width: var(--avatar-width);
+  max-height: var(--avatar-max-height);
+  height: var(--avatar-height);
+  position: absolute;
+  top: var(--avatar-top);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  overflow: hidden;
 }
 
 .question-screen .hero-avatar-video video {
@@ -411,24 +477,28 @@ position: absolute;
 }
 
 .question-content {
-  width: min(800px, 100%);
+  flex: 1;
+  width: 100%;
+  max-width: 840px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  transform: translateY(-40%);
+  gap: 14px;
+  padding: 0 18px 84px;
+  padding-top: calc(var(--avatar-top) + var(--avatar-height) + var(--avatar-gap-below) - 150px);
+  min-height: 0;
+  position: relative;
+}
+
+.question-content .option-stack {
+  margin-top: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .question-content .step-header {
   text-align: center;
-}
-
-.option-stack--compact {
-  width: min(760px, 100%);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 10px;
 }
 
 .option-card--compact {
@@ -477,6 +547,31 @@ position: absolute;
   justify-content: center;
   gap: 12px;
   width: 100%;
+  margin-top: auto;
+  position: sticky;
+  bottom: 70px;
+  padding-top: 8px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.85) 40%, rgba(255, 255, 255, 0.95) 100%);
+  z-index: 3;
+}
+
+@media (max-height: 900px) {
+  :root {
+    --avatar-max-height: clamp(380px, 50vh, 640px);
+  }
+  .question-content {
+    padding-bottom: 72px;
+  }
+}
+
+@media (max-height: 820px) {
+  :root {
+    --avatar-max-height: clamp(340px, 46vh, 580px);
+  }
+  .question-content {
+    padding-bottom: 60px;
+    gap: 12px;
+  }
 }
 
 .question-screen .screen-controls .primary-cta {
@@ -494,32 +589,6 @@ position: absolute;
 .option-card--compact .option-label,
 .option-card--compact .option-description {
   transition: opacity 0.35s ease, transform 0.35s ease;
-}
-
-.option-check {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 2px solid rgba(92, 99, 113, 0.24);
-  position: relative;
-}
-
-.option-card.is-selected .option-check {
-  border-color: transparent;
-  background: linear-gradient(135deg, #4e8fd4, #5da4ff);
-}
-
-.option-card.is-selected .option-check::after {
-  content: '';
-  position: absolute;
-  width: 10px;
-  height: 16px;
-  border: 3px solid #fff;
-  border-top: 0;
-  border-left: 0;
-  top: 3px;
-  left: 9px;
-  transform: rotate(45deg);
 }
 
 .helper-row {

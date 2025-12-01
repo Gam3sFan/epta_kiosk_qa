@@ -116,16 +116,17 @@ const App = () => {
                 stepLabel={strings.stepLabel}
                 eyebrow={strings.questions.q1.eyebrow}
                 title={strings.questions.q1.title}
-                subtitle={strings.questions.q1.subtitle}
-                options={timeOptions}
-                selectedOptions={answerA ? [answerA] : []}
-                onSelect={handleSelectAnswerA}
-                helper={helperQuestionA}
-                controls={
-                  <div className="screen-controls">
-                    <button type="button" className="ghost-button" onClick={() => setScreen(SCREENS.HERO)}>
-                      {strings.buttons.back}
-                    </button>
+              subtitle={strings.questions.q1.subtitle}
+              options={timeOptions}
+              selectedOptions={answerA ? [answerA] : []}
+              onSelect={handleSelectAnswerA}
+              helper={helperQuestionA}
+              layout="list"
+              controls={
+                <div className="screen-controls">
+                  <button type="button" className="ghost-button" onClick={() => setScreen(SCREENS.HERO)}>
+                    {strings.buttons.back}
+                  </button>
                   </div>
                 }
               />

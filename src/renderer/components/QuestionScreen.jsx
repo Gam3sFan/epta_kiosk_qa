@@ -5,17 +5,15 @@ import question1VideoAsset from '../../assets/avatar/question1.mp4';
 import question2VideoAsset from '../../assets/avatar/question2.mp4';
 import replayIconAsset from '../../assets/replay.svg';
 
+import { OPTION_TIMINGS } from '../data/timings';
+
 const avatarIdleVideo = new URL(avatarIdleVideoAsset, import.meta.url).href;
 const question1Video = new URL(question1VideoAsset, import.meta.url).href;
 const question2Video = new URL(question2VideoAsset, import.meta.url).href;
 const replayIcon = new URL(replayIconAsset, import.meta.url).href;
 
-const OPTION_TIMINGS = {
-  1: [2.589, 4.36, 6.079],
-  2: [3.14, 4.659, 6.619, 8.46, 10.579, 13.06],
-};
 
-const OptionCard = ({ option, index, selected, onSelect, compact, isVisible }) => {
+const OptionCard = ({ option, selected, onSelect, compact, isVisible }) => {
   const classes = ['option-card'];
   if (compact) classes.push('option-card--compact');
   if (selected) classes.push('is-selected');
@@ -27,7 +25,6 @@ const OptionCard = ({ option, index, selected, onSelect, compact, isVisible }) =
         <p className="option-label">{option.label}</p>
         {option.description && <p className="option-description">{option.description}</p>}
       </div>
-      <div className="option-check" aria-hidden="true" />
     </button>
   );
 };
@@ -44,6 +41,8 @@ const QuestionScreen = ({
   onSelect,
   helper,
   controls,
+  layout = 'grid',
+  compact = true,
 }) => {
   const questionVideo = step === 1 ? question1Video : question2Video;
   const questionVideoRef = useRef(null);
@@ -126,6 +125,10 @@ const QuestionScreen = ({
     setIsQuestionVideoPlaying(false);
   };
 
+  const stackClasses = ['option-stack'];
+  if (compact) stackClasses.push('option-stack--compact');
+  stackClasses.push(layout === 'list' ? 'option-stack--list' : 'option-stack--grid');
+
   return (
     <section className="hero-screen question-screen">
       <div className="question-step-header">
@@ -169,15 +172,14 @@ const QuestionScreen = ({
       </div>
 
       <div className="hero-center question-content">
-        <div className="option-stack option-stack--compact">
+        <div className={stackClasses.join(' ')}>
           {options.map((option, index) => (
             <OptionCard
               key={option.id}
               option={option}
-              index={index + 1}
               selected={selectedOptions.includes(option.id)}
               onSelect={() => onSelect(option.id)}
-              compact
+              compact={compact}
               isVisible={index < visibleOptions}
             />
           ))}

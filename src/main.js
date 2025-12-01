@@ -1,13 +1,19 @@
 const path = require('path');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, screen } = require('electron');
 const { autoUpdater } = require('electron-updater');
 
 const packageJson = require('../package.json');
 
 const isDev = process.env.NODE_ENV === 'development';
+const allowDevAutoUpdate = process.env.AUTO_UPDATE_ENABLE_DEV === 'true';
+const customFeedUrl = process.env.AUTO_UPDATE_FEED_URL;
 const PLACEHOLDER_OWNER = 'your-github-owner';
 const PLACEHOLDER_REPO = 'your-release-repo';
 const UPDATE_CHANNEL = 'app:autoUpdate';
+
+// Configuration for window positioning
+// Set to true to attempt opening on a secondary vertical screen
+const OPEN_ON_SECONDARY_VERTICAL_SCREEN = true;
 
 let mainWindow;
 let autoUpdateConfigured = false;
@@ -109,29 +115,34 @@ const registerUpdateIpcHandlers = () => {
 };
 
 const initAutoUpdater = () => {
-  if (isDev || !app.isPackaged) {
+  if (!app.isPackaged && !allowDevAutoUpdate) {
     console.info('[auto-updater] Disabled in development/unpackaged mode');
     return;
   }
 
-  const feedConfig = getGitHubFeedConfig();
-
-  if (!feedConfig) {
-    console.warn(
-      '[auto-updater] GitHub owner/repo not configured. Set AUTO_UPDATE_GITHUB_OWNER/AUTO_UPDATE_GITHUB_REPO env vars or update package.json',
-    );
-    return;
+  let feedConfig = null;
+  if (customFeedUrl) {
+    feedConfig = { provider: 'generic', url: customFeedUrl };
+  } else {
+    const ghConfig = getGitHubFeedConfig();
+    if (!ghConfig) {
+      console.warn(
+        '[auto-updater] GitHub owner/repo not configured. Set AUTO_UPDATE_GITHUB_OWNER/AUTO_UPDATE_GITHUB_REPO or package.json config.autoUpdate',
+      );
+      return;
+    }
+    feedConfig = {
+      provider: 'github',
+      owner: ghConfig.owner,
+      repo: ghConfig.repo,
+      releaseType: ghConfig.releaseType,
+      private: ghConfig.privateRepo,
+    };
   }
 
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = false;
-  autoUpdater.setFeedURL({
-    provider: 'github',
-    owner: feedConfig.owner,
-    repo: feedConfig.repo,
-    releaseType: feedConfig.releaseType,
-    private: feedConfig.privateRepo,
-  });
+  autoUpdater.setFeedURL(feedConfig);
 
   registerAutoUpdaterEvents();
   autoUpdateConfigured = true;
@@ -144,7 +155,7 @@ const initAutoUpdater = () => {
 const createWindow = () => {
   const iconPath = path.join(__dirname, 'epta_icon_qa.ico');
 
-  mainWindow = new BrowserWindow({
+  let windowOptions = {
     width: 1080,
     height: 1920,
     minWidth: 720,
@@ -161,7 +172,29 @@ const createWindow = () => {
       contextIsolation: true,
       nodeIntegration: false,
     },
-  });
+  };
+
+  if (OPEN_ON_SECONDARY_VERTICAL_SCREEN) {
+    const displays = screen.getAllDisplays();
+    const primaryDisplay = screen.getPrimaryDisplay();
+
+    // Try to find a secondary display that is vertical (portrait)
+    let targetDisplay = displays.find((display) => {
+      return display.id !== primaryDisplay.id && display.bounds.height > display.bounds.width;
+    });
+
+    // If no vertical secondary display found, try any secondary display
+    if (!targetDisplay) {
+      targetDisplay = displays.find((display) => display.id !== primaryDisplay.id);
+    }
+
+    if (targetDisplay) {
+      windowOptions.x = targetDisplay.bounds.x;
+      windowOptions.y = targetDisplay.bounds.y;
+    }
+  }
+
+  mainWindow = new BrowserWindow(windowOptions);
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
@@ -174,11 +207,7 @@ const createWindow = () => {
     .setVisualZoomLevelLimits(1, 1)
     .catch((error) => console.warn('[window] Unable to set visual zoom level limits', error));
 
-  try {
-    mainWindow.webContents.setLayoutZoomLevelLimits(0, 0);
-  } catch (error) {
-    console.warn('[window] Unable to set layout zoom level limits', error);
-  }
+
 
   mainWindow.setAspectRatio(9 / 16);
 
