@@ -55,11 +55,11 @@ const App = () => {
 
   const resultKey = useMemo(() => {
     if (!answersB.length) return null;
-    if (answersB.length > 2) return 'grandTour';
+    if (allowMultipleB && answersB.length > 1) return 'grandTour';
 
     const last = answersB[answersB.length - 1];
     return experienceOptions.find((option) => option.id === last)?.resultKey || null;
-  }, [answersB, experienceOptions]);
+  }, [allowMultipleB, answersB, experienceOptions]);
 
   const activeResult = resultKey ? strings.results[resultKey] : null;
 
