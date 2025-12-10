@@ -1,0 +1,29 @@
+1
+00:00:00,000 --> 00:00:02,377
+What kind of experience would you
+like to start with?
+
+2
+00:00:03,377 --> 00:00:04,349
+Must-see highlights
+
+3
+00:00:04,849 --> 00:00: 06,578
+Retail solutions walkthrough
+
+4
+00:00:06,578 --> 00:00:08,252
+Technical deep dives
+
+5
+00:00:08,752 --> 00:00: 10,373
+Specialty shop experiences
+
+6
+00:00:10,373 --> 00:00:13,088
+Convenience store innovations
+
+7
+00:00:13,088 --> 00:00:14,276
+A full, immersive tour
+

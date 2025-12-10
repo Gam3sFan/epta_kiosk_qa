@@ -1,0 +1,19 @@
+1
+00:00:00,200 --> 00:00:01,798
+Combien de temps avez-vous ?
+
+2
+00:00:02,498 --> 00:00:03,321
+Seulement 15 minutes
+
+3
+00:00:03,821 --> 00:00:04,827
+Environ 30 minutes
+
+4
+00:00:04,827 --> 00:00:06,017
+Environ 1 heure
+
+5
+00:00:06,517 --> 00:00:07,523
+Pas de contrainte de temps

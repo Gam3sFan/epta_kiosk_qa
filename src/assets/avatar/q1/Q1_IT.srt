@@ -1,0 +1,29 @@
+1
+00:00:00,000 --> 00:00:02,418
+Con quale tipo di esperienza
+vorresti iniziare?
+
+2
+00:00:03,771 --> 00:00: 05,776
+Assolutamente da vedere
+
+3
+00:00:06,276 --> 00:00:08,045
+Panoramica delle soluzioni retail
+
+4
+00:00:08,545 --> 00:00:10,196
+Approfondimenti tecnici
+
+5
+00:00:10,196 --> 00:00:13,203
+Esperienze nei negozi specializzati
+
+6
+00:00:13,203 --> 00:00:16,003
+Innovazioni nei minimarket
+
+7
+00:00:16,003 --> 00:00:17,241
+Un tour completo a 360 gradi
+

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import backIconAsset from '../../assets/back.svg';
 
 export const LanguageToggle = ({ language, onSelect, languageOptions = [] }) => {
   const [open, setOpen] = useState(false);
@@ -48,9 +49,23 @@ export const LanguageToggle = ({ language, onSelect, languageOptions = [] }) => 
   );
 };
 
-export const BottomBar = ({ language, onLanguage, languageOptions = [] }) => (
+const backIcon = new URL(backIconAsset, import.meta.url).href;
+
+export const BottomBar = ({
+  language,
+  onLanguage,
+  languageOptions = [],
+  onBack,
+  backAriaLabel = 'Back',
+  centerContent,
+}) => (
   <div className="bottom-bar">
-    <div />
+    {onBack && (
+      <button type="button" className="ghost-button bottom-bar__back" onClick={onBack} aria-label={backAriaLabel}>
+        <img src={backIcon} alt="" aria-hidden="true" />
+      </button>
+    )}
+    <div className="bottom-bar__center">{centerContent}</div>
     <LanguageToggle language={language} onSelect={onLanguage} languageOptions={languageOptions} />
   </div>
 );

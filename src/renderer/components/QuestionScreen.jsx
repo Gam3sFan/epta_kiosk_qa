@@ -1,30 +1,125 @@
 import React, { useEffect, useRef, useState } from 'react';
 import StepHeader from './StepHeader';
-import avatarIdleVideoAsset from '../../assets/avatar/EPTA_AVATAR_IDLE.mp4';
-import question1VideoAsset from '../../assets/avatar/question1.mp4';
+import avatarIdleVideoAsset from '../../assets/avatar/IDLE.webm';
+import eptaLogoAsset from '../../assets/epta_logo.svg';
+import question0VideoAssetEn from '../../assets/avatar/q0/Q0_EN.webm';
+import question0VideoAssetIt from '../../assets/avatar/q0/Q0_IT.webm';
+import question0VideoAssetFr from '../../assets/avatar/q0/Q0_FR.webm';
+import question0VideoAssetDe from '../../assets/avatar/q0/Q0_DE.webm';
+import question0SubsAssetEn from '../../assets/avatar/q0/Q0_EN.srt';
+import question0SubsAssetIt from '../../assets/avatar/q0/Q0_IT.srt';
+import question0SubsAssetFr from '../../assets/avatar/q0/Q0_FR.srt';
+import question0SubsAssetDe from '../../assets/avatar/q0/Q0_DE.srt';
+import question1VideoAssetEn from '../../assets/avatar/q1/Q1_EN.webm';
+import question1VideoAssetIt from '../../assets/avatar/q1/Q1_IT.webm';
+import question1VideoAssetEs from '../../assets/avatar/q1/Q1_ES.webm';
+import question1VideoAssetFr from '../../assets/avatar/q1/Q1_FR.webm';
+import question1VideoAssetDe from '../../assets/avatar/q1/Q1_DE.webm';
+import question1SubsAssetEn from '../../assets/avatar/q1/Q1_EN.srt';
+import question1SubsAssetIt from '../../assets/avatar/q1/Q1_IT.srt';
+import question1SubsAssetEs from '../../assets/avatar/q1/Q1_ES.srt';
+import question1SubsAssetFr from '../../assets/avatar/q1/Q1_FR.srt';
+import question1SubsAssetDe from '../../assets/avatar/q1/Q1_DE.srt';
 import question2VideoAsset from '../../assets/avatar/question2.mp4';
 import replayIconAsset from '../../assets/replay.svg';
 
 import { OPTION_TIMINGS } from '../data/timings';
 
 const avatarIdleVideo = new URL(avatarIdleVideoAsset, import.meta.url).href;
-const question1Video = new URL(question1VideoAsset, import.meta.url).href;
+const eptaLogo = new URL(eptaLogoAsset, import.meta.url).href;
+const question0Videos = {
+  en: {
+    video: new URL(question0VideoAssetEn, import.meta.url).href,
+    subtitles: new URL(question0SubsAssetEn, import.meta.url).href,
+  },
+  it: {
+    video: new URL(question0VideoAssetIt, import.meta.url).href,
+    subtitles: new URL(question0SubsAssetIt, import.meta.url).href,
+  },
+  fr: {
+    video: new URL(question0VideoAssetFr, import.meta.url).href,
+    subtitles: new URL(question0SubsAssetFr, import.meta.url).href,
+  },
+  de: {
+    video: new URL(question0VideoAssetDe, import.meta.url).href,
+    subtitles: new URL(question0SubsAssetDe, import.meta.url).href,
+  },
+};
+const question1Videos = {
+  en: {
+    video: new URL(question1VideoAssetEn, import.meta.url).href,
+    subtitles: new URL(question1SubsAssetEn, import.meta.url).href,
+  },
+  it: {
+    video: new URL(question1VideoAssetIt, import.meta.url).href,
+    subtitles: new URL(question1SubsAssetIt, import.meta.url).href,
+  },
+  es: {
+    video: new URL(question1VideoAssetEs, import.meta.url).href,
+    subtitles: new URL(question1SubsAssetEs, import.meta.url).href,
+  },
+  fr: {
+    video: new URL(question1VideoAssetFr, import.meta.url).href,
+    subtitles: new URL(question1SubsAssetFr, import.meta.url).href,
+  },
+  de: {
+    video: new URL(question1VideoAssetDe, import.meta.url).href,
+    subtitles: new URL(question1SubsAssetDe, import.meta.url).href,
+  },
+};
 const question2Video = new URL(question2VideoAsset, import.meta.url).href;
 const replayIcon = new URL(replayIconAsset, import.meta.url).href;
 
+<<<<<<< HEAD
 
 const OptionCard = ({ option, selected, onSelect, compact, isVisible }) => {
+=======
+const OPTION_TIMINGS = {
+  1: [3.377, 4.849, 6.578, 8.752],
+  2: [3.14, 4.659, 6.619, 8.46, 10.579, 13.06],
+};
+
+const attachReverseLoop = (videoEl) => {
+  if (!videoEl) return;
+  const resetAndPlay = () => {
+    videoEl.currentTime = 0;
+    const playPromise = videoEl.play();
+    if (playPromise?.catch) playPromise.catch(() => {});
+  };
+
+  const onCanPlay = () => {
+    resetAndPlay();
+  };
+
+  const onEnded = () => {
+    resetAndPlay();
+  };
+
+  videoEl.addEventListener('canplay', onCanPlay);
+  videoEl.addEventListener('ended', onEnded);
+
+  return () => {
+    videoEl.removeEventListener('canplay', onCanPlay);
+    videoEl.removeEventListener('ended', onEnded);
+  };
+};
+
+const OptionCard = ({ option, index, selected, onSelect, isVisible }) => {
+>>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
   const classes = ['option-card'];
-  if (compact) classes.push('option-card--compact');
   if (selected) classes.push('is-selected');
   if (!isVisible) classes.push('option-card--hidden');
 
   return (
     <button type="button" className={classes.join(' ')} onClick={onSelect}>
+<<<<<<< HEAD
       <div className="option-body">
         <p className="option-label">{option.label}</p>
         {option.description && <p className="option-description">{option.description}</p>}
       </div>
+=======
+      {option.label}
+>>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
     </button>
   );
 };
@@ -41,22 +136,38 @@ const QuestionScreen = ({
   onSelect,
   helper,
   controls,
+<<<<<<< HEAD
   layout = 'grid',
   compact = true,
+=======
+  language,
+  questionId,
+>>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
 }) => {
-  const questionVideo = step === 1 ? question1Video : question2Video;
+  const languageCode = language?.code || 'en';
+  const getQuestionVideo = () => {
+    if (questionId === 'q0') {
+      return question0Videos[languageCode] || question0Videos.en;
+    }
+    if (questionId === 'q1') {
+      return question1Videos[languageCode] || question1Videos.en;
+    }
+    return { video: question2Video };
+  };
+  const questionVideo = getQuestionVideo();
   const questionVideoRef = useRef(null);
-  const [videoKey, setVideoKey] = useState(`question-${step}`);
+  const idleVideoRef = useRef(null);
+  const [videoKey, setVideoKey] = useState(`question-${questionId || step}`);
   const [isQuestionVideoPlaying, setIsQuestionVideoPlaying] = useState(true);
   const [canReplay, setCanReplay] = useState(false);
   const [visibleOptions, setVisibleOptions] = useState(options.length);
 
   useEffect(() => {
-    setVideoKey(`question-${step}-${Date.now()}`);
+    setVideoKey(`question-${questionId || step}-${languageCode}-${Date.now()}`);
     setCanReplay(false);
     setIsQuestionVideoPlaying(true);
     setVisibleOptions(0);
-  }, [step]);
+  }, [languageCode, questionId, step]);
 
   useEffect(() => {
     const videoEl = questionVideoRef.current;
@@ -105,16 +216,49 @@ const QuestionScreen = ({
     return () => timers.forEach(clearTimeout);
   }, [options.length, step, videoKey]);
 
+  useEffect(() => {
+    const cleanup = attachReverseLoop(idleVideoRef.current);
+    return cleanup;
+  }, []);
+
+  useEffect(() => {
+    const idleEl = idleVideoRef.current;
+    if (!idleEl) return;
+    const playPromise = idleEl.play();
+    if (playPromise?.catch) playPromise.catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!isQuestionVideoPlaying) {
+      const playPromise = idleVideoRef.current?.play();
+      if (playPromise?.catch) playPromise.catch(() => {});
+    }
+  }, [isQuestionVideoPlaying]);
+
   const handleReplay = () => {
     setCanReplay(false);
     setIsQuestionVideoPlaying(true);
-    setVideoKey(`question-${step}-replay-${Date.now()}`);
+    setVideoKey(`question-${questionId || step}-replay-${Date.now()}`);
   };
 
-  const handleVideoEnded = () => {
+  const switchToIdle = () => {
     setIsQuestionVideoPlaying(false);
     setCanReplay(true);
+    if (questionVideoRef.current) {
+      questionVideoRef.current.pause();
+    }
+    if (idleVideoRef.current) {
+      idleVideoRef.current.currentTime = 0;
+      idleVideoRef.current.load();
+      const playPromise = idleVideoRef.current.play();
+      if (playPromise?.catch) playPromise.catch(() => {});
+    }
   };
+
+  const handleVideoEnded = switchToIdle;
+  const handleVideoAbort = switchToIdle;
+  const handleVideoError = switchToIdle;
+  const handleVideoEmptied = switchToIdle;
 
   const handleVideoPlay = () => {
     setIsQuestionVideoPlaying(true);
@@ -132,6 +276,7 @@ const QuestionScreen = ({
   return (
     <section className="hero-screen question-screen">
       <div className="question-step-header">
+        <img src={eptaLogo} alt="Epta" className="question-logo" />
         <StepHeader
           step={step}
           total={total}
@@ -146,23 +291,49 @@ const QuestionScreen = ({
         <video
           key={videoKey}
           ref={questionVideoRef}
-          src={questionVideo}
+          src={questionVideo.video}
           autoPlay
           playsInline
           muted={false}
           loop={false}
           className={`${isQuestionVideoPlaying ? 'is-active' : ''} question-video`}
           onEnded={handleVideoEnded}
+          onAbort={handleVideoAbort}
+          onEmptied={handleVideoEmptied}
+          onError={handleVideoError}
           onPlay={handleVideoPlay}
           onPause={handleVideoPause}
-        />
+        >
+          {questionVideo.subtitles && (
+            <track
+              key={`${languageCode}-subs`}
+              label={language?.label || languageCode}
+              kind="subtitles"
+              srcLang={languageCode}
+              src={questionVideo.subtitles}
+              default
+            />
+          )}
+        </video>
         <video
           src={avatarIdleVideo}
           autoPlay
-          loop
           muted
           playsInline
+          loop
+          onCanPlay={() => {
+            if (!isQuestionVideoPlaying) {
+              const playPromise = idleVideoRef.current?.play();
+              if (playPromise?.catch) playPromise.catch(() => {});
+            }
+          }}
+          onEnded={() => {
+            idleVideoRef.current?.load();
+            const playPromise = idleVideoRef.current?.play();
+            if (playPromise?.catch) playPromise.catch(() => {});
+          }}
           className={`${!isQuestionVideoPlaying ? 'is-active' : ''} idle-video`}
+          ref={idleVideoRef}
         />
         {canReplay && (
           <button type="button" className="ghost-button replay-button" onClick={handleReplay}>
@@ -172,14 +343,21 @@ const QuestionScreen = ({
       </div>
 
       <div className="hero-center question-content">
+<<<<<<< HEAD
         <div className={stackClasses.join(' ')}>
+=======
+        <div className="option-stack">
+>>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
           {options.map((option, index) => (
             <OptionCard
               key={option.id}
               option={option}
               selected={selectedOptions.includes(option.id)}
               onSelect={() => onSelect(option.id)}
+<<<<<<< HEAD
               compact={compact}
+=======
+>>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
               isVisible={index < visibleOptions}
             />
           ))}

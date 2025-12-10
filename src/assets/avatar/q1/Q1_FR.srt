@@ -1,0 +1,28 @@
+1
+00:00:00,000 --> 00:00:02,495
+Par quel type d'expérience souhaitez-vous commencer ?
+
+2
+00:00:03,495 --> 00:00:04,770
+Les incontournables
+
+3
+00:00:04,770 --> 00:00:07,902
+Présentation des solutions pour le commerce de détail
+
+4
+00:00:08,402 --> 00:00:09,995
+Analyses techniques approfondies
+
+5
+00:00:10,495 --> 00:00:12,566
+Expériences dans les boutiques spécialisées
+
+6
+00:00:13,066 --> 00:00:15,030
+Innovations dans les magasins de proximité
+
+7
+00:00:15,530 --> 00:00:17,017
+Une visite complète et immersive
+

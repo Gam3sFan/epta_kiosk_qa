@@ -1,0 +1,28 @@
+1
+00:00:00,200 --> 00:00: 03,580
+¿Con qué tipo de experiencia te gustaría empezar?
+
+2
+00:00:03,580 --> 00:00: 06,422
+Lo más destacado, lo que no te puedes perder
+
+3
+00:00:06,422 --> 00:00:09,049
+Guía de soluciones para minoristas
+
+4
+00:00:09,049 --> 00:00:11,300
+Análisis técnicos en profundidad
+
+5
+00:00:11,800 --> 00:00:13,998
+Experiencias en tiendas especializadas
+
+6
+00:00:13,998 --> 00:00:17,054
+Innovaciones en las tiendas de conveniencia
+
+7
+00:00:17,054 --> 00:00:19,252
+Una visita completa y envolvente
+

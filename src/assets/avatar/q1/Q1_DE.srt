@@ -1,0 +1,28 @@
+1
+00:00:00,000 --> 00:00:02,441
+Mit welcher Art von Erlebnis
+möchten Sie beginnen?
+
+2
+00:00:03,441 --> 00:00:04,804
+Unverzichtbare Highlights
+
+3
+00:00:05,304 --> 00:00:07,461
+Überblick der Lösungen für den Einzelhandel
+
+4
+00:00:07,961 --> 00:00:09,721
+Detaillierte technische Einblicke
+
+5
+00:00:10,221 --> 00:00:12,038
+Erlebnisse für Fachgeschäfte
+
+6
+00:00:12,038 --> 00:00:15,330
+Innovationen im Convenience-Store-Bereich
+
+7
+00:00:15,330 --> 00:00:17,658
+Eine umfassende, 360-Grad-Tour

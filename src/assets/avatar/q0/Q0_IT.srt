@@ -1,0 +1,20 @@
+1
+00:00:00,200 --> 00:00:02,102
+Quanto tempo hai a disposizione?
+
+2
+00:00:02,802 --> 00:00:03,403
+Solo 15 minuti
+
+3
+00:00:03,903 --> 00:00:05,154
+Intorno alla mezz'ora <break
+
+4
+00:00:05,154 --> 00:00:06,556
+Circa 1 ora
+
+5
+00:00:06,556 --> 00:00:07,758
+Non ho fretta
+
