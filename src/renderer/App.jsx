@@ -127,23 +127,6 @@ const App = () => {
                 total={3}
                 questionId="q0"
                 stepLabel={strings.stepLabel}
-<<<<<<< HEAD
-                eyebrow={strings.questions.q1.eyebrow}
-                title={strings.questions.q1.title}
-              subtitle={strings.questions.q1.subtitle}
-              options={timeOptions}
-              selectedOptions={answerA ? [answerA] : []}
-              onSelect={handleSelectAnswerA}
-              helper={helperQuestionA}
-              layout="list"
-              controls={
-                <div className="screen-controls">
-                  <button type="button" className="ghost-button" onClick={() => setScreen(SCREENS.HERO)}>
-                    {strings.buttons.back}
-                  </button>
-                  </div>
-                }
-=======
                 eyebrow={strings.questions.q0.eyebrow}
                 title={strings.questions.q0.title}
                 subtitle={strings.questions.q0.subtitle}
@@ -152,7 +135,6 @@ const App = () => {
                 onSelect={handleSelectAnswerA}
                 helper={strings.helpers.q0}
                 language={language}
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
               />
             )}
 

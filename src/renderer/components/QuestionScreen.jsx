@@ -70,56 +70,15 @@ const question1Videos = {
 const question2Video = new URL(question2VideoAsset, import.meta.url).href;
 const replayIcon = new URL(replayIconAsset, import.meta.url).href;
 
-<<<<<<< HEAD
 
-const OptionCard = ({ option, selected, onSelect, compact, isVisible }) => {
-=======
-const OPTION_TIMINGS = {
-  1: [3.377, 4.849, 6.578, 8.752],
-  2: [3.14, 4.659, 6.619, 8.46, 10.579, 13.06],
-};
-
-const attachReverseLoop = (videoEl) => {
-  if (!videoEl) return;
-  const resetAndPlay = () => {
-    videoEl.currentTime = 0;
-    const playPromise = videoEl.play();
-    if (playPromise?.catch) playPromise.catch(() => {});
-  };
-
-  const onCanPlay = () => {
-    resetAndPlay();
-  };
-
-  const onEnded = () => {
-    resetAndPlay();
-  };
-
-  videoEl.addEventListener('canplay', onCanPlay);
-  videoEl.addEventListener('ended', onEnded);
-
-  return () => {
-    videoEl.removeEventListener('canplay', onCanPlay);
-    videoEl.removeEventListener('ended', onEnded);
-  };
-};
-
-const OptionCard = ({ option, index, selected, onSelect, isVisible }) => {
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
+const OptionCard = ({ option, selected, onSelect, isVisible }) => {
   const classes = ['option-card'];
   if (selected) classes.push('is-selected');
   if (!isVisible) classes.push('option-card--hidden');
 
   return (
     <button type="button" className={classes.join(' ')} onClick={onSelect}>
-<<<<<<< HEAD
-      <div className="option-body">
-        <p className="option-label">{option.label}</p>
-        {option.description && <p className="option-description">{option.description}</p>}
-      </div>
-=======
       {option.label}
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
     </button>
   );
 };
@@ -136,13 +95,8 @@ const QuestionScreen = ({
   onSelect,
   helper,
   controls,
-<<<<<<< HEAD
-  layout = 'grid',
-  compact = true,
-=======
   language,
   questionId,
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
 }) => {
   const languageCode = language?.code || 'en';
   const getQuestionVideo = () => {
@@ -217,11 +171,6 @@ const QuestionScreen = ({
   }, [options.length, step, videoKey]);
 
   useEffect(() => {
-    const cleanup = attachReverseLoop(idleVideoRef.current);
-    return cleanup;
-  }, []);
-
-  useEffect(() => {
     const idleEl = idleVideoRef.current;
     if (!idleEl) return;
     const playPromise = idleEl.play();
@@ -268,10 +217,6 @@ const QuestionScreen = ({
     if (questionVideoRef.current?.ended) return;
     setIsQuestionVideoPlaying(false);
   };
-
-  const stackClasses = ['option-stack'];
-  if (compact) stackClasses.push('option-stack--compact');
-  stackClasses.push(layout === 'list' ? 'option-stack--list' : 'option-stack--grid');
 
   return (
     <section className="hero-screen question-screen">
@@ -343,21 +288,13 @@ const QuestionScreen = ({
       </div>
 
       <div className="hero-center question-content">
-<<<<<<< HEAD
-        <div className={stackClasses.join(' ')}>
-=======
         <div className="option-stack">
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
           {options.map((option, index) => (
             <OptionCard
               key={option.id}
               option={option}
               selected={selectedOptions.includes(option.id)}
               onSelect={() => onSelect(option.id)}
-<<<<<<< HEAD
-              compact={compact}
-=======
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
               isVisible={index < visibleOptions}
             />
           ))}

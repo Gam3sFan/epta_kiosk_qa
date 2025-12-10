@@ -11,16 +11,12 @@ export const SCREENS = {
   RESULT: 'result',
 };
 
-<<<<<<< HEAD
-export const TIME_OPTIONS_BASE = [{ id: 'express' }, { id: 'standard' }, { id: 'extended' }, { id: 'no-limit' }];
-=======
 export const TIME_OPTIONS_BASE = [
   { id: '15' },
   { id: '30' },
   { id: '60' },
   { id: 'no-limit' },
 ];
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
 
 export const EXPERIENCE_OPTIONS_BASE = [
   { id: 'highlights', resultKey: 'essential' },
@@ -80,42 +76,18 @@ export const TEXTS = {
       emptyBody: 'Return to the previous step and let us know which journey you want to focus on.',
     },
     timeOptions: {
-      15: {
-        label: 'Only 15 minutes',
-      },
-      30: {
-        label: 'Around 30 minutes',
-      },
-      60: {
-        label: 'Around 1 hour',
-      },
-      extended: {
-        label: 'Around 1 hour',
-        description: 'A deeper dive into the ecosystem.',
-      },
-      'no-limit': {
-        label: 'No time pressure',
-      },
+      15: { label: 'Only 15 minutes' },
+      30: { label: 'Around 30 minutes' },
+      60: { label: 'Around 1 hour' },
+      'no-limit': { label: 'No time pressure' },
     },
     experienceOptions: {
-      highlights: {
-        label: 'Must-see highlights',
-      },
-      retail: {
-        label: 'Retail solutions walkthrough',
-      },
-      tech: {
-        label: 'Technical deep dives',
-      },
-      immersive: {
-        label: 'A full, immersive tour',
-      },
-      convenience: {
-        label: 'Convenience store innovations',
-      },
-      specialty: {
-        label: 'Specialty shop experiences',
-      },
+      highlights: { label: 'Must-see highlights' },
+      retail: { label: 'Retail solutions walkthrough' },
+      tech: { label: 'Technical deep dives' },
+      specialty: { label: 'Specialty shop experiences' },
+      convenience: { label: 'Convenience store innovations' },
+      immersive: { label: 'A full, immersive tour' },
     },
     results: {
       essential: {
@@ -167,17 +139,6 @@ export const TEXTS = {
       q2: {
         eyebrow: 'Domanda 02',
         title: 'Con quale tipo di esperienza vorresti iniziare?',
-<<<<<<< HEAD
-        subtitleSingle: 'Scegli un solo percorso in base al tempo.',
-        subtitleMulti: 'Senza limiti di tempo puoi selezionare più percorsi.',
-      },
-    },
-    helpers: {
-      q1: "Scegli la fascia di tempo. Con 'Solo 15 minuti' o 'Intorno alla mezz'ora' la domanda successiva accetta una sola scelta.",
-      q2Single: 'In base al tempo a disposizione, seleziona un solo punto di partenza per la visita.',
-      q2Multi:
-        'Senza limiti di tempo puoi combinare più esperienze. Scegline fino a due, o più di due per attivare il Grand Tour.',
-=======
         subtitleSingle: 'Tocca una o più opzioni.',
         subtitleMulti: 'Tocca una o più opzioni.',
       },
@@ -186,7 +147,6 @@ export const TEXTS = {
       q0: 'Indica il tempo che hai a disposizione.',
       q2Single: 'Seleziona una sola esperienza per continuare.',
       q2Multi: 'Seleziona più esperienze per combinarle.',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
     },
     buttons: {
       start: 'Start',
@@ -202,72 +162,18 @@ export const TEXTS = {
       emptyBody: 'Torna al passo precedente e raccontaci quale percorso vuoi prioritizzare.',
     },
     timeOptions: {
-      15: {
-        label: 'Solo 15 minuti',
-      },
-<<<<<<< HEAD
-      standard: {
-        label: "Intorno alla mezz'ora",
-        description: 'Tempo sufficiente per una presentazione completa.',
-=======
-      30: {
-        label: "Intorno alla mezz'ora",
-      },
-      60: {
-        label: 'Circa 1 ora',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
-      extended: {
-        label: 'Circa 1 ora',
-        description: 'Un approfondimento completo dell\'ecosistema.',
-      },
-      'no-limit': {
-        label: 'Non ho fretta',
-<<<<<<< HEAD
-        description: 'Ritmo libero e possibilità di combinare più esperienze.',
-=======
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
+      15: { label: 'Solo 15 minuti' },
+      30: { label: "Intorno alla mezz'ora" },
+      60: { label: 'Circa 1 ora' },
+      'no-limit': { label: 'Non ho fretta' },
     },
     experienceOptions: {
-      highlights: {
-        label: 'Assolutamente da vedere',
-<<<<<<< HEAD
-        description: 'Parti dalle novità di cui parlano tutti.',
-      },
-      retail: {
-        label: 'Panoramica delle soluzioni retail',
-        description: 'Segui il viaggio completo delle soluzioni integrate Epta.',
-=======
-      },
-      retail: {
-        label: 'Panoramica delle soluzioni retail',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
-      tech: {
-        label: 'Approfondimenti tecnici',
-      },
-      immersive: {
-        label: 'Un tour completo a 360 gradi',
-<<<<<<< HEAD
-        description: 'Vivi tutto, dalle hero stories ai dettagli più nascosti.',
-      },
-      convenience: {
-        label: 'Innovazioni nei minimarket',
-        description: 'Focus rapido su format grab-and-go e soluzioni veloci.',
-      },
-      specialty: {
-        label: 'Esperienze nei negozi specializzati',
-        description: 'Un percorso curato per ambienti premium e ad alto coinvolgimento.',
-=======
-      },
-      convenience: {
-        label: 'Innovazioni nei minimarket',
-      },
-      specialty: {
-        label: 'Esperienze nei negozi specializzati',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
+      highlights: { label: 'Assolutamente da vedere' },
+      retail: { label: 'Panoramica delle soluzioni retail' },
+      tech: { label: 'Approfondimenti tecnici' },
+      specialty: { label: 'Esperienze nei negozi specializzati' },
+      convenience: { label: 'Innovazioni nei minimarket' },
+      immersive: { label: 'Un tour completo a 360°' },
     },
     results: {
       essential: {
@@ -319,13 +225,8 @@ export const TEXTS = {
       q2: {
         eyebrow: 'Pregunta 02',
         title: '¿Con qué tipo de experiencia te gustaría empezar?',
-<<<<<<< HEAD
-        subtitleSingle: 'Elige un único camino según tu disponibilidad.',
-        subtitleMulti: 'Sin límite de tiempo puedes seleccionar varias opciones.',
-=======
         subtitleSingle: 'Toca una o varias opciones.',
         subtitleMulti: 'Toca una o varias opciones.',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
       },
     },
     helpers: {
@@ -347,71 +248,18 @@ export const TEXTS = {
       emptyBody: 'Regresa al paso anterior y cuéntanos qué recorrido deseas priorizar.',
     },
     timeOptions: {
-      15: {
-        label: 'Solo 15 minutos',
-      },
-      30: {
-        label: 'Unos 30 minutos',
-      },
-      60: {
-        label: 'Alrededor de 1 hora',
-      },
-      extended: {
-        label: 'Aproximadamente 1 hora',
-        description: 'Una inmersión más profunda en el ecosistema.',
-      },
-      'no-limit': {
-<<<<<<< HEAD
-        label: 'No tengo prisa',
-        description: 'Tómate todo el tiempo y combina varias experiencias.',
-=======
-        label: 'Sin presión de tiempo',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
+      15: { label: 'Solo 15 minutos' },
+      30: { label: 'Unos 30 minutos' },
+      60: { label: 'Alrededor de 1 hora' },
+      'no-limit': { label: 'Sin presión de tiempo' },
     },
     experienceOptions: {
-      highlights: {
-        label: 'Lo más destacado, lo que no te puedes perder',
-<<<<<<< HEAD
-        description: 'Empieza con lo esencial de lo que todos hablan.',
-      },
-      retail: {
-        label: 'Guía de soluciones para minoristas',
-        description: 'Sigue el circuito completo de las soluciones integrales de Epta.',
-      },
-      tech: {
-        label: 'Análisis técnicos en profundidad',
-        description: 'Perfecto para ingenieros y mentes curiosas.',
-      },
-      immersive: {
-        label: 'Una visita completa y envolvente',
-        description: 'Vívelo todo, de las historias principales a los detalles ocultos.',
-      },
-      convenience: {
-        label: 'Innovaciones en las tiendas de conveniencia',
-        description: 'Un recorrido ágil por los formatos grab-and-go.',
-      },
-      specialty: {
-        label: 'Experiencias en tiendas especializadas',
-        description: 'Un viaje curado para espacios premium y de alto engagement.',
-=======
-      },
-      retail: {
-        label: 'Guía de soluciones para minoristas',
-      },
-      tech: {
-        label: 'Análisis técnicos en profundidad',
-      },
-      immersive: {
-        label: 'Una visita completa y envolvente',
-      },
-      convenience: {
-        label: 'Innovaciones en las tiendas de conveniencia',
-      },
-      specialty: {
-        label: 'Experiencias en tiendas especializadas',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
+      highlights: { label: 'Lo más destacado, lo que no te puedes perder' },
+      retail: { label: 'Guía de soluciones para minoristas' },
+      tech: { label: 'Análisis técnicos en profundidad' },
+      specialty: { label: 'Experiencias en tiendas especializadas' },
+      convenience: { label: 'Innovaciones en las tiendas de conveniencia' },
+      immersive: { label: 'Una visita completa y envolvente' },
     },
     results: {
       essential: {
@@ -463,13 +311,8 @@ export const TEXTS = {
       q2: {
         eyebrow: 'Question 02',
         title: "Par quel type d'expérience souhaitez-vous commencer ?",
-<<<<<<< HEAD
-        subtitleSingle: 'Choisissez un seul parcours en fonction de votre temps.',
-        subtitleMulti: 'Sans contrainte de temps, vous pouvez sélectionner plusieurs parcours.',
-=======
         subtitleSingle: 'Touchez une ou plusieurs options.',
         subtitleMulti: 'Touchez une ou plusieurs options.',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
       },
     },
     helpers: {
@@ -491,70 +334,18 @@ export const TEXTS = {
       emptyBody: "Retournez à l'étape précédente et dites-nous quel parcours vous voulez privilégier.",
     },
     timeOptions: {
-      15: {
-        label: 'Seulement 15 minutes',
-      },
-      30: {
-        label: 'Environ 30 minutes',
-      },
-      60: {
-        label: 'Environ 1 heure',
-      },
-      extended: {
-        label: 'Environ 1 heure',
-        description: 'Une plongée plus profonde dans l\'écosystème.',
-      },
-      'no-limit': {
-        label: 'Pas de contrainte de temps',
-<<<<<<< HEAD
-        description: 'Prenez votre temps et combinez plusieurs expériences.',
-=======
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
+      15: { label: 'Seulement 15 minutes' },
+      30: { label: 'Environ 30 minutes' },
+      60: { label: 'Environ 1 heure' },
+      'no-limit': { label: 'Pas de contrainte de temps' },
     },
     experienceOptions: {
-      highlights: {
-        label: 'Les incontournables',
-<<<<<<< HEAD
-        description: 'Commencez par les essentiels dont tout le monde parle.',
-      },
-      retail: {
-        label: 'Présentation des solutions pour le commerce de détail',
-        description: 'Suivez le circuit complet des solutions intégrées Epta.',
-      },
-      tech: {
-        label: 'Analyses techniques approfondies',
-        description: 'Parfait pour les ingénieurs et les esprits curieux.',
-      },
-      immersive: {
-        label: 'Une visite complète et immersive',
-        description: 'Voyez tout, des hero stories aux détails cachés.',
-      },
-      convenience: {
-        label: 'Innovations dans les magasins de proximité',
-        description: 'Un trajet dynamique dédié aux formats grab-and-go.',
-      },
-      specialty: {
-        label: 'Expériences dans les boutiques spécialisées',
-        description: 'Un voyage soigné pour les espaces premium et à forte implication.',
-=======
-      },
-      retail: {
-        label: 'Présentation des solutions pour le commerce de détail',
-      },
-      tech: {
-        label: 'Analyses techniques approfondies',
-      },
-      immersive: {
-        label: 'Une visite complète et immersive',
-      },
-      convenience: {
-        label: 'Innovations dans les magasins de proximité',
-      },
-      specialty: {
-        label: 'Expériences dans les boutiques spécialisées',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
+      highlights: { label: 'Les incontournables' },
+      retail: { label: 'Présentation des solutions pour le commerce de détail' },
+      tech: { label: 'Analyses techniques approfondies' },
+      specialty: { label: 'Expériences dans les boutiques spécialisées' },
+      convenience: { label: 'Innovations dans les magasins de proximité' },
+      immersive: { label: 'Une visite complète et immersive' },
     },
     results: {
       essential: {
@@ -601,26 +392,11 @@ export const TEXTS = {
       q0: {
         eyebrow: 'Frage 01',
         title: 'Wie viel Zeit haben Sie zur Verfügung?',
-<<<<<<< HEAD
-        subtitle: 'Das bestimmt das Tempo des Besuchs.',
-=======
         subtitle: 'Tippe auf eine Option.',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
       },
       q2: {
         eyebrow: 'Frage 02',
         title: 'Mit welcher Art von Erlebnis möchten Sie beginnen?',
-<<<<<<< HEAD
-        subtitleSingle: 'Wähle einen Pfad, der zu deiner Zeit passt.',
-        subtitleMulti: 'Ohne Zeitlimit kannst du mehrere Pfade kombinieren.',
-      },
-    },
-    helpers: {
-      q1: "Wähle einen Zeitrahmen. Bei 'Nur 15 Minuten' oder 'Ungefähr 30 Minuten' ist im nächsten Schritt nur eine Auswahl möglich.",
-      q2Single: 'Basierend auf deiner Zeit kannst du nur einen Startpunkt wählen.',
-      q2Multi:
-        'Ohne Zeitdruck darfst du bis zu zwei Erlebnisse kombinieren oder mehr als zwei für den Grand Tour wählen.',
-=======
         subtitleSingle: 'Tippe auf eine oder mehrere Optionen.',
         subtitleMulti: 'Tippe auf eine oder mehrere Optionen.',
       },
@@ -629,7 +405,6 @@ export const TEXTS = {
       q0: 'Gib an, wie viel Zeit du hast.',
       q2Single: 'Wähle ein Erlebnis, um fortzufahren.',
       q2Multi: 'Wähle mehrere Erlebnisse, um sie zu kombinieren.',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
     },
     buttons: {
       start: 'Start',
@@ -645,73 +420,18 @@ export const TEXTS = {
       emptyBody: 'Gehe einen Schritt zurück und sag uns, welcher Pfad prioritisiert werden soll.',
     },
     timeOptions: {
-      15: {
-        label: 'Nur 15 Minuten',
-      },
-<<<<<<< HEAD
-      standard: {
-        label: 'Ungefähr 30 Minuten',
-        description: 'Genug Zeit für eine komplette Vorstellung.',
-=======
-      30: {
-        label: 'Rund 30 Minuten',
-      },
-      60: {
-        label: 'Etwa 1 Stunde',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
-      extended: {
-        label: 'Ungefähr 1 Stunde',
-        description: 'Ein tieferer Einblick in das Ökosystem.',
-      },
-      'no-limit': {
-<<<<<<< HEAD
-        label: 'Ich habe keinen Zeitdruck',
-        description: 'Nimm dir alle Zeit und kombiniere mehrere Erlebnisse.',
-=======
-        label: 'Kein Zeitdruck',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
+      15: { label: 'Nur 15 Minuten' },
+      30: { label: 'Rund 30 Minuten' },
+      60: { label: 'Etwa 1 Stunde' },
+      'no-limit': { label: 'Kein Zeitdruck' },
     },
     experienceOptions: {
-      highlights: {
-        label: 'Unverzichtbare Highlights',
-      },
-      retail: {
-        label: 'Überblick der Lösungen für den Einzelhandel',
-<<<<<<< HEAD
-        description: 'Folge dem kompletten Loop der integrierten Epta Lösungen.',
-      },
-      tech: {
-        label: 'Detaillierte technische Einblicke',
-        description: 'Ideal für Ingenieure und neugierige Köpfe.',
-      },
-      immersive: {
-        label: 'Eine umfassende, 360-Grad-Tour',
-        description: 'Sieh alles, von Hero Stories bis zu versteckten Details.',
-      },
-      convenience: {
-        label: 'Innovationen im Convenience-Store-Bereich',
-        description: 'Ein schneller Blick auf Konzepte für Grab-and-go.',
-      },
-      specialty: {
-        label: 'Erlebnisse für Fachgeschäfte',
-        description: 'Ein kuratierter Weg für Premium- und Erlebnisflächen.',
-=======
-      },
-      tech: {
-        label: 'Detaillierte technische Einblicke',
-      },
-      immersive: {
-        label: 'Eine umfassende, 360-Grad-Tour',
-      },
-      convenience: {
-        label: 'Innovationen im Convenience-Store-Bereich',
-      },
-      specialty: {
-        label: 'Erlebnisse für Fachgeschäfte',
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
-      },
+      highlights: { label: 'Unverzichtbare Highlights' },
+      retail: { label: 'Überblick der Lösungen für den Einzelhandel' },
+      tech: { label: 'Detaillierte technische Einblicke' },
+      specialty: { label: 'Erlebnisse für Fachgeschäfte' },
+      convenience: { label: 'Innovationen im Convenience-Store-Bereich' },
+      immersive: { label: 'Eine umfassende, 360-Grad-Tour' },
     },
     results: {
       essential: {

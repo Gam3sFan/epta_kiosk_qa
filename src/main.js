@@ -155,19 +155,11 @@ const initAutoUpdater = () => {
 const createWindow = () => {
   const iconPath = path.join(__dirname, 'epta_icon_qa.ico');
 
-<<<<<<< HEAD
-  let windowOptions = {
-    width: 1080,
-    height: 1920,
-    minWidth: 720,
-    minHeight: 1280,
-=======
-  mainWindow = new BrowserWindow({
+  const windowOptions = {
     width: 540,
     height: 960,
     minWidth: 540,
     minHeight: 960,
->>>>>>> d5b2335 (aggiunta video tradotti per ogni lingua, nuova UI, fixing vari, ancora WIP)
     backgroundColor: '#f3f3f3',
     show: false,
     kiosk: false,
