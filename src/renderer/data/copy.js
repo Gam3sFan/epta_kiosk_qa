@@ -47,20 +47,20 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Question 01',
-        title: 'How much time do you have?',
-        subtitle: 'Tap an option.',
+        title: 'What kind of experience would you like to start with?',
+        subtitle: 'Tap one option.',
       },
       q2: {
         eyebrow: 'Question 02',
-        title: 'What kind of experience would you like to start with?',
-        subtitleSingle: 'Tap one or multiple option.',
-        subtitleMulti: 'Tap one or multiple option.',
+        title: 'How much time do you have?',
+        subtitleSingle: 'Tap an option.',
+        subtitleMulti: 'Tap an option.',
       },
     },
     helpers: {
-      q0: 'Choose the time you have available.',
-      q2Single: 'Select one experience to continue.',
-      q2Multi: 'Select multiple experiences to combine different paths.',
+      q0: 'Select one experience to continue.',
+      q2Single: 'Choose the time you have available.',
+      q2Multi: 'Choose the time you have available.',
     },
     buttons: {
       start: 'Cross the Gateway',
@@ -133,20 +133,20 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Domanda 01',
-        title: 'Quanto tempo hai a disposizione?',
-        subtitle: "Tocca un'opzione.",
+        title: 'Con quale tipo di esperienza vorresti iniziare?',
+        subtitle: 'Tocca una sola opzione.',
       },
       q2: {
         eyebrow: 'Domanda 02',
-        title: 'Con quale tipo di esperienza vorresti iniziare?',
-        subtitleSingle: 'Tocca una o più opzioni.',
-        subtitleMulti: 'Tocca una o più opzioni.',
+        title: 'Quanto tempo hai a disposizione?',
+        subtitleSingle: "Tocca un'opzione.",
+        subtitleMulti: "Tocca un'opzione.",
       },
     },
     helpers: {
-      q0: 'Indica il tempo che hai a disposizione.',
-      q2Single: 'Seleziona una sola esperienza per continuare.',
-      q2Multi: 'Seleziona più esperienze per combinarle.',
+      q0: 'Seleziona una sola esperienza per continuare.',
+      q2Single: 'Indica il tempo che hai a disposizione.',
+      q2Multi: 'Indica il tempo che hai a disposizione.',
     },
     buttons: {
       start: 'Start',
@@ -173,7 +173,7 @@ export const TEXTS = {
       tech: { label: 'Approfondimenti tecnici' },
       specialty: { label: 'Esperienze nei negozi specializzati' },
       convenience: { label: 'Innovazioni nei minimarket' },
-      immersive: { label: 'Un tour completo a 360°' },
+      immersive: { label: 'Un tour completo a 360 gradi' },
     },
     results: {
       essential: {
@@ -219,20 +219,20 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Pregunta 01',
-        title: '¿Cuánto tiempo tienes?',
-        subtitle: 'Toca una opción.',
+        title: '¿Con qué tipo de experiencia te gustaría empezar?',
+        subtitle: 'Toca una sola opción.',
       },
       q2: {
         eyebrow: 'Pregunta 02',
-        title: '¿Con qué tipo de experiencia te gustaría empezar?',
-        subtitleSingle: 'Toca una o varias opciones.',
-        subtitleMulti: 'Toca una o varias opciones.',
+        title: '¿Cuánto tiempo tienes?',
+        subtitleSingle: 'Toca una opción.',
+        subtitleMulti: 'Toca una opción.',
       },
     },
     helpers: {
-      q0: 'Indica el tiempo que tienes disponible.',
-      q2Single: 'Selecciona una sola experiencia para continuar.',
-      q2Multi: 'Selecciona varias experiencias para combinarlas.',
+      q0: 'Selecciona una sola experiencia para continuar.',
+      q2Single: 'Indica el tiempo que tienes disponible.',
+      q2Multi: 'Indica el tiempo que tienes disponible.',
     },
     buttons: {
       start: 'Iniciar',
@@ -249,9 +249,9 @@ export const TEXTS = {
     },
     timeOptions: {
       15: { label: 'Solo 15 minutos' },
-      30: { label: 'Unos 30 minutos' },
-      60: { label: 'Alrededor de 1 hora' },
-      'no-limit': { label: 'Sin presión de tiempo' },
+      30: { label: 'Alrededor de 30 minutos' },
+      60: { label: 'Aproximadamente 1 hora' },
+      'no-limit': { label: 'No tengo prisa' },
     },
     experienceOptions: {
       highlights: { label: 'Lo más destacado, lo que no te puedes perder' },
@@ -259,7 +259,7 @@ export const TEXTS = {
       tech: { label: 'Análisis técnicos en profundidad' },
       specialty: { label: 'Experiencias en tiendas especializadas' },
       convenience: { label: 'Innovaciones en las tiendas de conveniencia' },
-      immersive: { label: 'Una visita completa y envolvente' },
+      immersive: { label: 'Una visita completa y envolvente.' },
     },
     results: {
       essential: {
@@ -305,20 +305,20 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Question 01',
-        title: 'Combien de temps avez-vous ?',
-        subtitle: 'Touchez une option.',
+        title: "Par quel type d'expérience souhaitez-vous commencer ?",
+        subtitle: 'Touchez une seule option.',
       },
       q2: {
         eyebrow: 'Question 02',
-        title: "Par quel type d'expérience souhaitez-vous commencer ?",
-        subtitleSingle: 'Touchez une ou plusieurs options.',
-        subtitleMulti: 'Touchez une ou plusieurs options.',
+        title: 'Combien de temps avez-vous ?',
+        subtitleSingle: 'Touchez une option.',
+        subtitleMulti: 'Touchez une option.',
       },
     },
     helpers: {
-      q0: 'Indiquez le temps dont vous disposez.',
-      q2Single: 'Choisissez une seule expérience pour continuer.',
-      q2Multi: 'Sélectionnez plusieurs expériences pour les combiner.',
+      q0: 'Choisissez une seule expérience pour continuer.',
+      q2Single: 'Indiquez le temps dont vous disposez.',
+      q2Multi: 'Indiquez le temps dont vous disposez.',
     },
     buttons: {
       start: 'Démarrer',
@@ -391,20 +391,20 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Frage 01',
-        title: 'Wie viel Zeit haben Sie zur Verfügung?',
-        subtitle: 'Tippe auf eine Option.',
+        title: 'Mit welcher Art von Erlebnis möchten Sie beginnen?',
+        subtitle: 'Tippe genau eine Option an.',
       },
       q2: {
         eyebrow: 'Frage 02',
-        title: 'Mit welcher Art von Erlebnis möchten Sie beginnen?',
-        subtitleSingle: 'Tippe auf eine oder mehrere Optionen.',
-        subtitleMulti: 'Tippe auf eine oder mehrere Optionen.',
+        title: 'Wie viel Zeit hast du zur Verfügung?',
+        subtitleSingle: 'Tippe auf eine Option.',
+        subtitleMulti: 'Tippe auf eine Option.',
       },
     },
     helpers: {
-      q0: 'Gib an, wie viel Zeit du hast.',
-      q2Single: 'Wähle ein Erlebnis, um fortzufahren.',
-      q2Multi: 'Wähle mehrere Erlebnisse, um sie zu kombinieren.',
+      q0: 'Wähle genau ein Erlebnis, um fortzufahren.',
+      q2Single: 'Gib an, wie viel Zeit du hast.',
+      q2Multi: 'Gib an, wie viel Zeit du hast.',
     },
     buttons: {
       start: 'Start',
@@ -421,9 +421,9 @@ export const TEXTS = {
     },
     timeOptions: {
       15: { label: 'Nur 15 Minuten' },
-      30: { label: 'Rund 30 Minuten' },
-      60: { label: 'Etwa 1 Stunde' },
-      'no-limit': { label: 'Kein Zeitdruck' },
+      30: { label: 'Ungefähr 30 Minuten' },
+      60: { label: 'Ungefähr 1 Stunde' },
+      'no-limit': { label: 'Ich habe keinen Zeitdruck' },
     },
     experienceOptions: {
       highlights: { label: 'Unverzichtbare Highlights' },

@@ -15,6 +15,11 @@ import question1VideoAssetIt from '../../assets/avatar/q1/Q1_IT.webm';
 import question1VideoAssetEs from '../../assets/avatar/q1/Q1_ES.webm';
 import question1VideoAssetFr from '../../assets/avatar/q1/Q1_FR.webm';
 import question1VideoAssetDe from '../../assets/avatar/q1/Q1_DE.webm';
+import question1VideoCutAssetEn from '../../assets/avatar/q1/Q1_EN_CUT.webm';
+import question1VideoCutAssetIt from '../../assets/avatar/q1/Q1_IT_CUT.webm';
+import question1VideoCutAssetEs from '../../assets/avatar/q1/Q1_ES_CUT.webm';
+import question1VideoCutAssetFr from '../../assets/avatar/q1/Q1_FR_CUT.webm';
+import question1VideoCutAssetDe from '../../assets/avatar/q1/Q1_DE_CUT.webm';
 import question1SubsAssetEn from '../../assets/avatar/q1/Q1_EN.srt';
 import question1SubsAssetIt from '../../assets/avatar/q1/Q1_IT.srt';
 import question1SubsAssetEs from '../../assets/avatar/q1/Q1_ES.srt';
@@ -46,25 +51,49 @@ const question0Videos = {
   },
 };
 const question1Videos = {
-  en: {
-    video: new URL(question1VideoAssetEn, import.meta.url).href,
-    subtitles: new URL(question1SubsAssetEn, import.meta.url).href,
+  regular: {
+    en: {
+      video: new URL(question1VideoAssetEn, import.meta.url).href,
+      subtitles: new URL(question1SubsAssetEn, import.meta.url).href,
+    },
+    it: {
+      video: new URL(question1VideoAssetIt, import.meta.url).href,
+      subtitles: new URL(question1SubsAssetIt, import.meta.url).href,
+    },
+    es: {
+      video: new URL(question1VideoAssetEs, import.meta.url).href,
+      subtitles: new URL(question1SubsAssetEs, import.meta.url).href,
+    },
+    fr: {
+      video: new URL(question1VideoAssetFr, import.meta.url).href,
+      subtitles: new URL(question1SubsAssetFr, import.meta.url).href,
+    },
+    de: {
+      video: new URL(question1VideoAssetDe, import.meta.url).href,
+      subtitles: new URL(question1SubsAssetDe, import.meta.url).href,
+    },
   },
-  it: {
-    video: new URL(question1VideoAssetIt, import.meta.url).href,
-    subtitles: new URL(question1SubsAssetIt, import.meta.url).href,
-  },
-  es: {
-    video: new URL(question1VideoAssetEs, import.meta.url).href,
-    subtitles: new URL(question1SubsAssetEs, import.meta.url).href,
-  },
-  fr: {
-    video: new URL(question1VideoAssetFr, import.meta.url).href,
-    subtitles: new URL(question1SubsAssetFr, import.meta.url).href,
-  },
-  de: {
-    video: new URL(question1VideoAssetDe, import.meta.url).href,
-    subtitles: new URL(question1SubsAssetDe, import.meta.url).href,
+  cut: {
+    en: {
+      video: new URL(question1VideoCutAssetEn, import.meta.url).href,
+      subtitles: new URL(question1SubsAssetEn, import.meta.url).href,
+    },
+    it: {
+      video: new URL(question1VideoCutAssetIt, import.meta.url).href,
+      subtitles: new URL(question1SubsAssetIt, import.meta.url).href,
+    },
+    es: {
+      video: new URL(question1VideoCutAssetEs, import.meta.url).href,
+      subtitles: new URL(question1SubsAssetEs, import.meta.url).href,
+    },
+    fr: {
+      video: new URL(question1VideoCutAssetFr, import.meta.url).href,
+      subtitles: new URL(question1SubsAssetFr, import.meta.url).href,
+    },
+    de: {
+      video: new URL(question1VideoCutAssetDe, import.meta.url).href,
+      subtitles: new URL(question1SubsAssetDe, import.meta.url).href,
+    },
   },
 };
 const question2Video = new URL(question2VideoAsset, import.meta.url).href;
@@ -97,6 +126,7 @@ const QuestionScreen = ({
   controls,
   language,
   questionId,
+  useCutQ1Video = false,
 }) => {
   const languageCode = language?.code || 'en';
   const getQuestionVideo = () => {
@@ -104,7 +134,8 @@ const QuestionScreen = ({
       return question0Videos[languageCode] || question0Videos.en;
     }
     if (questionId === 'q1') {
-      return question1Videos[languageCode] || question1Videos.en;
+      const variant = useCutQ1Video ? 'cut' : 'regular';
+      return question1Videos[variant][languageCode] || question1Videos[variant].en;
     }
     return { video: question2Video };
   };

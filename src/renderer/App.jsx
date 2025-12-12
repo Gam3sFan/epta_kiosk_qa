@@ -17,8 +17,8 @@ const LogoHeader = () => (
 
 const App = () => {
   const [screen, setScreen] = useState(SCREENS.HERO);
-  const [answerA, setAnswerA] = useState(null);
-  const [answersB, setAnswersB] = useState([]);
+  const [selectedExperience, setSelectedExperience] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
   const [language, setLanguage] = useState(LANGUAGES[0]);
 
   const strings = TEXTS[language.code] || TEXTS.en;
@@ -43,64 +43,59 @@ const App = () => {
     [strings],
   );
 
-  const allowMultipleB = answerA === 'no-limit';
-
-  const selectedExperienceObjects = useMemo(
-    () =>
-      answersB
-        .map((id) => experienceOptions.find((option) => option.id === id))
-        .filter(Boolean),
-    [answersB, experienceOptions],
-  );
+  const experienceIsAuto = selectedExperience === 'highlights' || selectedExperience === 'immersive';
 
   const resultKey = useMemo(() => {
-    if (!answersB.length) return null;
-    if (allowMultipleB && answersB.length > 1) return 'grandTour';
-
-    const last = answersB[answersB.length - 1];
-    return experienceOptions.find((option) => option.id === last)?.resultKey || null;
-  }, [allowMultipleB, answersB, experienceOptions]);
+    if (!selectedExperience) return null;
+    return experienceOptions.find((option) => option.id === selectedExperience)?.resultKey || null;
+  }, [experienceOptions, selectedExperience]);
 
   const activeResult = resultKey ? strings.results[resultKey] : null;
 
   const resetFlow = () => {
-    setAnswerA(null);
-    setAnswersB([]);
+    setSelectedExperience(null);
+    setSelectedTime(null);
     setScreen(SCREENS.HERO);
   };
 
   const handleStart = () => {
-    setAnswerA(null);
-    setAnswersB([]);
+    setSelectedExperience(null);
+    setSelectedTime(null);
     setScreen(SCREENS.QUESTION_A);
   };
 
-  const handleSelectAnswerA = (optionId) => {
-    setAnswerA(optionId);
-    setAnswersB([]);
+  const handleSelectExperience = (optionId) => {
+    setSelectedExperience(optionId);
+    setSelectedTime(null);
+    const requiresTime = !(optionId === 'highlights' || optionId === 'immersive');
     setTimeout(() => {
-      setScreen(SCREENS.QUESTION_B);
+      setScreen(requiresTime ? SCREENS.QUESTION_B : SCREENS.RESULT);
     }, 350);
   };
 
-  const handleSelectExperience = (optionId) => {
-    if (!allowMultipleB) {
-      setAnswersB([optionId]);
-      return;
-    }
-
-    setAnswersB((prev) => (prev.includes(optionId) ? prev.filter((id) => id !== optionId) : [...prev, optionId]));
+  const handleSelectTime = (optionId) => {
+    setSelectedTime(optionId);
+    setTimeout(() => {
+      setScreen(SCREENS.RESULT);
+    }, 350);
   };
 
-  const helperQuestionB = allowMultipleB ? strings.helpers.q2Multi : strings.helpers.q2Single;
+  const helperExperience = strings.helpers.q0;
+  const helperTime = strings.helpers.q2Single;
 
   const heroVisible = screen === SCREENS.HERO;
   const questionAVisible = screen === SCREENS.QUESTION_A;
   const questionBVisible = screen === SCREENS.QUESTION_B;
   const resultVisible = screen === SCREENS.RESULT;
   const showLogo = !questionAVisible && !questionBVisible;
+  const requiresTimeQuestion = Boolean(selectedExperience && !experienceIsAuto);
 
   const handleBack = () => {
+    if (resultVisible) {
+      setScreen(requiresTimeQuestion ? SCREENS.QUESTION_B : SCREENS.QUESTION_A);
+      return;
+    }
+
     if (questionBVisible) {
       setScreen(SCREENS.QUESTION_A);
       return;
@@ -111,7 +106,7 @@ const App = () => {
     }
   };
 
-  const backEnabled = questionAVisible || questionBVisible;
+  const backEnabled = questionAVisible || questionBVisible || resultVisible;
 
   return (
     <div className="kiosk-shell">
@@ -124,16 +119,16 @@ const App = () => {
             {questionAVisible && (
               <QuestionScreen
                 step={1}
-                total={3}
-                questionId="q0"
+                total={experienceIsAuto ? 1 : 2}
+                questionId="q1"
                 stepLabel={strings.stepLabel}
                 eyebrow={strings.questions.q0.eyebrow}
                 title={strings.questions.q0.title}
                 subtitle={strings.questions.q0.subtitle}
-                options={timeOptions}
-                selectedOptions={answerA ? [answerA] : []}
-                onSelect={handleSelectAnswerA}
-                helper={strings.helpers.q0}
+                options={experienceOptions}
+                selectedOptions={selectedExperience ? [selectedExperience] : []}
+                onSelect={handleSelectExperience}
+                helper={helperExperience}
                 language={language}
               />
             )}
@@ -141,16 +136,16 @@ const App = () => {
             {questionBVisible && (
               <QuestionScreen
                 step={2}
-                total={3}
-                questionId="q1"
+                total={2}
+                questionId="q0"
                 stepLabel={strings.stepLabel}
                 eyebrow={strings.questions.q2.eyebrow}
                 title={strings.questions.q2.title}
-                subtitle={allowMultipleB ? strings.questions.q2.subtitleMulti : strings.questions.q2.subtitleSingle}
-                options={experienceOptions}
-                selectedOptions={answersB}
-                onSelect={handleSelectExperience}
-                helper={helperQuestionB}
+                subtitle={strings.questions.q2.subtitleSingle}
+                options={timeOptions}
+                selectedOptions={selectedTime ? [selectedTime] : []}
+                onSelect={handleSelectTime}
+                helper={helperTime}
                 language={language}
               />
             )}
@@ -158,11 +153,8 @@ const App = () => {
             {resultVisible && (
               <ResultScreen
                 result={activeResult}
-                selectedExperiences={selectedExperienceObjects}
-                onRestart={resetFlow}
                 copy={strings.result}
                 stepLabel={strings.stepLabel}
-                ctaLabel={strings.buttons.restart}
               />
             )}
           </div>
@@ -172,18 +164,7 @@ const App = () => {
             languageOptions={LANGUAGES}
             onBack={backEnabled ? handleBack : null}
             backAriaLabel={strings.buttons.back}
-            centerContent={
-              questionBVisible ? (
-                <button
-                  type="button"
-                  className="primary-cta"
-                  disabled={!activeResult}
-                  onClick={() => setScreen(SCREENS.RESULT)}
-                >
-                  {strings.buttons.showResult}
-                </button>
-              ) : null
-            }
+            centerContent={null}
           />
         </div>
       </div>
