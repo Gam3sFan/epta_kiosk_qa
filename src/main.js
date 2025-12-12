@@ -1,6 +1,13 @@
 const path = require('path');
 const { app, BrowserWindow, ipcMain, screen } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const {
+  appendFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} = require('fs');
 
 const packageJson = require('../package.json');
 
@@ -18,6 +25,7 @@ const OPEN_ON_SECONDARY_VERTICAL_SCREEN = true;
 let mainWindow;
 let autoUpdateConfigured = false;
 let autoUpdateHandlersRegistered = false;
+let analyticsFilePath = null;
 
 const autoUpdateSettings = (packageJson.config && packageJson.config.autoUpdate) || {};
 
@@ -111,6 +119,115 @@ const registerUpdateIpcHandlers = () => {
 
     autoUpdater.quitAndInstall(false, true);
     return true;
+  });
+};
+
+const getAnalyticsPaths = () => {
+  const analyticsDir = path.join(app.getPath('userData'), 'analytics');
+  const filePath = path.join(analyticsDir, 'session_stats.csv');
+  return { analyticsDir, filePath };
+};
+
+const ensureAnalyticsFile = () => {
+  const { analyticsDir, filePath } = getAnalyticsPaths();
+  analyticsFilePath = filePath;
+  if (!existsSync(analyticsDir)) {
+    mkdirSync(analyticsDir, { recursive: true });
+  }
+  if (!existsSync(filePath)) {
+    writeFileSync(filePath, 'sessionId,timestamp,language,experience,time,result,appVersion\n', 'utf8');
+  }
+  return filePath;
+};
+
+const parseAnalyticsRows = () => {
+  const file = ensureAnalyticsFile();
+  const raw = readFileSync(file, 'utf8');
+  const lines = raw.split(/\r?\n/).slice(1).filter((line) => Boolean(line.trim()));
+  return lines
+    .map((line) => {
+      const [sessionId, timestamp, language, experience, time, result, appVersion] = line.split(',');
+      return { sessionId, timestamp, language, experience, time, result, appVersion };
+    })
+    .filter(Boolean);
+};
+
+const aggregateAnalytics = (rows) => {
+  const increment = (obj, key) => {
+    const k = key || 'unknown';
+    obj[k] = (obj[k] || 0) + 1;
+  };
+
+  const summary = {
+    totalSessions: rows.length,
+    byExperience: {},
+    byTime: {},
+    byLanguage: {},
+    byResult: {},
+    lastSessions: rows.slice(-20).reverse(),
+  };
+
+  rows.forEach((row) => {
+    increment(summary.byExperience, row.experience);
+    increment(summary.byTime, row.time);
+    increment(summary.byLanguage, row.language);
+    increment(summary.byResult, row.result);
+  });
+
+  return summary;
+};
+
+const registerAnalyticsIpcHandlers = () => {
+  ipcMain.handle('analytics:recordSession', (_event, payload = {}) => {
+    try {
+      const file = ensureAnalyticsFile();
+      const sanitized = {
+        sessionId: payload.sessionId || `session-${Date.now()}`,
+        timestamp: payload.timestamp || new Date().toISOString(),
+        language: payload.language || 'unknown',
+        experience: payload.experience || 'unknown',
+        time: payload.time || 'n/a',
+        result: payload.resultKey || 'n/a',
+        appVersion: app.getVersion(),
+      };
+      const line = [
+        sanitized.sessionId,
+        sanitized.timestamp,
+        sanitized.language,
+        sanitized.experience,
+        sanitized.time,
+        sanitized.result,
+        sanitized.appVersion,
+      ].join(',');
+      appendFileSync(file, `${line}\n`, 'utf8');
+      return { ok: true, file };
+    } catch (error) {
+      console.error('[analytics] Failed to record session', error);
+      return { ok: false, error: error?.message || 'unknown-error' };
+    }
+  });
+
+  ipcMain.handle('analytics:getStats', () => {
+    try {
+      const rows = parseAnalyticsRows();
+      const summary = aggregateAnalytics(rows);
+      const file = ensureAnalyticsFile();
+      return { ok: true, ...summary, file };
+    } catch (error) {
+      console.error('[analytics] Failed to read stats', error);
+      return { ok: false, error: error?.message || 'unknown-error' };
+    }
+  });
+
+  ipcMain.handle('analytics:reset', () => {
+    try {
+      const file = ensureAnalyticsFile();
+      writeFileSync(file, 'sessionId,timestamp,language,experience,time,result,appVersion\n', 'utf8');
+      return { ok: true, file };
+    } catch (error) {
+      console.error('[analytics] Failed to reset stats', error);
+      return { ok: false, error: error?.message || 'unknown-error' };
+    }
   });
 };
 
@@ -218,6 +335,7 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   registerUpdateIpcHandlers();
+  registerAnalyticsIpcHandlers();
   createWindow();
   initAutoUpdater();
 
