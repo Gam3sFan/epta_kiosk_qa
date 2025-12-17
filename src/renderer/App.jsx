@@ -4,8 +4,11 @@ import QuestionScreen from './components/QuestionScreen';
 import ResultScreen from './components/ResultScreen';
 import { BottomBar } from './components/LanguageControls';
 import StatsPanel from './components/StatsPanel';
+import BrandStoryScreen from './components/BrandStoryScreen';
 import { SCREENS, TIME_OPTIONS_BASE, EXPERIENCE_OPTIONS_BASE, LANGUAGES, TEXTS } from './data/copy';
 import eptaTaglineImage from '../assets/logos.png';
+import payoffButtonImage from '../assets/epta_payoff_btn.svg';
+
 import './style.css';
 
 const DEFAULT_IDLE_MINUTES = 2;
@@ -51,6 +54,7 @@ const App = () => {
   const idleTimerRef = useRef(null);
 
   const strings = TEXTS[language.code] || TEXTS.en;
+  const brandStoryCopy = strings.brandStory || TEXTS.en.brandStory;
 
   const timeOptions = useMemo(
     () =>
@@ -127,10 +131,11 @@ const App = () => {
   const helperTime = strings.helpers.q2Single;
 
   const heroVisible = screen === SCREENS.HERO;
+  const brandStoryVisible = screen === SCREENS.BRAND_STORY;
   const questionAVisible = screen === SCREENS.QUESTION_A;
   const questionBVisible = screen === SCREENS.QUESTION_B;
   const resultVisible = screen === SCREENS.RESULT;
-  const showLogo = !questionAVisible && !questionBVisible;
+  const showLogo = !questionAVisible && !questionBVisible && !brandStoryVisible;
   const requiresTimeQuestion = Boolean(selectedExperience && !experienceIsAuto);
 
   const refreshApp = useCallback(() => {
@@ -151,6 +156,64 @@ const App = () => {
       localStorage.setItem('idleMinutes', String(idleMinutes));
     }
   }, [idleMinutes]);
+
+  useEffect(() => {
+    const preventKeyZoom = (event) => {
+      if (!event.ctrlKey && !event.metaKey) return;
+      const blockedKeys = ['=', '+', '-', '_', '0'];
+      if (blockedKeys.includes(event.key)) {
+        event.preventDefault();
+      }
+    };
+
+    const preventWheelZoom = (event) => {
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+      }
+    };
+
+    const preventGestureZoom = (event) => {
+      if (event.touches?.length > 1) {
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', preventKeyZoom);
+    window.addEventListener('wheel', preventWheelZoom, { passive: false });
+    window.addEventListener('touchmove', preventGestureZoom, { passive: false });
+    window.addEventListener('gesturestart', preventGestureZoom);
+    window.addEventListener('gesturechange', preventGestureZoom);
+    window.addEventListener('gestureend', preventGestureZoom);
+
+    return () => {
+      window.removeEventListener('keydown', preventKeyZoom);
+      window.removeEventListener('wheel', preventWheelZoom);
+      window.removeEventListener('touchmove', preventGestureZoom);
+      window.removeEventListener('gesturestart', preventGestureZoom);
+      window.removeEventListener('gesturechange', preventGestureZoom);
+      window.removeEventListener('gestureend', preventGestureZoom);
+    };
+  }, []);
+
+  useEffect(() => {
+    const preventDrag = (event) => {
+      event.preventDefault();
+    };
+
+    const preventDrop = (event) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener('dragstart', preventDrag);
+    window.addEventListener('drop', preventDrop);
+    window.addEventListener('dragover', preventDrop);
+
+    return () => {
+      window.removeEventListener('dragstart', preventDrag);
+      window.removeEventListener('drop', preventDrop);
+      window.removeEventListener('dragover', preventDrop);
+    };
+  }, []);
 
   const resetIdleTimer = useCallback(
     (customMinutes) => {
@@ -178,6 +241,11 @@ const App = () => {
   }, [resetIdleTimer]);
 
   const handleBack = () => {
+    if (brandStoryVisible) {
+      setScreen(SCREENS.HERO);
+      return;
+    }
+
     if (resultVisible) {
       refreshApp();
       return;
@@ -193,7 +261,7 @@ const App = () => {
     }
   };
 
-  const backEnabled = questionAVisible || questionBVisible || resultVisible;
+  const backEnabled = brandStoryVisible || questionAVisible || questionBVisible || resultVisible;
 
   useEffect(() => {
     resetIdleTimer();
@@ -274,12 +342,16 @@ const App = () => {
   }, []);
 
   return (
-    <div className="kiosk-shell">
+    <div className={`kiosk-shell ${brandStoryVisible ? 'kiosk-shell--brand' : ''}`}>
       <div className="device">
         <div className="panel">
           {showLogo && <LogoHeader onSecret={() => setStatsVisible(true)} />}
           <div className={`panel-content screen-${screen}`}>
             {heroVisible && <HeroScreen copy={strings.hero} onStart={handleStart} ctaLabel={strings.buttons.start} />}
+
+            {brandStoryVisible && (
+              <BrandStoryScreen title={brandStoryCopy?.title} description={brandStoryCopy?.description} />
+            )}
 
             {questionAVisible && (
               <QuestionScreen
@@ -329,7 +401,22 @@ const App = () => {
             languageOptions={LANGUAGES}
             onBack={backEnabled ? handleBack : null}
             backAriaLabel={strings.buttons.back}
-            centerContent={null}
+            backLabel={strings.buttons.back}
+            centerContent={
+              heroVisible ? (
+                <button
+                  type="button"
+                  className="bottom-bar__brand"
+                  onClick={() => setScreen(SCREENS.BRAND_STORY)}
+                >
+                          <img
+                    src={payoffButtonImage}
+                    alt={brandStoryCopy?.ctaLabel || 'Brand story'}
+                    className="bottom-bar__brand-image"
+                  />
+                </button>
+              ) : null
+            }
           />
           {statsVisible && (
             <StatsPanel

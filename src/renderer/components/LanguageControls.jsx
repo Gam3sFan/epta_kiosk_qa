@@ -57,12 +57,14 @@ export const BottomBar = ({
   languageOptions = [],
   onBack,
   backAriaLabel = 'Back',
+  backLabel = 'Back',
   centerContent,
 }) => (
   <div className="bottom-bar">
     {onBack && (
       <button type="button" className="ghost-button bottom-bar__back" onClick={onBack} aria-label={backAriaLabel}>
         <img src={backIcon} alt="" aria-hidden="true" />
+        <span>{backLabel}</span>
       </button>
     )}
     <div className="bottom-bar__center">{centerContent}</div>

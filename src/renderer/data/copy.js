@@ -6,6 +6,7 @@ import flagDe from '../../assets/flags/de.svg';
 
 export const SCREENS = {
   HERO: 'hero',
+  BRAND_STORY: 'brand-story',
   QUESTION_A: 'question-a',
   QUESTION_B: 'question-b',
   RESULT: 'result',
@@ -43,6 +44,13 @@ export const TEXTS = {
       subtitle:
         'A guided kiosk inspired by the Epta experience. Tap start and answer two quick questions to craft your visit.',
     },
+    brandStory: {
+      ctaLabel: 'Good never stops',
+      title: 'Good never stops',
+      description:
+        "'Good never stops' represents our evolution: we don't just offer advanced products, we are constantly committed to designing and implementing integrated, reliable solutions that meet customer needs and improve the shopping experience. We embark on this journey together with our customers, offering customised solutions, interpreting global trends and innovating in a conscious manner, with a focus on sustainability. We look to the future by focusing on servitisation, developing services that support our customers' businesses and strengthen the partnership between manufacturer and customer",
+      closeLabel: 'Close',
+    },
     stepLabel: 'Step',
     questions: {
       q0: {
@@ -70,8 +78,10 @@ export const TEXTS = {
     },
     result: {
       eyebrow: 'Your tailored route',
-      title: 'Ready to explore',
-      subtitle: 'Show this screen to an ambassador to begin the suggested path.',
+      title: 'Your personalized map!',
+      subtitle: 'Scan or print your map.',
+      scanLabel: 'Scan here',
+      printLabel: 'Print here',
       emptyTitle: 'Pick an experience first',
       emptyBody: 'Return to the previous step and let us know which journey you want to focus on.',
     },
@@ -129,12 +139,19 @@ export const TEXTS = {
       subtitle:
         "Un kiosk guidato ispirato all'esperienza Epta. Premi Start e rispondi a due domande veloci per progettare la tua visita.",
     },
+    brandStory: {
+      ctaLabel: 'Good never stops',
+      title: 'Good never stops',
+      description:
+        "'Good never stops' represents our evolution: we don't just offer advanced products, we are constantly committed to designing and implementing integrated, reliable solutions that meet customer needs and improve the shopping experience. We embark on this journey together with our customers, offering customised solutions, interpreting global trends and innovating in a conscious manner, with a focus on sustainability. We look to the future by focusing on servitisation, developing services that support our customers' businesses and strengthen the partnership between manufacturer and customer",
+      closeLabel: 'Chiudi',
+    },
     stepLabel: 'Passo',
     questions: {
       q0: {
         eyebrow: 'Domanda 01',
         title: 'Con quale tipo di esperienza vorresti iniziare?',
-        subtitle: 'Tocca una sola opzione.',
+        subtitle: 'Seleziona un\'opzione.',
       },
       q2: {
         eyebrow: 'Domanda 02',
@@ -149,15 +166,17 @@ export const TEXTS = {
       q2Multi: 'Indica il tempo che hai a disposizione.',
     },
     buttons: {
-      start: 'Start',
+      start: 'Attraversa il portale',
       back: 'Indietro',
       showResult: 'Mostra risultato',
       restart: 'Ricomincia il percorso',
     },
     result: {
       eyebrow: 'Il tuo itinerario su misura',
-      title: 'Pronto a esplorare',
-      subtitle: 'Mostra questa schermata a un ambassador per iniziare il percorso consigliato.',
+      title: 'La tua mappa personalizzata!',
+      subtitle: 'Scansiona o stampa la tua mappa',
+      scanLabel: 'Scansiona qui',
+      printLabel: 'Stampa qui',
       emptyTitle: "Seleziona prima un'esperienza",
       emptyBody: 'Torna al passo precedente e raccontaci quale percorso vuoi prioritizzare.',
     },
@@ -215,12 +234,19 @@ export const TEXTS = {
       subtitle:
         'Un quiosco guiado inspirado en la experiencia Epta. Pulsa iniciar y responde dos preguntas rápidas para definir tu visita.',
     },
+    brandStory: {
+      ctaLabel: 'Good never stops',
+      title: 'Good never stops',
+      description:
+        "'Good never stops' represents our evolution: we don't just offer advanced products, we are constantly committed to designing and implementing integrated, reliable solutions that meet customer needs and improve the shopping experience. We embark on this journey together with our customers, offering customised solutions, interpreting global trends and innovating in a conscious manner, with a focus on sustainability. We look to the future by focusing on servitisation, developing services that support our customers' businesses and strengthen the partnership between manufacturer and customer",
+      closeLabel: 'Cerrar',
+    },
     stepLabel: 'Paso',
     questions: {
       q0: {
         eyebrow: 'Pregunta 01',
         title: '¿Con qué tipo de experiencia te gustaría empezar?',
-        subtitle: 'Toca una sola opción.',
+        subtitle: 'Toca una opción.',
       },
       q2: {
         eyebrow: 'Pregunta 02',
@@ -235,15 +261,17 @@ export const TEXTS = {
       q2Multi: 'Indica el tiempo que tienes disponible.',
     },
     buttons: {
-      start: 'Iniciar',
+      start: 'Cruza la puerta',
       back: 'Atrás',
       showResult: 'Mostrar resultado',
       restart: 'Reiniciar flujo',
     },
     result: {
       eyebrow: 'Tu ruta a medida',
-      title: 'Listo para explorar',
-      subtitle: 'Muestra esta pantalla a un embajador para iniciar el recorrido sugerido.',
+      title: '¡Tu mapa personalizado!',
+      subtitle: 'Escanea o imprime tu mapa',
+      scanLabel: 'Escanee aquí',
+      printLabel: 'Imprime aquí',
       emptyTitle: 'Elige antes una experiencia',
       emptyBody: 'Regresa al paso anterior y cuéntanos qué recorrido deseas priorizar.',
     },
@@ -301,12 +329,19 @@ export const TEXTS = {
       subtitle:
         "Un kiosque guidé inspiré par l'expérience Epta. Appuyez sur Start et répondez à deux questions rapides pour préparer votre visite.",
     },
+    brandStory: {
+      ctaLabel: 'Good never stops',
+      title: 'Good never stops',
+      description:
+        "'Good never stops' represents our evolution: we don't just offer advanced products, we are constantly committed to designing and implementing integrated, reliable solutions that meet customer needs and improve the shopping experience. We embark on this journey together with our customers, offering customised solutions, interpreting global trends and innovating in a conscious manner, with a focus on sustainability. We look to the future by focusing on servitisation, developing services that support our customers' businesses and strengthen the partnership between manufacturer and customer",
+      closeLabel: 'Fermer',
+    },
     stepLabel: 'Étape',
     questions: {
       q0: {
         eyebrow: 'Question 01',
         title: "Par quel type d'expérience souhaitez-vous commencer ?",
-        subtitle: 'Touchez une seule option.',
+        subtitle: 'Appuyez sur une option.',
       },
       q2: {
         eyebrow: 'Question 02',
@@ -321,15 +356,17 @@ export const TEXTS = {
       q2Multi: 'Indiquez le temps dont vous disposez.',
     },
     buttons: {
-      start: 'Démarrer',
+      start: 'Franchissez la porte',
       back: 'Retour',
       showResult: 'Afficher le résultat',
       restart: 'Recommencer le parcours',
     },
     result: {
       eyebrow: 'Votre parcours personnalisé',
-      title: "Prêt pour l'exploration",
-      subtitle: 'Montrez cet écran à un ambassadeur pour démarrer le parcours suggéré.',
+      title: 'Votre carte personnalisée !',
+      subtitle: 'Scannez ou imprimez votre carte',
+      scanLabel: 'Scannez ici',
+      printLabel: 'Imprimer ici',
       emptyTitle: "Choisissez d'abord une expérience",
       emptyBody: "Retournez à l'étape précédente et dites-nous quel parcours vous voulez privilégier.",
     },
@@ -387,12 +424,19 @@ export const TEXTS = {
       subtitle:
         'Ein geführtes Kiosk inspiriert von der Epta Experience. Tippe auf Start und beantworte zwei kurze Fragen für deinen Rundgang.',
     },
+    brandStory: {
+      ctaLabel: 'Good never stops',
+      title: 'Good never stops',
+      description:
+        "'Good never stops' represents our evolution: we don't just offer advanced products, we are constantly committed to designing and implementing integrated, reliable solutions that meet customer needs and improve the shopping experience. We embark on this journey together with our customers, offering customised solutions, interpreting global trends and innovating in a conscious manner, with a focus on sustainability. We look to the future by focusing on servitisation, developing services that support our customers' businesses and strengthen the partnership between manufacturer and customer",
+      closeLabel: 'Schließen',
+    },
     stepLabel: 'Schritt',
     questions: {
       q0: {
         eyebrow: 'Frage 01',
         title: 'Mit welcher Art von Erlebnis möchten Sie beginnen?',
-        subtitle: 'Tippe genau eine Option an.',
+        subtitle: 'Eine Option antippen.',
       },
       q2: {
         eyebrow: 'Frage 02',
@@ -407,15 +451,17 @@ export const TEXTS = {
       q2Multi: 'Gib an, wie viel Zeit du hast.',
     },
     buttons: {
-      start: 'Start',
+      start: 'Das Tor durchschreiten',
       back: 'Zurück',
       showResult: 'Ergebnis anzeigen',
       restart: 'Flow neu starten',
     },
     result: {
       eyebrow: 'Deine kuratierte Route',
-      title: 'Bereit für die Erkundung',
-      subtitle: 'Zeige diesen Screen einem Ambassador, um mit dem empfohlenen Pfad zu beginnen.',
+      title: 'Dein personalisierter Lageplan!',
+      subtitle: 'Scannen oder drucken Sie Ihre Karte',
+      scanLabel: 'Hier scannen',
+      printLabel: 'Hier drucken',
       emptyTitle: 'Wähle zuerst ein Erlebnis',
       emptyBody: 'Gehe einen Schritt zurück und sag uns, welcher Pfad prioritisiert werden soll.',
     },
