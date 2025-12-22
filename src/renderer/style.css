@@ -367,8 +367,7 @@ content: "";
   width: min(760px, 100%);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 0fr));
-  gap: 6px;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .option-card {
@@ -474,7 +473,7 @@ content: "";
 .question-content {
   width: min(800px, 100%);
   margin: 0 auto;
-  margin-top: 2rem;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;

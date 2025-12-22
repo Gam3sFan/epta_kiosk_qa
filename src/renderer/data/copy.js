@@ -16,15 +16,16 @@ export const TIME_OPTIONS_BASE = [
   { id: '15' },
   { id: '30' },
   { id: '60' },
-  { id: 'no-limit' },
 ];
 
 export const EXPERIENCE_OPTIONS_BASE = [
   { id: 'highlights', resultKey: 'essential' },
   { id: 'retail', resultKey: 'retail' },
   { id: 'tech', resultKey: 'tech' },
-  { id: 'specialty', resultKey: 'specialty' },
   { id: 'convenience', resultKey: 'convenience' },
+  { id: 'specialty', resultKey: 'specialty' },
+  { id: 'fresh' },
+  { id: 'prepacked' },
   { id: 'immersive', resultKey: 'grandTour' },
 ];
 

@@ -4,10 +4,12 @@ import avatarIdleVideoAsset from '../../assets/avatar/IDLE.webm';
 import eptaLogoAsset from '../../assets/epta_logo.svg';
 import question0VideoAssetEn from '../../assets/avatar/q0/Q0_EN.webm';
 import question0VideoAssetIt from '../../assets/avatar/q0/Q0_IT.webm';
+import question0VideoAssetEs from '../../assets/avatar/q0/Q0_ES.webm';
 import question0VideoAssetFr from '../../assets/avatar/q0/Q0_FR.webm';
 import question0VideoAssetDe from '../../assets/avatar/q0/Q0_DE.webm';
 import question0SubsAssetEn from '../../assets/avatar/q0/Q0_EN.srt';
 import question0SubsAssetIt from '../../assets/avatar/q0/Q0_IT.srt';
+import question0SubsAssetEs from '../../assets/avatar/q0/Q0_ES.srt';
 import question0SubsAssetFr from '../../assets/avatar/q0/Q0_FR.srt';
 import question0SubsAssetDe from '../../assets/avatar/q0/Q0_DE.srt';
 import question1VideoAssetEn from '../../assets/avatar/q1/Q1_EN.webm';
@@ -15,23 +17,76 @@ import question1VideoAssetIt from '../../assets/avatar/q1/Q1_IT.webm';
 import question1VideoAssetEs from '../../assets/avatar/q1/Q1_ES.webm';
 import question1VideoAssetFr from '../../assets/avatar/q1/Q1_FR.webm';
 import question1VideoAssetDe from '../../assets/avatar/q1/Q1_DE.webm';
-import question1VideoCutAssetEn from '../../assets/avatar/q1/Q1_EN_CUT.webm';
-import question1VideoCutAssetIt from '../../assets/avatar/q1/Q1_IT_CUT.webm';
-import question1VideoCutAssetEs from '../../assets/avatar/q1/Q1_ES_CUT.webm';
-import question1VideoCutAssetFr from '../../assets/avatar/q1/Q1_FR_CUT.webm';
-import question1VideoCutAssetDe from '../../assets/avatar/q1/Q1_DE_CUT.webm';
 import question1SubsAssetEn from '../../assets/avatar/q1/Q1_EN.srt';
 import question1SubsAssetIt from '../../assets/avatar/q1/Q1_IT.srt';
 import question1SubsAssetEs from '../../assets/avatar/q1/Q1_ES.srt';
 import question1SubsAssetFr from '../../assets/avatar/q1/Q1_FR.srt';
 import question1SubsAssetDe from '../../assets/avatar/q1/Q1_DE.srt';
-import question2VideoAsset from '../../assets/avatar/question2.mp4';
 import replayIconAsset from '../../assets/replay.svg';
 
 import { OPTION_TIMINGS } from '../data/timings';
 
 const avatarIdleVideo = new URL(avatarIdleVideoAsset, import.meta.url).href;
 const eptaLogo = new URL(eptaLogoAsset, import.meta.url).href;
+const parseSrtTime = (value) => {
+  if (!value) return null;
+  const [hours, minutes, secondsAndMs] = value.trim().split(':');
+  if (!secondsAndMs) return null;
+  const [seconds, milliseconds] = secondsAndMs.split(',');
+  const hoursValue = Number(hours);
+  const minutesValue = Number(minutes);
+  const secondsValue = Number(seconds);
+  const millisecondsValue = Number(milliseconds);
+  if (
+    Number.isNaN(hoursValue) ||
+    Number.isNaN(minutesValue) ||
+    Number.isNaN(secondsValue) ||
+    Number.isNaN(millisecondsValue)
+  ) {
+    return null;
+  }
+  return hoursValue * 3600 + minutesValue * 60 + secondsValue + millisecondsValue / 1000;
+};
+
+const parseSrt = (raw) => {
+  if (!raw) return [];
+  const normalized = raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+  if (!normalized) return [];
+  return normalized
+    .split(/\n\n+/)
+    .map((block) => {
+      const lines = block
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean);
+      if (!lines.length) return null;
+      const timeIndex = lines[0].includes('-->') ? 0 : 1;
+      const timeLine = lines[timeIndex];
+      if (!timeLine || !timeLine.includes('-->')) return null;
+      const [startRaw, endRaw] = timeLine.split('-->').map((part) => part.trim());
+      const start = parseSrtTime(startRaw);
+      const end = parseSrtTime(endRaw);
+      if (start === null || end === null) return null;
+      const text = lines.slice(timeIndex + 1).join(' ').trim();
+      if (!text) return null;
+      return { start, end, text };
+    })
+    .filter(Boolean);
+};
+
+const buildSrtData = (raw) => {
+  const cues = parseSrt(raw);
+  if (!cues.length) {
+    return { question: null, optionLabels: [], optionTimings: [] };
+  }
+  const [questionCue, ...optionCues] = cues;
+  return {
+    question: questionCue?.text || null,
+    optionLabels: optionCues.map((cue) => cue.text),
+    optionTimings: optionCues.map((cue) => cue.start),
+  };
+};
+
 const question0Videos = {
   en: {
     video: new URL(question0VideoAssetEn, import.meta.url).href,
@@ -40,6 +95,10 @@ const question0Videos = {
   it: {
     video: new URL(question0VideoAssetIt, import.meta.url).href,
     subtitles: new URL(question0SubsAssetIt, import.meta.url).href,
+  },
+  es: {
+    video: new URL(question0VideoAssetEs, import.meta.url).href,
+    subtitles: new URL(question0SubsAssetEs, import.meta.url).href,
   },
   fr: {
     video: new URL(question0VideoAssetFr, import.meta.url).href,
@@ -51,52 +110,27 @@ const question0Videos = {
   },
 };
 const question1Videos = {
-  regular: {
-    en: {
-      video: new URL(question1VideoAssetEn, import.meta.url).href,
-      subtitles: new URL(question1SubsAssetEn, import.meta.url).href,
-    },
-    it: {
-      video: new URL(question1VideoAssetIt, import.meta.url).href,
-      subtitles: new URL(question1SubsAssetIt, import.meta.url).href,
-    },
-    es: {
-      video: new URL(question1VideoAssetEs, import.meta.url).href,
-      subtitles: new URL(question1SubsAssetEs, import.meta.url).href,
-    },
-    fr: {
-      video: new URL(question1VideoAssetFr, import.meta.url).href,
-      subtitles: new URL(question1SubsAssetFr, import.meta.url).href,
-    },
-    de: {
-      video: new URL(question1VideoAssetDe, import.meta.url).href,
-      subtitles: new URL(question1SubsAssetDe, import.meta.url).href,
-    },
+  en: {
+    video: new URL(question1VideoAssetEn, import.meta.url).href,
+    subtitles: new URL(question1SubsAssetEn, import.meta.url).href,
   },
-  cut: {
-    en: {
-      video: new URL(question1VideoCutAssetEn, import.meta.url).href,
-      subtitles: new URL(question1SubsAssetEn, import.meta.url).href,
-    },
-    it: {
-      video: new URL(question1VideoCutAssetIt, import.meta.url).href,
-      subtitles: new URL(question1SubsAssetIt, import.meta.url).href,
-    },
-    es: {
-      video: new URL(question1VideoCutAssetEs, import.meta.url).href,
-      subtitles: new URL(question1SubsAssetEs, import.meta.url).href,
-    },
-    fr: {
-      video: new URL(question1VideoCutAssetFr, import.meta.url).href,
-      subtitles: new URL(question1SubsAssetFr, import.meta.url).href,
-    },
-    de: {
-      video: new URL(question1VideoCutAssetDe, import.meta.url).href,
-      subtitles: new URL(question1SubsAssetDe, import.meta.url).href,
-    },
+  it: {
+    video: new URL(question1VideoAssetIt, import.meta.url).href,
+    subtitles: new URL(question1SubsAssetIt, import.meta.url).href,
+  },
+  es: {
+    video: new URL(question1VideoAssetEs, import.meta.url).href,
+    subtitles: new URL(question1SubsAssetEs, import.meta.url).href,
+  },
+  fr: {
+    video: new URL(question1VideoAssetFr, import.meta.url).href,
+    subtitles: new URL(question1SubsAssetFr, import.meta.url).href,
+  },
+  de: {
+    video: new URL(question1VideoAssetDe, import.meta.url).href,
+    subtitles: new URL(question1SubsAssetDe, import.meta.url).href,
   },
 };
-const question2Video = new URL(question2VideoAsset, import.meta.url).href;
 const replayIcon = new URL(replayIconAsset, import.meta.url).href;
 
 
@@ -126,7 +160,6 @@ const QuestionScreen = ({
   controls,
   language,
   questionId,
-  useCutQ1Video = false,
 }) => {
   const languageCode = language?.code || 'en';
   const getQuestionVideo = () => {
@@ -134,8 +167,7 @@ const QuestionScreen = ({
       return question0Videos[languageCode] || question0Videos.en;
     }
     if (questionId === 'q1') {
-      const variant = useCutQ1Video ? 'cut' : 'regular';
-      return question1Videos[variant][languageCode] || question1Videos[variant].en;
+      return question1Videos[languageCode] || question1Videos.en;
     }
     return { video: question2Video };
   };
@@ -146,6 +178,17 @@ const QuestionScreen = ({
   const [isQuestionVideoPlaying, setIsQuestionVideoPlaying] = useState(true);
   const [canReplay, setCanReplay] = useState(false);
   const [visibleOptions, setVisibleOptions] = useState(options.length);
+  const [srtData, setSrtData] = useState({ question: null, optionLabels: [], optionTimings: [] });
+  const resolvedTitle = srtData.question || title;
+  const displayOptions = srtData.optionLabels.length
+    ? options.map((option, index) => ({
+        ...option,
+        label: srtData.optionLabels[index] || option.label,
+      }))
+    : options;
+  const resolvedTimings = srtData.optionTimings.length
+    ? srtData.optionTimings
+    : OPTION_TIMINGS[step] || [];
 
   useEffect(() => {
     setVideoKey(`question-${questionId || step}-${languageCode}-${Date.now()}`);
@@ -153,6 +196,27 @@ const QuestionScreen = ({
     setIsQuestionVideoPlaying(true);
     setVisibleOptions(0);
   }, [languageCode, questionId, step]);
+
+  useEffect(() => {
+    let isActive = true;
+    if (!questionVideo.subtitles) {
+      setSrtData({ question: null, optionLabels: [], optionTimings: [] });
+      return undefined;
+    }
+    fetch(questionVideo.subtitles)
+      .then((response) => (response.ok ? response.text() : Promise.reject(new Error('srt-fetch-failed'))))
+      .then((raw) => {
+        if (!isActive) return;
+        setSrtData(buildSrtData(raw));
+      })
+      .catch(() => {
+        if (!isActive) return;
+        setSrtData({ question: null, optionLabels: [], optionTimings: [] });
+      });
+    return () => {
+      isActive = false;
+    };
+  }, [questionVideo.subtitles]);
 
   useEffect(() => {
     const videoEl = questionVideoRef.current;
@@ -172,7 +236,7 @@ const QuestionScreen = ({
   }, [videoKey]);
 
   useEffect(() => {
-    const timings = OPTION_TIMINGS[step];
+    const timings = resolvedTimings;
     if (!timings || !timings.length) {
       setVisibleOptions(options.length);
       return undefined;
@@ -181,7 +245,7 @@ const QuestionScreen = ({
     setVisibleOptions(0);
     const timers = [];
 
-    timings.forEach((time, idx) => {
+    timings.slice(0, options.length).forEach((time, idx) => {
       timers.push(
         setTimeout(() => {
           setVisibleOptions(idx + 1);
@@ -199,7 +263,7 @@ const QuestionScreen = ({
     }
 
     return () => timers.forEach(clearTimeout);
-  }, [options.length, step, videoKey]);
+  }, [options.length, resolvedTimings, step, videoKey]);
 
   useEffect(() => {
     const idleEl = idleVideoRef.current;
@@ -258,7 +322,7 @@ const QuestionScreen = ({
           total={total}
           stepLabel={stepLabel}
           eyebrow={eyebrow}
-          title={title}
+          title={resolvedTitle}
           subtitle={subtitle}
         />
       </div>
@@ -320,7 +384,7 @@ const QuestionScreen = ({
 
       <div className="hero-center question-content">
         <div className="option-stack">
-          {options.map((option, index) => (
+          {displayOptions.map((option, index) => (
             <OptionCard
               key={option.id}
               option={option}

@@ -1,20 +1,36 @@
 1
-00:00:00,200 --> 00:00:02,102
-Quanto tempo hai a disposizione?
+00:00:00,500 --> 00:00:03,478
+Quale tipo di esperienza di vendita ti incuriosisce di più?
 
 2
-00:00:02,802 --> 00:00:03,403
-Solo 15 minuti
+00:00:03,978 --> 00:00:04,693
+Da non perdere
 
 3
-00:00:03,903 --> 00:00:05,154
-Intorno alla mezz'ora <break
+00:00:05,193 --> 00:00:06,920
+Soluzioni integrate per il Retail
 
 4
-00:00:05,154 --> 00:00:06,556
-Circa 1 ora
+00:00:07,420 --> 00:00:09,624
+Tecnologie e sistemi per la refrigerazione
 
 5
-00:00:06,556 --> 00:00:07,758
-Non ho fretta
+00:00:10,124 --> 00:00:13,543
+Soluzioni per Convenience e gli acquisti di impulso
+
+6
+00:00:13,543 --> 00:00:15,092
+Punti vendita specializzati
+
+7
+00:00:15,092 --> 00:00:18,010
+Esperienze gastronomiche fresche
+
+8
+00:00:18,010 --> 00:00:21,048
+Soluzioni per prodotti confezionati
+
+9
+00:00:21,048 --> 00:00:22,835
+Voglio vedere tutto
 

@@ -1,0 +1,36 @@
+1
+00:00:00,500 --> 00:00:04,371
+¿Qué tipo de experiencia en tienda te despierta más curiosidad hoy en día?
+
+2
+00:00:04,871 --> 00:00:06,932
+Lo más destacado que no te puedes perder
+
+3
+00:00:07,432 --> 00:00:10,117
+Soluciones integradas para el comercio minorista
+
+4
+00:00:10,617 --> 00:00:12,365
+Tecnología y mecánica minorista
+
+5
+00:00:12,865 --> 00:00:14,988
+Formatos prácticos y para llevar
+
+6
+00:00:14,988 --> 00:00:17,985
+Tiendas premium y especializadas
+
+7
+00:00:17,985 --> 00:00:21,544
+Experiencias gastronómicas con alimentos frescos
+
+8
+00:00:22,044 --> 00:00:24,167
+Soluciones alimentarias preenvasadas
+
+9
+00:00:24,667 --> 00:00:25,604
+Quiero verlo todo
+

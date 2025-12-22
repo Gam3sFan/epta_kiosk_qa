@@ -1,20 +1,36 @@
 1
-00:00:00,200 --> 00:00:01,720
-How much time do you have?
+00:00:00,500 --> 00:00:03,758
+What kind of retail experience are you most curious about today? 
 
 2
-00:00:02,420 --> 00:00:03,051
-Only 15 minutes
+00:00:04,258 --> 00:00:05,344
+Must-see highlights 
 
 3
-00:00:03,551 --> 00:00:04,571
-Around 30 minutes
+00:00:05,844 --> 00:00:07,714
+Integrated retail solutions
 
 4
-00:00:04,571 --> 00:00:06,029
-Around 1 hour <break
+00:00:07,714 --> 00:00:10,067
+Retail technology & mechanics
 
 5
-00:00:06,029 --> 00:00:07,340
-No time pressure
+00:00:10,567 --> 00:00:12,377
+Convenience & grab-and-go formats
+
+6
+00:00:12,877 --> 00:00:14,566
+Premium & specialty shops
+
+7
+00:00:14,566 --> 00:00:16,557
+Fresh food experiences
+
+8
+00:00:17,057 --> 00:00:18,806
+Pre-packed food solutions
+
+9
+00:00:18,806 --> 00:00:20,797
+I want to see everything
 

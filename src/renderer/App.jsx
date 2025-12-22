@@ -60,8 +60,8 @@ const App = () => {
     () =>
       TIME_OPTIONS_BASE.map((option) => ({
         ...option,
-        label: strings.timeOptions[option.id].label,
-        description: strings.timeOptions[option.id].description,
+        label: strings.timeOptions?.[option.id]?.label || option.label || option.id,
+        description: strings.timeOptions?.[option.id]?.description || option.description,
       })),
     [strings],
   );
@@ -70,8 +70,8 @@ const App = () => {
     () =>
       EXPERIENCE_OPTIONS_BASE.map((option) => ({
         ...option,
-        label: strings.experienceOptions[option.id].label,
-        description: strings.experienceOptions[option.id].description,
+        label: strings.experienceOptions?.[option.id]?.label || option.label || option.id,
+        description: strings.experienceOptions?.[option.id]?.description || option.description,
       })),
     [strings],
   );
@@ -357,7 +357,7 @@ const App = () => {
               <QuestionScreen
                 step={1}
                 total={experienceIsAuto ? 1 : 2}
-                questionId="q1"
+                questionId="q0"
                 stepLabel={strings.stepLabel}
                 eyebrow={strings.questions.q0.eyebrow}
                 title={strings.questions.q0.title}
@@ -374,7 +374,7 @@ const App = () => {
               <QuestionScreen
                 step={2}
                 total={2}
-                questionId="q0"
+                questionId="q1"
                 stepLabel={strings.stepLabel}
                 eyebrow={strings.questions.q2.eyebrow}
                 title={strings.questions.q2.title}

@@ -1,28 +1,16 @@
 1
-00:00:00,000 --> 00:00:02,441
-Mit welcher Art von Erlebnis
-möchten Sie beginnen?
+00:00:00,500 --> 00:00:03,913
+Wie viel Zeit möchten Sie damit verbringen, unseren Stand  zu erkunden?
 
 2
-00:00:03,441 --> 00:00:04,804
-Unverzichtbare Highlights
+00:00:04,413 --> 00:00:06,688
+Nur das Wesentliche – schnell und wirkungsvoll
 
 3
-00:00:05,304 --> 00:00:07,461
-Überblick der Lösungen für den Einzelhandel
+00:00:07,188 --> 00:00:10,203
+Ein ausgewogener Besuch – zentrale Themen und Lösungen
 
 4
-00:00:07,961 --> 00:00:09,721
-Detaillierte technische Einblicke
+00:00:10,203 --> 00:00:13,274
+Detaillierte Informationen zu unserem Angebot
 
-5
-00:00:10,221 --> 00:00:12,038
-Erlebnisse für Fachgeschäfte
-
-6
-00:00:12,038 --> 00:00:15,330
-Innovationen im Convenience-Store-Bereich
-
-7
-00:00:15,330 --> 00:00:17,658
-Eine umfassende, 360-Grad-Tour

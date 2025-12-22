@@ -1,19 +1,36 @@
 1
-00:00:00,200 --> 00:00:01,798
-Combien de temps avez-vous ?
+00:00:00,500 --> 00:00:03,777
+Quel type d'expérience Retail vous intéresse le plus aujourd'hui?
 
 2
-00:00:02,498 --> 00:00:03,321
-Seulement 15 minutes
+00:00:04,277 --> 00:00:05,657
+Les incontournables
 
 3
-00:00:03,821 --> 00:00:04,827
-Environ 30 minutes
+00:00:05,657 --> 00:00:08,473
+Solutions intégrées pour le Retail
 
 4
-00:00:04,827 --> 00:00:06,017
-Environ 1 heure
+00:00:08,473 --> 00:00:11,808
+Technologies et leviers d’efficacité pour le Retail
 
 5
-00:00:06,517 --> 00:00:07,523
-Pas de contrainte de temps
+00:00:12,308 --> 00:00:14,090
+Proximité Snacking Vente à emporter
+
+6
+00:00:14,590 --> 00:00:16,372
+Commerce spécialisé premium
+
+7
+00:00:16,372 --> 00:00:19,304
+Expériences culinaires fraîches 
+
+8
+00:00:19,304 --> 00:00:19,879
+Frais LS et Surgelés LS
+
+9
+00:00:20,379 --> 00:00:21,241
+Tout m'intéresse
+
