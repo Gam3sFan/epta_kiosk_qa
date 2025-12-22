@@ -26,6 +26,21 @@ Avvia esbuild in watch e lancia Electron con hot reload.
 npm run build:renderer
 ```
 
+### Build web (statico per hosting)
+```bash
+npm run build:web
+```
+Genera `dist/index.html` insieme a `dist/renderer.js` e `dist/renderer.css`.
+
+### Hosting su Azure (solo React)
+Opzione A: **Azure Static Web Apps**
+- Build command: `npm run build:web`
+- Output location: `dist`
+
+Opzione B: **Azure Storage Static Website**
+- Abilita “Static website” nello storage account
+- Carica la cartella `dist` nel container `$web`
+
 ## 🧭 Struttura essenziale
 - `src/renderer/App.jsx` – entry React e orchestrazione schermate.
 - `src/renderer/components/` – Hero, Question, Result, BottomBar.
@@ -40,7 +55,7 @@ npm run build:renderer
 
 ## 🧪 Consigli per il test
 - Verifica autoplay del video idle in Hero (muted/inline abilitati).
-- Prova la selezione multipla nella Q2 quando scegli “no-limit”.
+- Verifica il timing di comparsa delle opzioni sincronizzate ai video.
 - Cambia lingua dal BottomBar e controlla testi e formattazioni.
 
 ## 📦 Packaging
