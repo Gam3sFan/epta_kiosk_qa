@@ -327,7 +327,7 @@ content: "";
   gap: 20px;
 }
 
-.step-header h2 {
+.step-header h3 {
   color: #353947;
   margin: 0;
 }
@@ -349,16 +349,16 @@ content: "";
 }
 
 .step-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: #cbd2df;
   box-shadow: inset 0 0 0 1px rgba(91, 100, 125, 0.16);
 }
 
 .step-dot.is-active {
-  width: 14px;
-  height: 14px;
+  width: 10px;
+  height: 10px;
   background: #A2CFF0;
   box-shadow: 0 0 0 4px rgba(93, 164, 255, 0.15);
 }
@@ -366,7 +366,7 @@ content: "";
 .option-stack {
   width: min(760px, 100%);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 0fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 0fr));
   justify-content: space-between;
 }
 
@@ -386,8 +386,8 @@ content: "";
     color: #343a49;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     font-weight: 600;
-    font-size: 0.70rem;
-    height: 40px;
+    font-size: 0.7rem;
+    height: 38px;
 }
 
 .option-card:disabled {
@@ -437,9 +437,9 @@ content: "";
 }
 
 .question-logo {
-  width: 100px;
+  width: 90px;
   max-width: 60vw;
-  margin: 0 auto 14px;
+  margin: 0 auto 10px;
   display: block;
 }
 
@@ -666,6 +666,12 @@ content: "";
   color: #323743;
 }
 
+.result-screen__description {
+  margin: 0;
+  color: #5f6575;
+  font-size: 1rem;
+}
+
 .result-screen__subtitle {
   margin: 0;
   color: #5f6575;
@@ -681,11 +687,16 @@ content: "";
   background: #f9fcff;
   position: relative;
   overflow: hidden;
-  background-image: url(../assets/waves.svg), url(../assets/waves.svg);
-  background-repeat: no-repeat;
-  background-position: 26px calc(100% - 28px), calc(100% - 72px) 24px;
-  background-size: 230px, 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: inset 0 0 0 2px #e4f0fa;
+}
+
+.result-screen__map {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .result-screen__actions {
@@ -749,6 +760,19 @@ content: "";
   width: 100% !important;
   max-width: 100% !important;
   height: auto;
+}
+
+.print-mode .result-screen__header,
+.print-mode .result-screen__actions {
+  display: none !important;
+}
+
+.print-mode .result-screen__canvas {
+  border: none;
+  box-shadow: none;
+  background: #ffffff;
+  background-image: none;
+  padding: 0;
 }
 
 .qr-modal-overlay {
@@ -842,8 +866,11 @@ content: "";
   letter-spacing: 0.02em;
   text-transform: uppercase;
   border-radius: 999px;
+  font-size: 0.6rem;
 }
-
+.bottom-bar__back img {
+  height: 12px;
+}
 .bottom-bar__center {
   flex: 1;
   display: flex;

@@ -1,16 +1,36 @@
 import React, { useState } from 'react';
 import qrIconAsset from '../../assets/qrcode.svg';
 import printerIconAsset from '../../assets/printer.fill.svg';
+import resultMap1 from '../../assets/results/id1.png';
+import resultMap2 from '../../assets/results/id2.png';
+import resultMap3 from '../../assets/results/id3.png';
+import resultMap4 from '../../assets/results/id4.png';
+import resultMap5 from '../../assets/results/id5.png';
+import resultMap6 from '../../assets/results/id6.png';
+import resultMap7 from '../../assets/results/id7.png';
+import resultMap8 from '../../assets/results/id8.png';
 
 const qrIcon = new URL(qrIconAsset, import.meta.url).href;
 const printerIcon = new URL(printerIconAsset, import.meta.url).href;
+const resultMaps = {
+  1: new URL(resultMap1, import.meta.url).href,
+  2: new URL(resultMap2, import.meta.url).href,
+  3: new URL(resultMap3, import.meta.url).href,
+  4: new URL(resultMap4, import.meta.url).href,
+  5: new URL(resultMap5, import.meta.url).href,
+  6: new URL(resultMap6, import.meta.url).href,
+  7: new URL(resultMap7, import.meta.url).href,
+  8: new URL(resultMap8, import.meta.url).href,
+};
 
-const ResultScreen = ({ result, copy, stepLabel }) => {
+const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
   const headline = result?.title || copy?.title || 'Your personalized map!';
+  const description = result?.description || '';
   const subtitle = copy?.subtitle || 'Scan or print your map.';
   const scanLabel = copy?.scanLabel || 'Show QR';
   const printLabel = copy?.printLabel || 'Print here';
   const [showQrModal, setShowQrModal] = useState(false);
+  const mapSrc = resultId ? resultMaps[Number(resultId)] : null;
 
   const handlePrint = () => {
     const target = document.querySelector('.result-screen');
@@ -33,7 +53,13 @@ const ResultScreen = ({ result, copy, stepLabel }) => {
 
   return (
     <section className="result-screen">
-      <div className="result-screen__canvas" aria-hidden="true" />
+      <div className="result-screen__header">
+        <h1>{headline}</h1>
+        {description && <p className="result-screen__description">{description}</p>}
+      </div>
+      <div className="result-screen__canvas">
+        {mapSrc && <img src={mapSrc} alt={headline} className="result-screen__map" />}
+      </div>
 
       <div className="result-screen__actions">
         <button type="button" className="result-action" onClick={() => setShowQrModal(true)}>

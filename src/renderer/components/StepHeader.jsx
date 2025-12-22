@@ -10,7 +10,7 @@ const StepHeader = ({ step, total, stepLabel, eyebrow, title, subtitle }) => {
           <span key={dot} className={`step-dot ${dot === step ? 'is-active' : ''}`} aria-hidden="true" />
         ))}
       </p>
-      <h2>{title}</h2>
+      <h3>{title}</h3>
       {subtitle && <p className="question-subtitle">{subtitle}</p>}
     </header>
   );

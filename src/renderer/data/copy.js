@@ -13,9 +13,9 @@ export const SCREENS = {
 };
 
 export const TIME_OPTIONS_BASE = [
-  { id: '15' },
-  { id: '30' },
-  { id: '60' },
+  { id: 'essentials' },
+  { id: 'balanced' },
+  { id: 'deep' },
 ];
 
 export const EXPERIENCE_OPTIONS_BASE = [
@@ -56,12 +56,12 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Question 01',
-        title: 'What kind of experience would you like to start with?',
+        title: 'What kind of retail experience are you most curious about today?',
         subtitle: 'Tap one option.',
       },
       q2: {
         eyebrow: 'Question 02',
-        title: 'How much time do you have?',
+        title: 'How much time do you want to spend exploring us?',
         subtitleSingle: 'Tap an option.',
         subtitleMulti: 'Tap an option.',
       },
@@ -87,49 +87,52 @@ export const TEXTS = {
       emptyBody: 'Return to the previous step and let us know which journey you want to focus on.',
     },
     timeOptions: {
-      15: { label: 'Only 15 minutes' },
-      30: { label: 'Around 30 minutes' },
-      60: { label: 'Around 1 hour' },
-      'no-limit': { label: 'No time pressure' },
+      essentials: { label: 'Just the essentials - quick and impactful' },
+      balanced: { label: 'A balanced visit - key topics and solutions' },
+      deep: { label: 'Take me deep - full, immersive experience' },
     },
     experienceOptions: {
       highlights: { label: 'Must-see highlights' },
-      retail: { label: 'Retail solutions walkthrough' },
-      tech: { label: 'Technical deep dives' },
-      specialty: { label: 'Specialty shop experiences' },
-      convenience: { label: 'Convenience store innovations' },
-      immersive: { label: 'A full, immersive tour' },
+      retail: { label: 'Integrated retail solutions' },
+      tech: { label: 'Retail technology & mechanics' },
+      convenience: { label: 'Convenience & grab-and-go formats' },
+      specialty: { label: 'Premium & specialty shops' },
+      fresh: { label: 'Fresh food experiences' },
+      prepacked: { label: 'Pre-packed food solutions' },
+      immersive: { label: 'I want to see everything' },
     },
     results: {
-      essential: {
+      1: {
         title: 'The Essential Trail',
-        body: "Your hand-picked map of the top highlights you can't miss.",
-        kicker: 'Highlights first',
+        description: 'Your hand-picked map of the top highlights you can’t miss.',
       },
-      retail: {
+      2: {
         title: 'The Retail Explorer Path',
-        body: 'A guided loop through complete, integrated end-to-end solutions.',
-        kicker: 'Store blueprints',
+        description: 'A guided loop through complete, integrated end-to-end solutions.',
       },
-      tech: {
+      3: {
         title: 'The Tech Insider Route',
-        body: 'Perfect if you want to understand the mechanics behind the world of retail.',
-        kicker: 'For makers & engineers',
+        description: 'Perfect if you want to understand the mechanics behind the world of retail.',
       },
-      convenience: {
+      4: {
         title: 'The Convenience Compass',
-        body: 'A quick, dynamic trail spotlighting innovations for convenience and grab-and-go formats.',
-        kicker: 'Grab & go focus',
+        description: 'A quick, dynamic trail spotlighting innovations for convenience and grab-and-go formats.',
       },
-      specialty: {
+      5: {
         title: 'The Specialty Shop Path',
-        body: 'A curated journey into premium and high-engagement specialty shop experiences.',
-        kicker: 'High-touch stories',
+        description: 'A curated journey into premium and high-engagement specialty shops.',
       },
-      grandTour: {
+      6: {
         title: 'The Grand Tour',
-        body: 'The most immersive and comprehensive experience of the booth (not suggested if you have time limits).',
-        kicker: 'All-in adventure',
+        description: 'The most immersive and comprehensive experience of the booth.',
+      },
+      7: {
+        title: 'The Fresh Market Journey',
+        description: 'A sensory-rich path focused on super-fresh food, foodservice, and fresh retail excellence.',
+      },
+      8: {
+        title: 'The Smart Pack Trail',
+        description: 'A practical route dedicated to pre-packed food, efficiency, scalability, and ready-to-sell solutions',
       },
     },
   },
@@ -151,12 +154,12 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Domanda 01',
-        title: 'Con quale tipo di esperienza vorresti iniziare?',
+        title: 'Quale tipo di esperienza di vendita ti incuriosisce di più?',
         subtitle: 'Seleziona un\'opzione.',
       },
       q2: {
         eyebrow: 'Domanda 02',
-        title: 'Quanto tempo hai a disposizione?',
+        title: 'Quanto tempo vuoi dedicare alla scoperta della nostre soluzioni?',
         subtitleSingle: "Tocca un'opzione.",
         subtitleMulti: "Tocca un'opzione.",
       },
@@ -182,49 +185,54 @@ export const TEXTS = {
       emptyBody: 'Torna al passo precedente e raccontaci quale percorso vuoi prioritizzare.',
     },
     timeOptions: {
-      15: { label: 'Solo 15 minuti' },
-      30: { label: "Intorno alla mezz'ora" },
-      60: { label: 'Circa 1 ora' },
-      'no-limit': { label: 'Non ho fretta' },
+      essentials: { label: "Solo l'essenziale - rapido ed efficace" },
+      balanced: { label: 'Una visita equilibrata: argomenti chiave' },
+      deep: { label: "Mostrami tutto - un'esperienza completa e coinvolgente" },
     },
     experienceOptions: {
-      highlights: { label: 'Assolutamente da vedere' },
-      retail: { label: 'Panoramica delle soluzioni retail' },
-      tech: { label: 'Approfondimenti tecnici' },
-      specialty: { label: 'Esperienze nei negozi specializzati' },
-      convenience: { label: 'Innovazioni nei minimarket' },
-      immersive: { label: 'Un tour completo a 360 gradi' },
+      highlights: { label: 'Da non perdere' },
+      retail: { label: 'Soluzioni integrate per il Retail' },
+      tech: { label: 'Tecnologie e sistemi per la refrigerazione' },
+      convenience: { label: 'Soluzioni per Convenience e gli acquisti di impulso' },
+      specialty: { label: 'Punti vendita specializzati' },
+      fresh: { label: 'Esperienze gastronomiche fresche' },
+      prepacked: { label: 'Soluzioni per prodotti confezionati' },
+      immersive: { label: 'Voglio vedere tutto' },
     },
     results: {
-      essential: {
-        title: 'Il Sentiero Essenziale',
-        body: 'La tua mappa personalizzata con gli highlight da non perdere.',
-        kicker: 'Highlights prioritari',
+      1: {
+        title: 'Il Percorso Essenziale',
+        description: 'La tua mappa personalizzata con le principali attrazioni da non perdere.',
       },
-      retail: {
-        title: 'Il Percorso Retail Explorer',
-        body: 'Un circuito guidato attraverso soluzioni integrate end-to-end.',
-        kicker: 'Blueprint del negozio',
+      2: {
+        title: 'Il Percorso Dei Negozi Al Dettaglio',
+        description: 'Un percorso guidato attraverso soluzioni complete, integrate e end-to-end.',
       },
-      tech: {
-        title: 'La Rotta Tech Insider',
-        body: 'Perfetta per capire la meccanica che muove il mondo del retail.',
-        kicker: 'Per maker e ingegneri',
+      3: {
+        title: 'Il Percorso Degli Esperti In Tecnologia',
+        description: 'Perfetto se vuoi comprendere i meccanismi che regolano il mondo della vendita al dettaglio.',
       },
-      convenience: {
-        title: 'La Bussola Convenience',
-        body: 'Un trail dinamico sulle innovazioni per format grab-and-go.',
-        kicker: 'Focus convenience',
+      4: {
+        title: 'Il Percorso Dei Convenience',
+        description: 'Un percorso rapido e dinamico che mette in luce le innovazioni per la praticità e i formati da asporto.',
       },
-      specialty: {
-        title: 'Il Sentiero Specialty Shop',
-        body: 'Un viaggio curato dentro ambienti premium e ad alto coinvolgimento.',
-        kicker: 'Esperienze high-touch',
+      5: {
+        title: 'Il Percorso Dei Negozi Specializzati',
+        description: 'Un viaggio curato alla scoperta di negozi specializzati di alta qualità e dal forte coinvolgimento.',
       },
-      grandTour: {
-        title: 'Il Grand Tour',
-        body: "L'esperienza più immersiva e completa dello stand (non consigliata se hai limiti di tempo).",
-        kicker: 'Avventura completa',
+      6: {
+        title: 'Il Grande Tour',
+        description: "L'esperienza più coinvolgente e completa dello stand.",
+      },
+      7: {
+        title: 'Il Viaggio dei Fresh Market',
+        description:
+          'Un percorso ricco di sensazioni incentrato su alimenti freschissimi, ristorazione e eccellenza nella vendita al dettaglio di prodotti freschi.',
+      },
+      8: {
+        title: 'Il Percorso Smart Pack',
+        description:
+          "Un percorso pratico dedicato agli alimenti preconfezionati, all'efficienza, alla scalabilità e alle soluzioni pronte per la vendita.",
       },
     },
   },
@@ -246,12 +254,12 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Pregunta 01',
-        title: '¿Con qué tipo de experiencia te gustaría empezar?',
+        title: '¿Qué tipo de experiencia en tienda te despierta más curiosidad hoy en día?',
         subtitle: 'Toca una opción.',
       },
       q2: {
         eyebrow: 'Pregunta 02',
-        title: '¿Cuánto tiempo tienes?',
+        title: '¿Cuánto tiempo quieres dedicar a conocernos?',
         subtitleSingle: 'Toca una opción.',
         subtitleMulti: 'Toca una opción.',
       },
@@ -277,49 +285,54 @@ export const TEXTS = {
       emptyBody: 'Regresa al paso anterior y cuéntanos qué recorrido deseas priorizar.',
     },
     timeOptions: {
-      15: { label: 'Solo 15 minutos' },
-      30: { label: 'Alrededor de 30 minutos' },
-      60: { label: 'Aproximadamente 1 hora' },
-      'no-limit': { label: 'No tengo prisa' },
+      essentials: { label: 'Solo lo esencial: rápido y eficaz.' },
+      balanced: { label: 'Una visita equilibrada: temas clave y soluciones' },
+      deep: { label: 'Llévame a lo más profundo: una experiencia completa y envolvente.' },
     },
     experienceOptions: {
-      highlights: { label: 'Lo más destacado, lo que no te puedes perder' },
-      retail: { label: 'Guía de soluciones para minoristas' },
-      tech: { label: 'Análisis técnicos en profundidad' },
-      specialty: { label: 'Experiencias en tiendas especializadas' },
-      convenience: { label: 'Innovaciones en las tiendas de conveniencia' },
-      immersive: { label: 'Una visita completa y envolvente.' },
+      highlights: { label: 'Lo más destacado que no te puedes perder' },
+      retail: { label: 'Soluciones integradas para el comercio minorista' },
+      tech: { label: 'Tecnología y mecánica minorista' },
+      convenience: { label: 'Formatos prácticos y para llevar' },
+      specialty: { label: 'Tiendas premium y especializadas' },
+      fresh: { label: 'Experiencias gastronómicas con alimentos frescos' },
+      prepacked: { label: 'Soluciones alimentarias preenvasadas' },
+      immersive: { label: 'Quiero verlo todo' },
     },
     results: {
-      essential: {
-        title: 'La Ruta Esencial',
-        body: 'Tu mapa seleccionado con los highlights que no puedes perderte.',
-        kicker: 'Highlights primero',
+      1: {
+        title: 'El sendero esencial',
+        description: 'Tu mapa personalizado con los principales lugares de interés que no te puedes perder.',
       },
-      retail: {
-        title: 'El Camino Retail Explorer',
-        body: 'Un bucle guiado por soluciones completas e integradas.',
-        kicker: 'Planos de la tienda',
+      2: {
+        title: 'La ruta del  retailer explorador',
+        description: 'Un recorrido guiado por soluciones completas e integradas de extremo a extremo.',
       },
-      tech: {
-        title: 'La Ruta Tech Insider',
-        body: 'Perfecta si quieres entender la mecánica detrás del retail.',
-        kicker: 'Para makers e ingenieros',
+      3: {
+        title: 'La ruta del experto en tecnología',
+        description: 'Perfecto si quieres comprender los mecanismos que hay detrás del mundo de la distribución.',
       },
-      convenience: {
-        title: 'La Brújula Convenience',
-        body: 'Un trail dinámico que destaca innovaciones para el grab-and-go.',
-        kicker: 'Enfoque convenience',
+      4: {
+        title: 'La brújula de la comodidad',
+        description: 'Un recorrido rápido y dinámico que destaca las innovaciones en formatos prácticos y para llevar.',
       },
-      specialty: {
-        title: 'La Ruta Specialty Shop',
-        body: 'Un recorrido curado dentro de espacios premium y de alto engagement.',
-        kicker: 'Experiencias high-touch',
+      5: {
+        title: 'La ruta de las tiendas especializadas',
+        description: 'Un recorrido seleccionado por tiendas especializadas de alta gama y gran atractivo.',
       },
-      grandTour: {
-        title: 'El Grand Tour',
-        body: 'La experiencia más inmersiva y completa del stand (no se sugiere si tienes poco tiempo).',
-        kicker: 'Aventura total',
+      6: {
+        title: 'El Gran Tour',
+        description: 'La experiencia más inmersiva y completa del estand.',
+      },
+      7: {
+        title: 'El viaje por el  mercado del fresco',
+        description:
+          'Un recorrido rico en sensaciones centrado en la excelencia de los alimentos súper frescos, los servicios de restauración y la venta minorista de productos frescos.',
+      },
+      8: {
+        title: 'El sendero Smart Pack',
+        description:
+          'Una ruta práctica dedicada a los alimentos preenvasados, la eficiencia, la escalabilidad y las soluciones listas para comer.',
       },
     },
   },
@@ -341,12 +354,12 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Question 01',
-        title: "Par quel type d'expérience souhaitez-vous commencer ?",
+        title: "Quel type d'expérience Retail vous intéresse le plus aujourd'hui?",
         subtitle: 'Appuyez sur une option.',
       },
       q2: {
         eyebrow: 'Question 02',
-        title: 'Combien de temps avez-vous ?',
+        title: 'Combien de temps voulez-vous prendre pour cette découverte ?',
         subtitleSingle: 'Touchez une option.',
         subtitleMulti: 'Touchez une option.',
       },
@@ -372,49 +385,56 @@ export const TEXTS = {
       emptyBody: "Retournez à l'étape précédente et dites-nous quel parcours vous voulez privilégier.",
     },
     timeOptions: {
-      15: { label: 'Seulement 15 minutes' },
-      30: { label: 'Environ 30 minutes' },
-      60: { label: 'Environ 1 heure' },
-      'no-limit': { label: 'Pas de contrainte de temps' },
+      essentials: { label: "L'essentiel seulement - Rapide & Percutant" },
+      balanced: { label: 'Une visite équilibrée - Sujets Clé et solutions' },
+      deep: { label: 'Accompagnez-moi dans une expérience immersive globale' },
     },
     experienceOptions: {
       highlights: { label: 'Les incontournables' },
-      retail: { label: 'Présentation des solutions pour le commerce de détail' },
-      tech: { label: 'Analyses techniques approfondies' },
-      specialty: { label: 'Expériences dans les boutiques spécialisées' },
-      convenience: { label: 'Innovations dans les magasins de proximité' },
-      immersive: { label: 'Une visite complète et immersive' },
+      retail: { label: 'Solutions intégrées pour le Retail' },
+      tech: { label: 'Technologies et leviers d’efficacité pour le Retail' },
+      convenience: { label: 'Proximité Snacking Vente à emporter' },
+      specialty: { label: 'Commerce spécialisé premium' },
+      fresh: { label: 'Expériences culinaires fraîches' },
+      prepacked: { label: 'Frais LS et Surgelés LS' },
+      immersive: { label: "Tout m'intéresse" },
     },
     results: {
-      essential: {
-        title: 'La Route Essentielle',
-        body: 'Votre carte personnalisée des incontournables à ne pas manquer.',
-        kicker: "Essentiels d'abord",
+      1: {
+        title: 'Le sentier essentiel',
+        description: 'Votre carte personnalisée des incontournables à ne pas manquer.',
       },
-      retail: {
-        title: 'Le Parcours Retail Explorer',
-        body: 'Une boucle guidée à travers des solutions complètes et intégrées.',
-        kicker: 'Plans du magasin',
+      2: {
+        title: 'Le parcours Retail Explorer',
+        description: 'Une boucle guidée à travers des solutions complètes, intégrées et de bout en bout.',
       },
-      tech: {
-        title: 'La Route Tech Insider',
-        body: "Idéale pour comprendre la mécanique derrière l'univers du retail.",
-        kicker: 'Pour makers et ingénieurs',
+      3: {
+        title: 'La voie des initiés à la technologie',
+        description:
+          'Parfait si vous souhaitez comprendre les mécanismes qui régissent le monde du commerce de détail.',
       },
-      convenience: {
-        title: 'La Boussole Convenience',
-        body: 'Un circuit rapide mettant en lumière les innovations pour le grab-and-go.',
-        kicker: 'Focus convenience',
+      4: {
+        title: 'La boussole du confort',
+        description:
+          'Un parcours rapide et dynamique mettant en avant les innovations en matière de commodité et de formats à emporter.',
       },
-      specialty: {
-        title: 'Le Chemin Specialty Shop',
-        body: 'Un parcours curaté au cœur des espaces premium et haute implication.',
-        kicker: 'Expériences high-touch',
+      5: {
+        title: 'Le chemin des boutiques spécialisées',
+        description: 'Un voyage organisé dans des boutiques spécialisées haut de gamme et très fréquentées.',
       },
-      grandTour: {
+      6: {
         title: 'Le Grand Tour',
-        body: "L'expérience la plus immersive et complète du stand (déconseillée si vous manquez de temps).",
-        kicker: 'Aventure totale',
+        description: "L'expérience la plus immersive et la plus complète du stand.",
+      },
+      7: {
+        title: 'Le parcours du marché frais',
+        description:
+          "Un parcours riche en sensations, axé sur les aliments ultra-frais, la restauration et l'excellence dans la vente au détail de produits frais.",
+      },
+      8: {
+        title: 'Le sentier Smart Pack',
+        description:
+          "Une solution pratique dédiée aux aliments préemballés, à l'efficacité, à l'évolutivité et aux solutions prêtes à la vente.",
       },
     },
   },
@@ -436,12 +456,12 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Frage 01',
-        title: 'Mit welcher Art von Erlebnis möchten Sie beginnen?',
+        title: 'Welche Art von Einkaufserlebnis interessiert Sie heute am meisten?',
         subtitle: 'Eine Option antippen.',
       },
       q2: {
         eyebrow: 'Frage 02',
-        title: 'Wie viel Zeit hast du zur Verfügung?',
+        title: 'Wie viel Zeit möchten Sie damit verbringen, unseren Stand zu erkunden?',
         subtitleSingle: 'Tippe auf eine Option.',
         subtitleMulti: 'Tippe auf eine Option.',
       },
@@ -467,49 +487,54 @@ export const TEXTS = {
       emptyBody: 'Gehe einen Schritt zurück und sag uns, welcher Pfad prioritisiert werden soll.',
     },
     timeOptions: {
-      15: { label: 'Nur 15 Minuten' },
-      30: { label: 'Ungefähr 30 Minuten' },
-      60: { label: 'Ungefähr 1 Stunde' },
-      'no-limit': { label: 'Ich habe keinen Zeitdruck' },
+      essentials: { label: 'Nur das Wesentliche – schnell und wirkungsvoll' },
+      balanced: { label: 'Ein ausgewogener Besuch – zentrale Themen und Lösungen' },
+      deep: { label: 'Detaillierte Informationen zu unserem Angebot' },
     },
     experienceOptions: {
-      highlights: { label: 'Unverzichtbare Highlights' },
-      retail: { label: 'Überblick der Lösungen für den Einzelhandel' },
-      tech: { label: 'Detaillierte technische Einblicke' },
-      specialty: { label: 'Erlebnisse für Fachgeschäfte' },
-      convenience: { label: 'Innovationen im Convenience-Store-Bereich' },
-      immersive: { label: 'Eine umfassende, 360-Grad-Tour' },
+      highlights: { label: 'Sehenswerte Highlights' },
+      retail: { label: 'Integrierte Einzelhandelslösungen' },
+      tech: { label: 'Einzelhandelstechnologie und -mechanik' },
+      convenience: { label: 'Convenience- und Grab-and-Go-Format' },
+      specialty: { label: 'Premium- und Spezialitätengeschäfte' },
+      fresh: { label: 'Erlebnisse mit frischen Lebensmitteln' },
+      prepacked: { label: 'Lösungen für vorverpackte Lebensmittel' },
+      immersive: { label: 'Ich möchte alles sehen.' },
     },
     results: {
-      essential: {
-        title: 'Die Essential Route',
-        body: 'Deine kuratierte Karte mit den wichtigsten Highlights.',
-        kicker: 'Highlights zuerst',
+      1: {
+        title: 'Der unverzichtbare Weg',
+        description: 'Ihre handverlesene Karte mit den wichtigsten Sehenswürdigkeiten, die Sie nicht verpassen sollten.',
       },
-      retail: {
-        title: 'Der Retail Explorer Pfad',
-        body: 'Ein geführter Loop durch komplette, integrierte Lösungen.',
-        kicker: 'Store-Blueprints',
+      2: {
+        title: 'Der Weg zum Einzelhandels-Entdecker',
+        description: 'Eine geführte Tour durch vollständige, integrierte End-to-End-Lösungen.',
       },
-      tech: {
-        title: 'Die Tech Insider Route',
-        body: 'Perfekt, wenn du die Mechanik hinter dem Retail verstehen willst.',
-        kicker: 'Für Maker & Ingenieure',
+      3: {
+        title: 'Der Tech-Insider-Weg',
+        description: 'Perfekt, wenn Sie die Mechanismen hinter der Welt des Einzelhandels verstehen möchten.',
       },
-      convenience: {
-        title: 'Der Convenience Kompass',
-        body: 'Ein dynamischer Pfad zu Innovationen für Convenience und Grab-and-go.',
-        kicker: 'Convenience Fokus',
+      4: {
+        title: 'Der Komfortkompass',
+        description: 'Ein kurzer, dynamischer Überblick über Innovationen für Convenience- und Grab-and-Go-Formate.',
       },
-      specialty: {
-        title: 'Der Specialty Shop Pfad',
-        body: 'Ein kuratiertes Erlebnis für Premium- und High-Engagement-Flächen.',
-        kicker: 'High-Touch Experiences',
+      5: {
+        title: 'Der Weg zum Fachgeschäft',
+        description: 'Eine kuratierte Reise zu hochwertigen und hochgradig engagierten Fachgeschäften.',
       },
-      grandTour: {
-        title: 'Die Grand Tour',
-        body: 'Das immersivste und umfassendste Erlebnis des Stands (nicht empfohlen bei wenig Zeit).',
-        kicker: 'All-in Erlebnis',
+      6: {
+        title: 'Die große Tour',
+        description: 'Das eindrucksvollste und umfassendste Erlebnis am Stand.',
+      },
+      7: {
+        title: 'Die Reise zum Frischmarkt',
+        description:
+          'Ein sinnlicher Weg, der sich auf superfrische Lebensmittel, Gastronomie und herausragende Frische im Einzelhandel konzentriert.',
+      },
+      8: {
+        title: 'Der Smart Pack Trail',
+        description:
+          'Ein praktischer Weg, der sich auf vorverpackte Lebensmittel, Effizienz, Skalierbarkeit und verkaufsfertige Lösungen konzentriert.',
       },
     },
   },

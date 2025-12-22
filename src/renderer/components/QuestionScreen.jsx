@@ -180,13 +180,15 @@ const QuestionScreen = ({
   const [visibleOptions, setVisibleOptions] = useState(options.length);
   const [srtData, setSrtData] = useState({ question: null, optionLabels: [], optionTimings: [] });
   const resolvedTitle = srtData.question || title;
-  const displayOptions = srtData.optionLabels.length
+  const canUseSrtLabels = srtData.optionLabels.length === options.length;
+  const canUseSrtTimings = srtData.optionTimings.length === options.length;
+  const displayOptions = canUseSrtLabels
     ? options.map((option, index) => ({
         ...option,
         label: srtData.optionLabels[index] || option.label,
       }))
     : options;
-  const resolvedTimings = srtData.optionTimings.length
+  const resolvedTimings = canUseSrtTimings
     ? srtData.optionTimings
     : OPTION_TIMINGS[step] || [];
 

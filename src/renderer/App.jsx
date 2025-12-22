@@ -12,6 +12,20 @@ import payoffButtonImage from '../assets/epta_payoff_btn.svg';
 import './style.css';
 
 const DEFAULT_IDLE_MINUTES = 2;
+const RESULT_ID_BY_EXPERIENCE = {
+  highlights: '1',
+  retail: '2',
+  tech: '3',
+  convenience: '4',
+  specialty: '5',
+  fresh: '7',
+  prepacked: '8',
+};
+const RESULT_ID_BY_IMMERSIVE_TIME = {
+  essentials: '1',
+  balanced: '2',
+  deep: '6',
+};
 
 const generateSessionId = () => {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -76,14 +90,16 @@ const App = () => {
     [strings],
   );
 
-  const experienceIsAuto = selectedExperience === 'highlights' || selectedExperience === 'immersive';
-
-  const resultKey = useMemo(() => {
+  const resultId = useMemo(() => {
     if (!selectedExperience) return null;
-    return experienceOptions.find((option) => option.id === selectedExperience)?.resultKey || null;
-  }, [experienceOptions, selectedExperience]);
+    if (selectedExperience === 'immersive') {
+      if (!selectedTime) return null;
+      return RESULT_ID_BY_IMMERSIVE_TIME[selectedTime] || RESULT_ID_BY_IMMERSIVE_TIME.deep;
+    }
+    return RESULT_ID_BY_EXPERIENCE[selectedExperience] || null;
+  }, [selectedExperience, selectedTime]);
 
-  const activeResult = resultKey ? strings.results[resultKey] : null;
+  const activeResult = resultId ? strings.results?.[resultId] : null;
 
   const resetFlow = () => {
     setSelectedExperience(null);
@@ -105,9 +121,8 @@ const App = () => {
     setSelectedExperience(optionId);
     setSelectedTime(null);
     setHasLoggedSession(false);
-    const requiresTime = !(optionId === 'highlights' || optionId === 'immersive');
     setTimeout(() => {
-      setScreen(requiresTime ? SCREENS.QUESTION_B : SCREENS.RESULT);
+      setScreen(SCREENS.QUESTION_B);
     }, 350);
   };
 
@@ -136,7 +151,6 @@ const App = () => {
   const questionBVisible = screen === SCREENS.QUESTION_B;
   const resultVisible = screen === SCREENS.RESULT;
   const showLogo = !questionAVisible && !questionBVisible && !brandStoryVisible;
-  const requiresTimeQuestion = Boolean(selectedExperience && !experienceIsAuto);
 
   const refreshApp = useCallback(() => {
     window.location.reload();
@@ -282,7 +296,7 @@ const App = () => {
       language: language.code,
       experience: selectedExperience,
       time: selectedTime || 'n/a',
-      resultKey: resultKey || 'n/a',
+      resultKey: resultId || 'n/a',
       appVersion,
     };
     try {
@@ -291,7 +305,7 @@ const App = () => {
     } catch (error) {
       console.warn('[analytics] Unable to record session', error);
     }
-  }, [appVersion, hasLoggedSession, language.code, resultKey, selectedExperience, selectedTime, sessionId]);
+  }, [appVersion, hasLoggedSession, language.code, resultId, selectedExperience, selectedTime, sessionId]);
 
   useEffect(() => {
     if (screen === SCREENS.RESULT) {
@@ -356,7 +370,7 @@ const App = () => {
             {questionAVisible && (
               <QuestionScreen
                 step={1}
-                total={experienceIsAuto ? 1 : 2}
+                total={2}
                 questionId="q0"
                 stepLabel={strings.stepLabel}
                 eyebrow={strings.questions.q0.eyebrow}
@@ -390,6 +404,7 @@ const App = () => {
             {resultVisible && (
               <ResultScreen
                 result={activeResult}
+                resultId={resultId}
                 copy={strings.result}
                 stepLabel={strings.stepLabel}
               />
