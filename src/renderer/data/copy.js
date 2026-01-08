@@ -185,7 +185,7 @@ export const TEXTS = {
       emptyBody: 'Torna al passo precedente e raccontaci quale percorso vuoi prioritizzare.',
     },
     timeOptions: {
-      essentials: { label: "Solo l'essenziale - rapido ed efficace" },
+      essentials: { label: "Solo l'essenziale - veloce e di grande impatto" },
       balanced: { label: 'Una visita equilibrata: argomenti chiave' },
       deep: { label: "Mostrami tutto - un'esperienza completa e coinvolgente" },
     },
