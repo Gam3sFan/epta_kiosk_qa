@@ -26,11 +26,12 @@ body {
 }
 
 .kiosk-shell {
-  min-height: 100vh;
-  padding: 10px 24px;
-  padding-bottom: 0;
+  height: 100%;
+  width: 100%;
   display: flex;
+  align-items: center;
   justify-content: center;
+  background: #ffffff;
 }
 
 .kiosk-shell--brand {
@@ -38,7 +39,10 @@ body {
 }
 
 .device {
-  width: min(1080px, 100%);
+  width: min(100vw, calc(100vh * 9 / 16));
+  height: min(100vh, calc(100vw * 16 / 9));
+  aspect-ratio: 9 / 16;
+  position: relative;
   display: flex;
 }
 
