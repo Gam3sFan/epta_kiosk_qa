@@ -170,7 +170,7 @@ export const TEXTS = {
       q2Multi: 'Indica il tempo che hai a disposizione.',
     },
     buttons: {
-      start: 'Attraversa il portale',
+      start: 'Cross the Gateway',
       back: 'Indietro',
       showResult: 'Mostra risultato',
       restart: 'Ricomincia il percorso',
@@ -270,7 +270,7 @@ export const TEXTS = {
       q2Multi: 'Indica el tiempo que tienes disponible.',
     },
     buttons: {
-      start: 'Cruza la puerta',
+      start: 'Cross the Gateway',
       back: 'Atrás',
       showResult: 'Mostrar resultado',
       restart: 'Reiniciar flujo',
@@ -370,7 +370,7 @@ export const TEXTS = {
       q2Multi: 'Indiquez le temps dont vous disposez.',
     },
     buttons: {
-      start: 'Franchissez la porte',
+      start: 'Cross the Gateway',
       back: 'Retour',
       showResult: 'Afficher le résultat',
       restart: 'Recommencer le parcours',
@@ -472,7 +472,7 @@ export const TEXTS = {
       q2Multi: 'Gib an, wie viel Zeit du hast.',
     },
     buttons: {
-      start: 'Das Tor durchschreiten',
+      start: 'Cross the Gateway',
       back: 'Zurück',
       showResult: 'Ergebnis anzeigen',
       restart: 'Flow neu starten',

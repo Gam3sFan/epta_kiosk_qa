@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('../assets/fonts/stylesheet.css');
 
 :root {
-  font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Barlow', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: #4c5362;
   background-color: #eceff3;
 }
@@ -665,6 +665,9 @@ content: "";
   font-size: clamp(2rem, 4vw, 2.6rem);
   color: #323743;
 }
+.map-hint__title {
+  font-weight: 400!important;
+}
 
 .result-screen__description {
   margin: 0;
@@ -963,6 +966,54 @@ content: "";
   line-height: 1.7;
   font-size: 0.7rem;
   text-align: left;
+}
+
+.brand-story__areas {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.brand-story__areas-title {
+  margin: 0;
+  color: #7bb4e5;
+  font-weight: 700;
+  text-align: left;
+}
+
+.brand-story__areas-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 14px;
+}
+
+.brand-story__area-pill {
+  border: 1px solid rgba(149, 167, 192, 0.5);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #d9d9d936;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-align: center;
+}
+
+.brand-story__area-heading {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #2c3445;
+}
+
+.brand-story__area-subtitle {
+  font-size: 0.65rem;
+  color: #3f4858;
 }
 
 .stats-overlay {
