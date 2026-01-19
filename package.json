@@ -1,6 +1,6 @@
 {
   "name": "epta_kiosk_qa",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Electron kiosk Q&A experience inspired by epta_kiosk_content.",
   "main": "src/main.js",
   "scripts": {
