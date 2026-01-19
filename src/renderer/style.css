@@ -371,7 +371,7 @@ content: "";
   width: min(760px, 100%);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 0fr));
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .option-card {
@@ -624,6 +624,8 @@ content: "";
   display: flex;
   flex-direction: column;
   gap: 12px;
+  align-items: center;
+  margin: 3rem;
 }
 
 .result-screen__top {
@@ -691,6 +693,7 @@ content: "";
   min-height: 200px;
   border: 2px solid #b5d7f2;
   border-radius: 26px;
+  max-width: 16rem;
   background: #f9fcff;
   position: relative;
   overflow: hidden;

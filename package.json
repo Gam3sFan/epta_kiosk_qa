@@ -1,12 +1,12 @@
 {
   "name": "epta_kiosk_qa",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Electron kiosk Q&A experience inspired by epta_kiosk_content.",
   "main": "src/main.js",
   "scripts": {
     "start": "npm run build:renderer && electron .",
     "dev": "concurrently -k \"npm run build:renderer:watch\" \"NODE_ENV=development electron .\"",
-    "build:renderer": "esbuild src/renderer/index.jsx --bundle --platform=browser --format=esm --sourcemap --outfile=dist/renderer.js --loader:.svg=dataurl --loader:.mp4=file --loader:.webm=file --loader:.srt=file --loader:.png=dataurl --loader:.woff=file --loader:.woff2=file",
+    "build:renderer": "esbuild src/renderer/index.jsx --bundle --platform=browser --format=esm --sourcemap --outfile=dist/renderer.js --loader:.svg=dataurl --loader:.mp4=file --loader:.webm=file --loader:.srt=file --loader:.png=dataurl --loader:.pdf=file --loader:.woff=file --loader:.woff2=file",
     "build:renderer:watch": "npm run build:renderer -- --watch",
     "build:web": "npm run build:renderer && node scripts/build-web.js",
     "dist:win": "npm run build:renderer && electron-builder --win --publish=never",

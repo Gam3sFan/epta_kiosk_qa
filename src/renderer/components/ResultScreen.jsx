@@ -9,6 +9,8 @@ import resultMap5 from '../../assets/results/id5.png';
 import resultMap6 from '../../assets/results/id6.png';
 import resultMap7 from '../../assets/results/id7.png';
 import resultMap8 from '../../assets/results/id8.png';
+import essentialTrailImageAsset from '../../assets/paths/essential_trail.png';
+import essentialTrailPdfAsset from '../../assets/paths/essential_trail.pdf';
 
 const qrIcon = new URL(qrIconAsset, import.meta.url).href;
 const printerIcon = new URL(printerIconAsset, import.meta.url).href;
@@ -22,6 +24,8 @@ const resultMaps = {
   7: new URL(resultMap7, import.meta.url).href,
   8: new URL(resultMap8, import.meta.url).href,
 };
+const essentialTrailImage = new URL(essentialTrailImageAsset, import.meta.url).href;
+const essentialTrailPdf = new URL(essentialTrailPdfAsset, import.meta.url).href;
 
 const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
   const headline = result?.title || copy?.title || 'Your personalized map!';
@@ -30,9 +34,34 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
   const scanLabel = copy?.scanLabel || 'Show QR';
   const printLabel = copy?.printLabel || 'Print here';
   const [showQrModal, setShowQrModal] = useState(false);
-  const mapSrc = resultId ? resultMaps[Number(resultId)] : null;
+  const normalizedResultId = resultId ? String(resultId) : null;
+  const isEssentialTrail = normalizedResultId === '1';
+  const mapSrc = normalizedResultId ? (isEssentialTrail ? essentialTrailImage : resultMaps[Number(normalizedResultId)]) : null;
 
   const handlePrint = () => {
+    if (isEssentialTrail) {
+      const printFrame = document.createElement('iframe');
+      printFrame.style.position = 'fixed';
+      printFrame.style.right = '0';
+      printFrame.style.bottom = '0';
+      printFrame.style.width = '0';
+      printFrame.style.height = '0';
+      printFrame.style.border = '0';
+      printFrame.src = essentialTrailPdf;
+      printFrame.onload = () => {
+        const frameWindow = printFrame.contentWindow;
+        if (frameWindow) {
+          frameWindow.focus();
+          frameWindow.print();
+        }
+        setTimeout(() => {
+          printFrame.remove();
+        }, 1000);
+      };
+      document.body.appendChild(printFrame);
+      return;
+    }
+
     const target = document.querySelector('.result-screen');
     if (!target) return;
 
