@@ -20,7 +20,20 @@ const StatList = ({ title, data }) => {
   );
 };
 
-const StatsPanel = ({ stats, onClose, onRefresh, onReset, idleMinutes, onIdleChange, errorMessage }) => {
+const StatsPanel = ({
+  stats,
+  onClose,
+  onRefresh,
+  onReset,
+  idleMinutes,
+  onIdleChange,
+  errorMessage,
+  updateInfo,
+  updateStatusLabel,
+  onCheckUpdates,
+  onCancelUpdateInstall,
+  updateActionDisabled,
+}) => {
   const [localIdle, setLocalIdle] = useState(idleMinutes || 2);
 
   useEffect(() => {
@@ -102,6 +115,33 @@ const StatsPanel = ({ stats, onClose, onRefresh, onReset, idleMinutes, onIdleCha
           </div>
           <p className="stat-help">After this time without interaction the kiosk reloads to the start.</p>
         </div>
+
+        {updateInfo ? (
+          <div className="stat-block">
+            <p className="stat-title">Updates</p>
+            <div className="stat-grid">
+              <div className="stat-chip">
+                <span className="stat-chip__label">Current</span>
+                <span className="stat-chip__value">{updateInfo.currentVersion || 'n/a'}</span>
+              </div>
+              <div className="stat-chip">
+                <span className="stat-chip__label">Available</span>
+                <span className="stat-chip__value">{updateInfo.availableVersion || 'n/a'}</span>
+              </div>
+            </div>
+            <p className="stat-help">Status: {updateStatusLabel || updateInfo.status || 'n/a'}</p>
+            <div className="stats-actions">
+              <button type="button" className="ghost-button" onClick={onCheckUpdates} disabled={updateActionDisabled}>
+                Check updates
+              </button>
+              {updateInfo.status === 'install-countdown' ? (
+                <button type="button" className="ghost-button warn" onClick={onCancelUpdateInstall}>
+                  Postpone install
+                </button>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
 
         <div className="stats-columns">
           <div className="stats-column">

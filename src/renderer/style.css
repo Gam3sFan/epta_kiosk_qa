@@ -6,6 +6,16 @@
   background-color: #eceff3;
 }
 
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 * {
   box-sizing: border-box;
   user-select: none;
@@ -14,20 +24,20 @@
 }
 
 body {
-  margin: 0;
   background: linear-gradient(109.08deg, #daebf1c6 7.92%, #abd5df4f 91.11%);
   color: #4c5362;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
   touch-action: manipulation;
 }
 
 #root {
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 .kiosk-shell {
   height: 100%;
-  padding: 10px 24px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -51,6 +61,8 @@ body {
   flex-direction: column;
   width: 100%;
   height: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .panel-content {
@@ -58,6 +70,8 @@ body {
   width: 100%;
   display: flex;
   position: relative;
+  min-height: 0;
+  padding-bottom: 80px;
 }
 
 .panel-content > * {
@@ -318,6 +332,10 @@ content: "";
   box-shadow: inset 0 0 0 1px rgba(91, 97, 113, 0.15);
   backdrop-filter: blur(10px);
 }
+.ghost-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .question-card,
 .result-card {
@@ -369,18 +387,20 @@ content: "";
 
 .option-stack {
   width: min(760px, 100%);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 0fr));
-  justify-content: space-evenly;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .option-card {
+    display: flex;
     border-radius: 45px;
     padding: 5px;
     padding-left: 6px;
     padding-right: 6px;
     margin: 10px;
     align-items: center;
+    justify-content: center;
     background: white;
     box-shadow: 0 0 6px 3px rgb(0 0 0 / 3%);
     text-align: center;
@@ -391,7 +411,11 @@ content: "";
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     font-weight: 600;
     font-size: 0.7rem;
-    height: 38px;
+    line-height: 1.2;
+    height: auto;
+    min-height: 38px;
+    min-width: 200px;
+    white-space: normal;
 }
 
 .option-card:disabled {
@@ -852,15 +876,76 @@ content: "";
   font-weight: 600;
 }
 
+.update-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(13, 23, 48, 0.35);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.update-modal__content {
+  width: min(340px, 90%);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 18px 20px;
+  box-shadow: 0 24px 48px rgba(12, 24, 46, 0.25);
+  text-align: center;
+}
+
+.update-modal__title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2f3647;
+  margin-bottom: 10px;
+}
+
+.update-modal__text {
+  margin: 0 0 14px;
+  color: #5b6475;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.update-modal__actions {
+  display: flex;
+  justify-content: center;
+}
+
+.update-modal__button {
+  border: none;
+  border-radius: 999px;
+  background: #e9f0fb;
+  color: #2f3647;
+  padding: 10px 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(86, 104, 134, 0.2);
+}
+
 .bottom-bar {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: auto;
-  padding-top: 8px;
-  margin-bottom: 16px;
   gap: 12px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  padding: 0 24px;
+  padding-bottom: 15px;
+  pointer-events: auto;
+  background: linear-gradient(0deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 .bottom-bar__back {
@@ -889,16 +974,17 @@ content: "";
 }
 
 .bottom-bar__brand {
-     background: white;
-    border: 1px solid black;
-    padding: 10px;
-    border-radius: 10px 10px 0 0;
-    height: 65px;
-    object-fit: scale-down;
-    transform: translate(18px, 7px);
-    position: absolute;
-    display: block;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  background: #ffffff;
+  border: 1px solid #000000;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+  transform: translateX(-50%);
+  object-fit: scale-down;
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  display: block;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 .bottom-bar__brand-image {
   height: 45px;

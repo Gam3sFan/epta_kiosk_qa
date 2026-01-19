@@ -12,6 +12,14 @@ import payoffButtonImage from '../assets/epta_payoff_btn.svg';
 import './style.css';
 
 const DEFAULT_IDLE_MINUTES = 2;
+const DEFAULT_UPDATE_INFO = {
+  status: 'idle',
+  currentVersion: '',
+  availableVersion: '',
+  progress: null,
+  message: '',
+  countdownSeconds: null,
+};
 const RESULT_ID_BY_EXPERIENCE = {
   highlights: '1',
   retail: '2',
@@ -65,6 +73,7 @@ const App = () => {
   const [statsError, setStatsError] = useState(null);
   const [appVersion, setAppVersion] = useState(null);
   const [idleMinutes, setIdleMinutes] = useState(DEFAULT_IDLE_MINUTES);
+  const [updateInfo, setUpdateInfo] = useState(DEFAULT_UPDATE_INFO);
   const idleTimerRef = useRef(null);
 
   const strings = TEXTS[language.code] || TEXTS.en;
@@ -151,6 +160,52 @@ const App = () => {
   const questionBVisible = screen === SCREENS.QUESTION_B;
   const resultVisible = screen === SCREENS.RESULT;
   const showLogo = !questionAVisible && !questionBVisible && !brandStoryVisible;
+
+  const updateStatusLabel = useMemo(() => {
+    switch (updateInfo.status) {
+      case 'disabled':
+        return 'Auto update disabled';
+      case 'unsupported':
+        return 'Auto update only supported on Windows';
+      case 'checking':
+        return 'Checking for updates';
+      case 'available':
+        return 'Update available';
+      case 'not-available':
+        return 'No updates available';
+      case 'downloading':
+        return `Downloading ${updateInfo.progress ?? 0}%`;
+      case 'install-countdown':
+        return `Installing in ${updateInfo.countdownSeconds ?? 0}s`;
+      case 'installing':
+        return 'Installing update';
+      case 'install-cancelled':
+        return 'Install postponed';
+      case 'error':
+        return updateInfo.message ? `Error: ${updateInfo.message}` : 'Update error';
+      case 'idle':
+      default:
+        return 'Idle';
+    }
+  }, [updateInfo.countdownSeconds, updateInfo.message, updateInfo.progress, updateInfo.status]);
+
+  const updateActionDisabled = useMemo(
+    () =>
+      ['checking', 'downloading', 'install-countdown', 'installing'].includes(updateInfo.status),
+    [updateInfo.status],
+  );
+
+  const handleCheckForUpdates = useCallback(() => {
+    if (window?.eptaUpdater?.checkForUpdates) {
+      window.eptaUpdater.checkForUpdates();
+    }
+  }, []);
+
+  const handleCancelUpdateInstall = useCallback(() => {
+    if (window?.eptaUpdater?.cancelInstall) {
+      window.eptaUpdater.cancelInstall();
+    }
+  }, []);
 
   const refreshApp = useCallback(() => {
     window.location.reload();
@@ -285,6 +340,33 @@ const App = () => {
     if (window?.kioskBridge?.getVersion) {
       window.kioskBridge.getVersion().then((ver) => setAppVersion(ver)).catch(() => {});
     }
+  }, []);
+
+  useEffect(() => {
+    const updater = window?.eptaUpdater;
+    if (!updater) {
+      setUpdateInfo((prev) => ({ ...prev, status: 'unsupported' }));
+      return undefined;
+    }
+    const unsubscribe = updater.onStatus((payload) => {
+      if (!payload || typeof payload !== 'object') return;
+      setUpdateInfo((prev) => ({
+        ...prev,
+        ...payload,
+        status: payload.status || payload.state || prev.status,
+      }));
+    });
+    updater
+      .getCurrentVersion?.()
+      .then((version) => {
+        if (version) {
+          setUpdateInfo((prev) => ({ ...prev, currentVersion: version }));
+        }
+      })
+      .catch(() => {});
+    return () => {
+      unsubscribe?.();
+    };
   }, []);
 
   const recordSession = useCallback(async () => {
@@ -433,12 +515,32 @@ const App = () => {
               ) : null
             }
           />
+          {updateInfo.status === 'install-countdown' && (
+            <div className="update-modal" role="dialog" aria-modal="true" aria-label="Update scheduled">
+              <div className="update-modal__content">
+                <div className="update-modal__title">Update available</div>
+                <div className="update-modal__text">
+                  Installing in {updateInfo.countdownSeconds ?? 0} seconds. The app will restart.
+                </div>
+                <div className="update-modal__actions">
+                  <button type="button" className="update-modal__button" onClick={handleCancelUpdateInstall}>
+                    Postpone
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           {statsVisible && (
             <StatsPanel
               stats={stats}
               idleMinutes={idleMinutes}
               onIdleChange={handleIdleMinutesChange}
               errorMessage={statsError}
+              updateInfo={updateInfo}
+              updateStatusLabel={updateStatusLabel}
+              updateActionDisabled={updateActionDisabled}
+              onCheckUpdates={handleCheckForUpdates}
+              onCancelUpdateInstall={handleCancelUpdateInstall}
               onClose={() => setStatsVisible(false)}
               onRefresh={refreshStats}
               onReset={handleResetStats}

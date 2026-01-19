@@ -10,13 +10,19 @@ const {
 } = require('fs');
 
 const packageJson = require('../package.json');
-
+const TARGET_ASPECT_RATIO = 9 / 16;
+const AUTO_UPDATE_INTERVAL_MS = 1000 * 60 * 60 * 4;
+const UPDATE_INSTALL_COUNTDOWN_SECONDS = 30;
+const UPDATE_INSTALL_RETRY_MS = 1000 * 60 * 30;
 const isDev = process.env.NODE_ENV === 'development';
 const allowDevAutoUpdate = process.env.AUTO_UPDATE_ENABLE_DEV === 'true';
 const customFeedUrl = process.env.AUTO_UPDATE_FEED_URL;
 const PLACEHOLDER_OWNER = 'your-github-owner';
 const PLACEHOLDER_REPO = 'your-release-repo';
 const UPDATE_CHANNEL = 'app:autoUpdate';
+const UPDATER_STATUS_CHANNEL = 'updater:status';
+const isProduction = app.isPackaged;
+const shouldAutoUpdate = (isProduction || allowDevAutoUpdate) && process.platform === 'win32';
 
 // Configuration for window positioning
 // Set to true to attempt opening on a secondary vertical screen
@@ -25,8 +31,23 @@ const OPEN_ON_SECONDARY_VERTICAL_SCREEN = true;
 let mainWindow;
 let autoUpdateConfigured = false;
 let autoUpdateHandlersRegistered = false;
+let lastUpdateStatus = null;
+let installCountdownInterval = null;
+let installRetryTimer = null;
+let pendingUpdateInfo = null;
 let analyticsFilePath = null;
-
+const getWindowBounds = () => {
+  const { workArea } = screen.getPrimaryDisplay()
+  let height = workArea.height
+  let width = Math.round(height * TARGET_ASPECT_RATIO)
+  if (width > workArea.width) {
+    width = workArea.width
+    height = Math.round(width / TARGET_ASPECT_RATIO)
+  }
+  const x = Math.round(workArea.x + (workArea.width - width) / 2)
+  const y = Math.round(workArea.y + (workArea.height - height) / 2)
+  return { width, height, x, y }
+}
 const autoUpdateSettings = (packageJson.config && packageJson.config.autoUpdate) || {};
 
 const getGitHubFeedConfig = () => {
@@ -45,10 +66,72 @@ const getGitHubFeedConfig = () => {
   return { owner, repo, releaseType, privateRepo };
 };
 
-const sendAutoUpdateEvent = (state, payload = {}) => {
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send(UPDATE_CHANNEL, { state, ...payload });
+const sendUpdateStatus = (payload = {}) => {
+  const nextStatus = {
+    currentVersion: app.getVersion(),
+    ...payload,
+  };
+  if (nextStatus.status && !nextStatus.state) {
+    nextStatus.state = nextStatus.status;
   }
+  lastUpdateStatus = nextStatus;
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send(UPDATE_CHANNEL, nextStatus);
+    mainWindow.webContents.send(UPDATER_STATUS_CHANNEL, nextStatus);
+  }
+};
+
+const clearInstallCountdown = () => {
+  if (installCountdownInterval) {
+    clearInterval(installCountdownInterval);
+    installCountdownInterval = null;
+  }
+};
+
+const clearInstallRetry = () => {
+  if (installRetryTimer) {
+    clearTimeout(installRetryTimer);
+    installRetryTimer = null;
+  }
+};
+
+const runInstall = () => {
+  sendUpdateStatus({
+    status: 'installing',
+    availableVersion: pendingUpdateInfo?.version,
+  });
+  autoUpdater.quitAndInstall(true, true);
+};
+
+const startInstallCountdown = (info) => {
+  pendingUpdateInfo = info || pendingUpdateInfo;
+  if (!pendingUpdateInfo) return;
+  clearInstallCountdown();
+  clearInstallRetry();
+  const endAt = Date.now() + UPDATE_INSTALL_COUNTDOWN_SECONDS * 1000;
+  const tick = () => {
+    const remainingMs = Math.max(0, endAt - Date.now());
+    const remainingSeconds = Math.ceil(remainingMs / 1000);
+    sendUpdateStatus({
+      status: 'install-countdown',
+      availableVersion: pendingUpdateInfo?.version,
+      countdownSeconds: remainingSeconds,
+    });
+    if (remainingMs <= 0) {
+      clearInstallCountdown();
+      runInstall();
+    }
+  };
+  tick();
+  installCountdownInterval = setInterval(tick, 1000);
+};
+
+const scheduleInstallRetry = () => {
+  clearInstallRetry();
+  if (!pendingUpdateInfo) return;
+  installRetryTimer = setTimeout(() => {
+    startInstallCountdown(pendingUpdateInfo);
+  }, UPDATE_INSTALL_RETRY_MS);
 };
 
 const registerAutoUpdaterEvents = () => {
@@ -59,66 +142,125 @@ const registerAutoUpdaterEvents = () => {
 
   autoUpdater.on('checking-for-update', () => {
     console.info('[auto-updater] Checking for updates');
-    sendAutoUpdateEvent('checking');
+    sendUpdateStatus({ status: 'checking' });
   });
 
   autoUpdater.on('update-available', (info) => {
     console.info('[auto-updater] Update available', info?.version);
-    sendAutoUpdateEvent('available', { version: info?.version || null });
+    sendUpdateStatus({ status: 'available', availableVersion: info?.version || '' });
   });
 
-  autoUpdater.on('update-not-available', (info) => {
+  autoUpdater.on('update-not-available', () => {
     console.info('[auto-updater] No update available');
-    sendAutoUpdateEvent('not-available', { version: info?.version || null });
+    pendingUpdateInfo = null;
+    clearInstallCountdown();
+    clearInstallRetry();
+    sendUpdateStatus({ status: 'not-available', availableVersion: '' });
   });
 
   autoUpdater.on('download-progress', (progress) => {
-    sendAutoUpdateEvent('download-progress', {
-      percent: Math.round(progress.percent ?? 0),
-      bytesPerSecond: progress.bytesPerSecond,
-      transferred: progress.transferred,
-      total: progress.total,
+    sendUpdateStatus({
+      status: 'downloading',
+      progress: Math.round(progress.percent ?? 0),
     });
   });
 
   autoUpdater.on('update-downloaded', (info) => {
-    console.info('[auto-updater] Update downloaded, restarting to install', info?.version);
-    sendAutoUpdateEvent('downloaded', { version: info?.version || null });
-    setTimeout(() => {
-      autoUpdater.quitAndInstall(false, true);
-    }, 1000);
+    console.info('[auto-updater] Update downloaded, preparing install', info?.version);
+    startInstallCountdown(info);
   });
 
   autoUpdater.on('error', (error) => {
     console.error('[auto-updater] Error while updating', error);
-    sendAutoUpdateEvent('error', { message: error?.message || 'Unknown auto-update error' });
+    clearInstallCountdown();
+    clearInstallRetry();
+    sendUpdateStatus({
+      status: 'error',
+      message: error?.message || 'Unknown auto-update error',
+    });
   });
+};
+
+const configureAutoUpdater = () => {
+  autoUpdater.autoDownload = true;
+  autoUpdater.autoInstallOnAppQuit = false;
+  registerAutoUpdaterEvents();
+};
+
+const scheduleAutoUpdates = () => {
+  if (!shouldAutoUpdate || !autoUpdateConfigured) return;
+  const runCheck = () => {
+    autoUpdater.checkForUpdates().catch((error) => {
+      sendUpdateStatus({
+        status: 'error',
+        message: error?.message || 'Update check failed',
+      });
+    });
+  };
+  runCheck();
+  setInterval(runCheck, AUTO_UPDATE_INTERVAL_MS);
+};
+
+const emitAutoUpdateUnavailable = (message) => {
+  if (!shouldAutoUpdate) {
+    sendUpdateStatus({ status: isProduction ? 'unsupported' : 'disabled' });
+    return;
+  }
+  sendUpdateStatus({ status: 'disabled', message });
+};
+
+const handleManualUpdateCheck = async () => {
+  if (!shouldAutoUpdate || !autoUpdateConfigured) {
+    emitAutoUpdateUnavailable('Auto update feed not configured');
+    return { ok: false, reason: 'auto-update-disabled' };
+  }
+
+  try {
+    await autoUpdater.checkForUpdates();
+    return { ok: true };
+  } catch (error) {
+    console.error('[auto-updater] Manual check failed', error);
+    sendUpdateStatus({
+      status: 'error',
+      message: error?.message || 'Unknown auto-update error',
+    });
+    return { ok: false, reason: error?.message || 'Unknown auto-update error' };
+  }
 };
 
 const registerUpdateIpcHandlers = () => {
   ipcMain.handle('app:getVersion', () => app.getVersion());
+  ipcMain.handle('updater:get-version', () => app.getVersion());
 
   ipcMain.handle('updates:check', async () => {
-    if (!autoUpdateConfigured) {
-      return { started: false, reason: 'auto-update-disabled' };
-    }
-
-    try {
-      await autoUpdater.checkForUpdates();
-      return { started: true };
-    } catch (error) {
-      console.error('[auto-updater] Manual check failed', error);
-      return { started: false, reason: error?.message || 'Unknown auto-update error' };
-    }
+    const result = await handleManualUpdateCheck();
+    return {
+      started: result.ok,
+      reason: result.ok ? undefined : result.reason,
+    };
   });
 
+  ipcMain.handle('updater:check', async () => handleManualUpdateCheck());
+
   ipcMain.handle('updates:install', () => {
-    if (!autoUpdateConfigured) {
+    if (!shouldAutoUpdate || !autoUpdateConfigured) {
       return false;
     }
-
-    autoUpdater.quitAndInstall(false, true);
+    runInstall();
     return true;
+  });
+
+  ipcMain.handle('updater:cancel-install', () => {
+    if (!shouldAutoUpdate || !autoUpdateConfigured) return { ok: false };
+    if (!pendingUpdateInfo) return { ok: false };
+    clearInstallCountdown();
+    sendUpdateStatus({
+      status: 'install-cancelled',
+      availableVersion: pendingUpdateInfo?.version,
+      countdownSeconds: null,
+    });
+    scheduleInstallRetry();
+    return { ok: true };
   });
 };
 
@@ -232,8 +374,8 @@ const registerAnalyticsIpcHandlers = () => {
 };
 
 const initAutoUpdater = () => {
-  if (!app.isPackaged && !allowDevAutoUpdate) {
-    console.info('[auto-updater] Disabled in development/unpackaged mode');
+  if (!shouldAutoUpdate) {
+    console.info('[auto-updater] Auto update disabled for this build');
     return;
   }
 
@@ -246,6 +388,7 @@ const initAutoUpdater = () => {
       console.warn(
         '[auto-updater] GitHub owner/repo not configured. Set AUTO_UPDATE_GITHUB_OWNER/AUTO_UPDATE_GITHUB_REPO or package.json config.autoUpdate',
       );
+      emitAutoUpdateUnavailable('Auto update feed not configured');
       return;
     }
     feedConfig = {
@@ -257,29 +400,25 @@ const initAutoUpdater = () => {
     };
   }
 
-  autoUpdater.autoDownload = true;
-  autoUpdater.autoInstallOnAppQuit = false;
   autoUpdater.setFeedURL(feedConfig);
-
-  registerAutoUpdaterEvents();
+  configureAutoUpdater();
   autoUpdateConfigured = true;
-
-  autoUpdater
-    .checkForUpdates()
-    .catch((error) => console.error('[auto-updater] Initial check failed', error));
+  scheduleAutoUpdates();
 };
 
 const createWindow = () => {
   const iconPath = path.join(__dirname, 'epta_icon_qa.ico');
-
+  const { width, height, x, y } = getWindowBounds()
   const windowOptions = {
-    width: 540,
-    height: 960,
-    minWidth: 540,
-    minHeight: 960,
+    width,
+    height,
+    x,
+    y,
     backgroundColor: '#f3f3f3',
     show: false,
     kiosk: false,
+    useContentSize: true,
+    resizable: false,
     fullscreen: false,
     autoHideMenuBar: true,
     fullscreenable: false,
@@ -290,7 +429,7 @@ const createWindow = () => {
       nodeIntegration: false,
     },
   };
-
+  
   if (OPEN_ON_SECONDARY_VERTICAL_SCREEN) {
     const displays = screen.getAllDisplays();
     const primaryDisplay = screen.getPrimaryDisplay();
@@ -315,6 +454,19 @@ const createWindow = () => {
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (!shouldAutoUpdate) {
+      sendUpdateStatus({ status: isProduction ? 'unsupported' : 'disabled' });
+      return;
+    }
+    if (lastUpdateStatus) {
+      mainWindow.webContents.send(UPDATE_CHANNEL, lastUpdateStatus);
+      mainWindow.webContents.send(UPDATER_STATUS_CHANNEL, lastUpdateStatus);
+      return;
+    }
+    sendUpdateStatus({ status: 'idle' });
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;

@@ -16,8 +16,8 @@
   "license": "ISC",
   "config": {
     "autoUpdate": {
-      "githubOwner": "your-github-owner",
-      "githubRepo": "your-release-repo",
+      "githubOwner": "Gam3sFan",
+      "githubRepo": "epta_kiosk_qa",
       "releaseType": "release",
       "private": false
     }
@@ -37,8 +37,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "your-github-owner",
-        "repo": "your-release-repo",
+        "owner": "Gam3sFan",
+        "repo": "epta_kiosk_qa",
         "releaseType": "release",
         "private": false
       }
