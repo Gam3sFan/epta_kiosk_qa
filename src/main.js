@@ -23,7 +23,7 @@ const AUTO_UPDATE_INTERVAL_MS = 1000 * 60 * 60 * 4;
 const UPDATE_INSTALL_COUNTDOWN_SECONDS = 30;
 const UPDATE_INSTALL_RETRY_MS = 1000 * 60 * 30;
 const UI_SCALE_MIN = 0.8;
-const UI_SCALE_MAX = 1.6;
+const UI_SCALE_MAX = 2.0;
 const CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const ESSENTIAL_TRAIL_PDF_RELATIVE = path.join('public', 'paths', 'essential_trail.pdf');
 const isDev = process.env.NODE_ENV === 'development';

@@ -154,11 +154,6 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
           <img src={printerIcon} alt="" aria-hidden="true" />
           <span>{printLabel}</span>
         </button>
-        {isEssentialTrail && (
-          <button type="button" className="result-action" onClick={() => setShowPdfPreview(true)}>
-            <span>Preview PDF</span>
-          </button>
-        )}
       </div>
 
       {showQrModal && (
