@@ -27,6 +27,12 @@ const StatsPanel = ({
   onReset,
   idleMinutes,
   onIdleChange,
+  uiScale,
+  uiScaleMin = 0.8,
+  uiScaleMax = 1.6,
+  uiScaleStep = 0.05,
+  onUiScaleChange,
+  onUiScaleReset,
   errorMessage,
   updateInfo,
   updateStatusLabel,
@@ -35,10 +41,15 @@ const StatsPanel = ({
   updateActionDisabled,
 }) => {
   const [localIdle, setLocalIdle] = useState(idleMinutes || 2);
+  const [localScale, setLocalScale] = useState(uiScale || 1);
 
   useEffect(() => {
     setLocalIdle(idleMinutes || 2);
   }, [idleMinutes]);
+
+  useEffect(() => {
+    setLocalScale(uiScale || 1);
+  }, [uiScale]);
 
   const handleSaveIdle = () => {
     if (!onIdleChange) return;
@@ -47,6 +58,16 @@ const StatsPanel = ({
     const clamped = Math.min(Math.max(parsed, 0.5), 240);
     onIdleChange(clamped);
     setLocalIdle(clamped);
+  };
+
+  const handleScaleChange = (value) => {
+    setLocalScale(value);
+    onUiScaleChange?.(value);
+  };
+
+  const handleScaleReset = () => {
+    setLocalScale(1);
+    onUiScaleReset?.();
   };
 
   return (
@@ -114,6 +135,24 @@ const StatsPanel = ({
             </button>
           </div>
           <p className="stat-help">After this time without interaction the kiosk reloads to the start.</p>
+          <div className="stat-settings-row">
+            <label className="stat-field stat-field--wide">
+              <span>UI scale</span>
+              <input
+                type="range"
+                min={uiScaleMin}
+                max={uiScaleMax}
+                step={uiScaleStep}
+                value={localScale}
+                onChange={(e) => handleScaleChange(e.target.value)}
+              />
+            </label>
+            <div className="stat-scale-value">{Number(localScale).toFixed(2)}</div>
+            <button type="button" className="ghost-button" onClick={handleScaleReset}>
+              Reset
+            </button>
+          </div>
+          <p className="stat-help">Applies global UI zoom to the kiosk window.</p>
         </div>
 
         {updateInfo ? (

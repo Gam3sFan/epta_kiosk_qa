@@ -1,6 +1,6 @@
 {
   "name": "epta_kiosk_qa",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "Electron kiosk Q&A experience inspired by epta_kiosk_content.",
   "main": "src/main.js",
   "scripts": {
@@ -45,10 +45,21 @@
     ],
     "win": {
       "target": [
-        "nsis"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "icon": "src/epta_icon_qa.ico",
       "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": false,
+      "include": "electron/installer.nsh"
     }
   },
   "devDependencies": {
@@ -60,6 +71,7 @@
   },
   "dependencies": {
     "electron-updater": "^6.6.2",
+    "qrcode": "^1.5.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   }

@@ -1272,6 +1272,22 @@ content: "";
   min-width: 140px;
 }
 
+.stat-field--wide {
+  flex: 1 1 260px;
+}
+
+.stat-field input[type='range'] {
+  padding: 0;
+  min-width: 260px;
+}
+
+.stat-scale-value {
+  font-weight: 700;
+  color: #223047;
+  min-width: 52px;
+  text-align: right;
+}
+
 .stat-help {
   margin: 8px 0 0;
   color: #556175;

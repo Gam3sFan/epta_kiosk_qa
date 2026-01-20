@@ -12,6 +12,9 @@ import payoffButtonImage from '../assets/epta_payoff_btn.svg';
 import './style.css';
 
 const DEFAULT_IDLE_MINUTES = 2;
+const UI_SCALE_MIN = 0.8;
+const UI_SCALE_MAX = 1.6;
+const UI_SCALE_STEP = 0.05;
 const DEFAULT_UPDATE_INFO = {
   status: 'idle',
   currentVersion: '',
@@ -40,6 +43,11 @@ const generateSessionId = () => {
     return crypto.randomUUID();
   }
   return `session-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+};
+
+const clampUiScale = (value) => {
+  if (!Number.isFinite(value)) return 1;
+  return Math.min(Math.max(value, UI_SCALE_MIN), UI_SCALE_MAX);
 };
 
 const LogoHeader = ({ onSecret }) => (
@@ -74,6 +82,7 @@ const App = () => {
   const [appVersion, setAppVersion] = useState(null);
   const [idleMinutes, setIdleMinutes] = useState(DEFAULT_IDLE_MINUTES);
   const [updateInfo, setUpdateInfo] = useState(DEFAULT_UPDATE_INFO);
+  const [uiScale, setUiScale] = useState(1);
   const idleTimerRef = useRef(null);
 
   const strings = TEXTS[language.code] || TEXTS.en;
@@ -211,6 +220,19 @@ const App = () => {
     window.location.reload();
   }, []);
 
+  const applyUiScale = useCallback((scale, { persist = true } = {}) => {
+    const parsed = Number(scale);
+    if (Number.isNaN(parsed)) return;
+    const clamped = clampUiScale(parsed);
+    setUiScale(clamped);
+    if (window?.eptaUi?.setScale) {
+      window.eptaUi.setScale(clamped).catch(() => {});
+    }
+    if (persist && typeof localStorage !== 'undefined') {
+      localStorage.setItem('uiScale', String(clamped));
+    }
+  }, []);
+
   useEffect(() => {
     if (typeof localStorage === 'undefined') return;
     const stored = Number(localStorage.getItem('idleMinutes'));
@@ -218,6 +240,35 @@ const App = () => {
       setIdleMinutes(stored);
     }
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (typeof localStorage !== 'undefined') {
+      const stored = Number(localStorage.getItem('uiScale'));
+      if (!Number.isNaN(stored)) {
+        applyUiScale(stored);
+        return () => {
+          cancelled = true;
+        };
+      }
+    }
+
+    if (window?.eptaUi?.getScale) {
+      window.eptaUi
+        .getScale()
+        .then((scale) => {
+          if (cancelled) return;
+          if (typeof scale === 'number') {
+            applyUiScale(scale);
+          }
+        })
+        .catch(() => {});
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [applyUiScale]);
 
   useEffect(() => {
     if (typeof localStorage === 'undefined') return;
@@ -420,6 +471,10 @@ const App = () => {
     }
   }, [refreshStats]);
 
+  const handleUiScaleReset = useCallback(() => {
+    applyUiScale(1);
+  }, [applyUiScale]);
+
   useEffect(() => {
     if (statsVisible) {
       refreshStats();
@@ -535,6 +590,12 @@ const App = () => {
               stats={stats}
               idleMinutes={idleMinutes}
               onIdleChange={handleIdleMinutesChange}
+              uiScale={uiScale}
+              uiScaleMin={UI_SCALE_MIN}
+              uiScaleMax={UI_SCALE_MAX}
+              uiScaleStep={UI_SCALE_STEP}
+              onUiScaleChange={applyUiScale}
+              onUiScaleReset={handleUiScaleReset}
               errorMessage={statsError}
               updateInfo={updateInfo}
               updateStatusLabel={updateStatusLabel}

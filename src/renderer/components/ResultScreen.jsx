@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import QRCode from 'qrcode';
 import qrIconAsset from '../../assets/qrcode.svg';
 import printerIconAsset from '../../assets/printer.fill.svg';
 import resultMap1 from '../../assets/results/id1.png';
@@ -9,8 +10,6 @@ import resultMap5 from '../../assets/results/id5.png';
 import resultMap6 from '../../assets/results/id6.png';
 import resultMap7 from '../../assets/results/id7.png';
 import resultMap8 from '../../assets/results/id8.png';
-import essentialTrailImageAsset from '../../assets/paths/essential_trail.png';
-import essentialTrailPdfAsset from '../../assets/paths/essential_trail.pdf';
 
 const qrIcon = new URL(qrIconAsset, import.meta.url).href;
 const printerIcon = new URL(printerIconAsset, import.meta.url).href;
@@ -24,19 +23,49 @@ const resultMaps = {
   7: new URL(resultMap7, import.meta.url).href,
   8: new URL(resultMap8, import.meta.url).href,
 };
-const essentialTrailImage = new URL(essentialTrailImageAsset, import.meta.url).href;
-const essentialTrailPdf = new URL(essentialTrailPdfAsset, import.meta.url).href;
+const cloudPathsBase = 'https://eptamedias.z6.web.core.windows.net/paths';
+const essentialTrailImage = `${cloudPathsBase}/essential_trail.png`;
+const essentialTrailPdf = `${cloudPathsBase}/essential_trail.pdf`;
 
 const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
   const headline = result?.title || copy?.title || 'Your personalized map!';
   const description = result?.description || '';
-  const subtitle = copy?.subtitle || 'Scan or print your map.';
+  const subtitle = copy?.subtitle || 'Scan your map QR code to download it on your device.';
   const scanLabel = copy?.scanLabel || 'Show QR';
   const printLabel = copy?.printLabel || 'Print here';
   const [showQrModal, setShowQrModal] = useState(false);
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
   const normalizedResultId = resultId ? String(resultId) : null;
   const isEssentialTrail = normalizedResultId === '1';
   const mapSrc = normalizedResultId ? (isEssentialTrail ? essentialTrailImage : resultMaps[Number(normalizedResultId)]) : null;
+  const qrCodeSrc = isEssentialTrail && qrCodeDataUrl ? qrCodeDataUrl : qrIcon;
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    if (!isEssentialTrail) {
+      setQrCodeDataUrl('');
+      return () => {
+        isCancelled = true;
+      };
+    }
+
+    QRCode.toDataURL(essentialTrailPdf, { width: 320, margin: 1 })
+      .then((dataUrl) => {
+        if (!isCancelled) {
+          setQrCodeDataUrl(dataUrl);
+        }
+      })
+      .catch(() => {
+        if (!isCancelled) {
+          setQrCodeDataUrl('');
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [isEssentialTrail]);
 
   const handlePrint = () => {
     if (isEssentialTrail) {
@@ -112,7 +141,7 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
               x
             </button>
             <div className="qr-modal__content">
-              <img src={qrIcon} alt="QR code" className="qr-modal__qr" />
+              <img src={qrCodeSrc} alt="QR code" className="qr-modal__qr" />
               <p className="qr-modal__caption">{subtitle}</p>
             </div>
           </div>

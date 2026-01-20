@@ -14,6 +14,8 @@ const TARGET_ASPECT_RATIO = 9 / 16;
 const AUTO_UPDATE_INTERVAL_MS = 1000 * 60 * 60 * 4;
 const UPDATE_INSTALL_COUNTDOWN_SECONDS = 30;
 const UPDATE_INSTALL_RETRY_MS = 1000 * 60 * 30;
+const UI_SCALE_MIN = 0.8;
+const UI_SCALE_MAX = 1.6;
 const isDev = process.env.NODE_ENV === 'development';
 const allowDevAutoUpdate = process.env.AUTO_UPDATE_ENABLE_DEV === 'true';
 const customFeedUrl = process.env.AUTO_UPDATE_FEED_URL;
@@ -36,6 +38,12 @@ let installCountdownInterval = null;
 let installRetryTimer = null;
 let pendingUpdateInfo = null;
 let analyticsFilePath = null;
+const clampUiScale = (value) => {
+  if (!Number.isFinite(value)) return 1;
+  return Math.min(Math.max(value, UI_SCALE_MIN), UI_SCALE_MAX);
+};
+const initialUiScaleRaw = Number.parseFloat(process.env.UI_SCALE);
+let currentUiScale = Number.isFinite(initialUiScaleRaw) ? clampUiScale(initialUiScaleRaw) : 1;
 const getWindowBounds = () => {
   const { workArea } = screen.getPrimaryDisplay()
   let height = workArea.height
@@ -373,6 +381,19 @@ const registerAnalyticsIpcHandlers = () => {
   });
 };
 
+const registerUiScaleIpcHandlers = () => {
+  ipcMain.handle('ui:get-scale', () => currentUiScale);
+  ipcMain.handle('ui:set-scale', (_event, scale) => {
+    const parsed = Number.parseFloat(scale);
+    const clamped = clampUiScale(parsed);
+    currentUiScale = clamped;
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.setZoomFactor(clamped);
+    }
+    return clamped;
+  });
+};
+
 const initAutoUpdater = () => {
   if (!shouldAutoUpdate) {
     console.info('[auto-updater] Auto update disabled for this build');
@@ -456,6 +477,9 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
   mainWindow.webContents.on('did-finish-load', () => {
+    if (currentUiScale !== 1) {
+      mainWindow.webContents.setZoomFactor(currentUiScale);
+    }
     if (!shouldAutoUpdate) {
       sendUpdateStatus({ status: isProduction ? 'unsupported' : 'disabled' });
       return;
@@ -488,6 +512,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   registerUpdateIpcHandlers();
   registerAnalyticsIpcHandlers();
+  registerUiScaleIpcHandlers();
   createWindow();
   initAutoUpdater();
 
