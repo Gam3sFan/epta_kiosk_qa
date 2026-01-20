@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
 import qrIconAsset from '../../assets/qrcode.svg';
 import printerIconAsset from '../../assets/printer.fill.svg';
@@ -34,11 +34,45 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
   const scanLabel = copy?.scanLabel || 'Show QR';
   const printLabel = copy?.printLabel || 'Print here';
   const [showQrModal, setShowQrModal] = useState(false);
+  const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
+  const [cachedPdfUrl, setCachedPdfUrl] = useState('');
+  const cacheAttemptedRef = useRef(false);
   const normalizedResultId = resultId ? String(resultId) : null;
   const isEssentialTrail = normalizedResultId === '1';
   const mapSrc = normalizedResultId ? (isEssentialTrail ? essentialTrailImage : resultMaps[Number(normalizedResultId)]) : null;
   const qrCodeSrc = isEssentialTrail && qrCodeDataUrl ? qrCodeDataUrl : qrIcon;
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!isEssentialTrail) {
+      setCachedPdfUrl('');
+      cacheAttemptedRef.current = false;
+      return () => {
+        cancelled = true;
+      };
+    }
+    if (cacheAttemptedRef.current) {
+      return () => {
+        cancelled = true;
+      };
+    }
+    cacheAttemptedRef.current = true;
+    if (window?.eptaUi?.cacheFile) {
+      window.eptaUi
+        .cacheFile(essentialTrailPdf)
+        .then((url) => {
+          if (!cancelled && url) {
+            setCachedPdfUrl(url);
+            console.info('[print] Cached PDF ready', url);
+          }
+        })
+        .catch(() => {});
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [isEssentialTrail]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -69,6 +103,13 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
 
   const handlePrint = () => {
     if (isEssentialTrail) {
+      console.info('[print] Start PDF print', {
+        cachedPdfUrl,
+        cloudUrl: essentialTrailPdf,
+      });
+      const targetUrls = [cachedPdfUrl, essentialTrailPdf]
+        .filter(Boolean)
+        .filter((value, index, list) => list.indexOf(value) === index);
       const printFrame = document.createElement('iframe');
       printFrame.style.position = 'fixed';
       printFrame.style.right = '0';
@@ -76,18 +117,67 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
       printFrame.style.width = '0';
       printFrame.style.height = '0';
       printFrame.style.border = '0';
-      printFrame.src = essentialTrailPdf;
+      let attemptIndex = 0;
+      let loadTimeoutId = null;
+      let printed = false;
+
+      const cleanup = () => {
+        if (loadTimeoutId) {
+          clearTimeout(loadTimeoutId);
+          loadTimeoutId = null;
+        }
+        printFrame.remove();
+      };
+
+      const tryNextUrl = () => {
+        if (attemptIndex >= targetUrls.length) {
+          console.warn('[print] PDF print failed, no URLs left');
+          cleanup();
+          return;
+        }
+        const nextUrl = targetUrls[attemptIndex];
+        attemptIndex += 1;
+        console.info('[print] Loading PDF for print', nextUrl);
+        printFrame.src = nextUrl;
+        loadTimeoutId = setTimeout(() => {
+          console.warn('[print] PDF load timeout, trying next');
+          tryNextUrl();
+        }, 8000);
+      };
+
       printFrame.onload = () => {
+        if (printed) return;
+        if (loadTimeoutId) {
+          clearTimeout(loadTimeoutId);
+          loadTimeoutId = null;
+        }
         const frameWindow = printFrame.contentWindow;
         if (frameWindow) {
+          printed = true;
           frameWindow.focus();
           frameWindow.print();
+          const finalize = () => {
+            frameWindow.removeEventListener('afterprint', finalize);
+            cleanup();
+          };
+          frameWindow.addEventListener('afterprint', finalize);
+          setTimeout(finalize, 2000);
+        } else {
+          console.warn('[print] Missing iframe window, retrying');
+          tryNextUrl();
         }
-        setTimeout(() => {
-          printFrame.remove();
-        }, 1000);
+      };
+
+      printFrame.onerror = () => {
+        if (loadTimeoutId) {
+          clearTimeout(loadTimeoutId);
+          loadTimeoutId = null;
+        }
+        console.warn('[print] PDF iframe load error, retrying');
+        tryNextUrl();
       };
       document.body.appendChild(printFrame);
+      tryNextUrl();
       return;
     }
 
@@ -128,6 +218,11 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
           <img src={printerIcon} alt="" aria-hidden="true" />
           <span>{printLabel}</span>
         </button>
+        {isEssentialTrail && (
+          <button type="button" className="result-action" onClick={() => setShowPdfPreview(true)}>
+            <span>Preview PDF</span>
+          </button>
+        )}
       </div>
 
       {showQrModal && (
@@ -144,6 +239,27 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
               <img src={qrCodeSrc} alt="QR code" className="qr-modal__qr" />
               <p className="qr-modal__caption">{subtitle}</p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showPdfPreview && (
+        <div
+          className="pdf-modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="PDF preview"
+          onClick={() => setShowPdfPreview(false)}
+        >
+          <div className="pdf-modal" onClick={(event) => event.stopPropagation()} role="presentation">
+            <button type="button" className="pdf-modal__close" onClick={() => setShowPdfPreview(false)} aria-label="Close preview">
+              x
+            </button>
+            <iframe
+              title="PDF preview"
+              className="pdf-modal__frame"
+              src={cachedPdfUrl || essentialTrailPdf}
+            />
           </div>
         </div>
       )}

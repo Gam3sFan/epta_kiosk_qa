@@ -1,13 +1,21 @@
 const path = require('path');
 const { app, BrowserWindow, ipcMain, screen } = require('electron');
+const http = require('http');
+const https = require('https');
 const { autoUpdater } = require('electron-updater');
 const {
   appendFileSync,
+  createWriteStream,
   existsSync,
   mkdirSync,
   readFileSync,
+  renameSync,
+  statSync,
+  unlinkSync,
   writeFileSync,
 } = require('fs');
+const { createHash } = require('crypto');
+const { pathToFileURL } = require('url');
 
 const packageJson = require('../package.json');
 const TARGET_ASPECT_RATIO = 9 / 16;
@@ -15,7 +23,8 @@ const AUTO_UPDATE_INTERVAL_MS = 1000 * 60 * 60 * 4;
 const UPDATE_INSTALL_COUNTDOWN_SECONDS = 30;
 const UPDATE_INSTALL_RETRY_MS = 1000 * 60 * 30;
 const UI_SCALE_MIN = 0.8;
-const UI_SCALE_MAX = 2.0;
+const UI_SCALE_MAX = 1.6;
+const CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const isDev = process.env.NODE_ENV === 'development';
 const allowDevAutoUpdate = process.env.AUTO_UPDATE_ENABLE_DEV === 'true';
 const customFeedUrl = process.env.AUTO_UPDATE_FEED_URL;
@@ -38,14 +47,163 @@ let installCountdownInterval = null;
 let installRetryTimer = null;
 let pendingUpdateInfo = null;
 let analyticsFilePath = null;
+const cacheDir = path.join(app.getPath('userData'), 'asset-cache');
+const cacheInFlight = new Map();
 const clampUiScale = (value) => {
   if (!Number.isFinite(value)) return 1;
   return Math.min(Math.max(value, UI_SCALE_MIN), UI_SCALE_MAX);
 };
 const initialUiScaleRaw = Number.parseFloat(process.env.UI_SCALE);
 let currentUiScale = Number.isFinite(initialUiScaleRaw) ? clampUiScale(initialUiScaleRaw) : 1;
-const getWindowBounds = () => {
-  const { workArea } = screen.getPrimaryDisplay()
+
+const ensureCacheDir = () => {
+  if (!existsSync(cacheDir)) {
+    mkdirSync(cacheDir, { recursive: true });
+  }
+};
+
+const getCachePathForUrl = (assetUrl) => {
+  const parsedUrl = new URL(assetUrl);
+  const ext = path.extname(parsedUrl.pathname) || '.bin';
+  const hash = createHash('sha256').update(assetUrl).digest('hex');
+  return path.join(cacheDir, `${hash}${ext}`);
+};
+
+const getCacheMetaPath = (cachePath) => `${cachePath}.meta.json`;
+
+const readCacheMeta = (cachePath) => {
+  const metaPath = getCacheMetaPath(cachePath);
+  if (!existsSync(metaPath)) return null;
+  try {
+    const raw = readFileSync(metaPath, 'utf8');
+    return JSON.parse(raw);
+  } catch (_error) {
+    return null;
+  }
+};
+
+const writeCacheMeta = (cachePath, assetUrl) => {
+  const metaPath = getCacheMetaPath(cachePath);
+  const payload = {
+    url: assetUrl,
+    cachedAt: Date.now(),
+  };
+  try {
+    writeFileSync(metaPath, JSON.stringify(payload), 'utf8');
+  } catch (_error) {
+    // Ignore meta write errors.
+  }
+};
+
+const isValidRemoteUrl = (assetUrl) => /^https?:\/\//i.test(assetUrl);
+
+const downloadToFile = (assetUrl, destinationPath) =>
+  new Promise((resolve, reject) => {
+    const client = assetUrl.startsWith('https') ? https : http;
+    const tempPath = `${destinationPath}.tmp`;
+    const request = client.get(assetUrl, (response) => {
+      if (response.statusCode >= 300 && response.statusCode < 400 && response.headers.location) {
+        response.resume();
+        const redirected = new URL(response.headers.location, assetUrl).toString();
+        resolve(downloadToFile(redirected, destinationPath));
+        return;
+      }
+      if (response.statusCode !== 200) {
+        response.resume();
+        reject(new Error(`Download failed (${response.statusCode})`));
+        return;
+      }
+
+      const fileStream = createWriteStream(tempPath);
+      response.pipe(fileStream);
+
+      fileStream.on('finish', () => {
+        fileStream.close(() => {
+          try {
+            renameSync(tempPath, destinationPath);
+            resolve(destinationPath);
+          } catch (error) {
+            try {
+              unlinkSync(tempPath);
+            } catch (_cleanupError) {}
+            reject(error);
+          }
+        });
+      });
+
+      fileStream.on('error', (error) => {
+        try {
+          unlinkSync(tempPath);
+        } catch (_cleanupError) {}
+        reject(error);
+      });
+    });
+
+    request.on('error', (error) => {
+      try {
+        unlinkSync(tempPath);
+      } catch (_cleanupError) {}
+      reject(error);
+    });
+
+    request.setTimeout(15000, () => {
+      request.destroy(new Error('Download timeout'));
+    });
+  });
+
+const ensureCachedUrl = async (assetUrl) => {
+  if (!isValidRemoteUrl(assetUrl)) return null;
+  ensureCacheDir();
+  const cachePath = getCachePathForUrl(assetUrl);
+  const meta = readCacheMeta(cachePath);
+  const isFresh = meta?.cachedAt && Date.now() - meta.cachedAt < CACHE_TTL_MS;
+  console.info('[cache] Request', assetUrl, { cachePath, isFresh });
+  if (existsSync(cachePath)) {
+    try {
+      const stats = statSync(cachePath);
+      if (stats.size > 0 && isFresh) {
+        console.info('[cache] Hit', cachePath);
+        return pathToFileURL(cachePath).toString();
+      }
+    } catch (_error) {
+      // Fall through to download.
+    }
+  }
+
+  if (cacheInFlight.has(assetUrl)) {
+    return cacheInFlight.get(assetUrl);
+  }
+
+  const downloadPromise = downloadToFile(assetUrl, cachePath)
+    .then(() => {
+      writeCacheMeta(cachePath, assetUrl);
+      console.info('[cache] Stored', cachePath);
+      return pathToFileURL(cachePath).toString();
+    })
+    .catch((error) => {
+      console.warn('[cache] Failed to cache asset', assetUrl, error?.message || error);
+      if (existsSync(cachePath)) {
+        try {
+          const stats = statSync(cachePath);
+          if (stats.size > 0) {
+            console.warn('[cache] Using stale cache', cachePath);
+            return pathToFileURL(cachePath).toString();
+          }
+        } catch (_fallbackError) {
+          return null;
+        }
+      }
+      return null;
+    })
+    .finally(() => {
+      cacheInFlight.delete(assetUrl);
+    });
+
+  cacheInFlight.set(assetUrl, downloadPromise);
+  return downloadPromise;
+};
+const getWindowBounds = (display) => {
+  const { workArea } = display || screen.getPrimaryDisplay()
   let height = workArea.height
   let width = Math.round(height * TARGET_ASPECT_RATIO)
   if (width > workArea.width) {
@@ -394,6 +552,13 @@ const registerUiScaleIpcHandlers = () => {
   });
 };
 
+const registerCacheIpcHandlers = () => {
+  ipcMain.handle('cache:fetch', async (_event, assetUrl) => {
+    if (typeof assetUrl !== 'string' || !assetUrl.trim()) return null;
+    return ensureCachedUrl(assetUrl.trim());
+  });
+};
+
 const initAutoUpdater = () => {
   if (!shouldAutoUpdate) {
     console.info('[auto-updater] Auto update disabled for this build');
@@ -427,9 +592,29 @@ const initAutoUpdater = () => {
   scheduleAutoUpdates();
 };
 
+const getTargetDisplay = () => {
+  const displays = screen.getAllDisplays();
+  const primaryDisplay = screen.getPrimaryDisplay();
+  if (!OPEN_ON_SECONDARY_VERTICAL_SCREEN) {
+    return primaryDisplay;
+  }
+
+  let targetDisplay = displays.find((display) => {
+    return display.id !== primaryDisplay.id && display.bounds.height > display.bounds.width;
+  });
+
+  if (!targetDisplay) {
+    targetDisplay = displays.find((display) => display.id !== primaryDisplay.id);
+  }
+
+  return targetDisplay || primaryDisplay;
+};
+
 const createWindow = () => {
   const iconPath = path.join(__dirname, 'epta_icon_qa.ico');
-  const { width, height, x, y } = getWindowBounds()
+  const targetDisplay = getTargetDisplay();
+  const bounds = isProduction ? targetDisplay.bounds : getWindowBounds(targetDisplay);
+  const { width, height, x, y } = bounds;
   const windowOptions = {
     width,
     height,
@@ -439,7 +624,7 @@ const createWindow = () => {
     show: false,
     kiosk: isProduction,
     useContentSize: true,
-    resizable: false,
+    resizable: true,
     fullscreen: isProduction,
     autoHideMenuBar: true,
     fullscreenable: isProduction,
@@ -450,27 +635,6 @@ const createWindow = () => {
       nodeIntegration: false,
     },
   };
-  
-  if (OPEN_ON_SECONDARY_VERTICAL_SCREEN) {
-    const displays = screen.getAllDisplays();
-    const primaryDisplay = screen.getPrimaryDisplay();
-
-    // Try to find a secondary display that is vertical (portrait)
-    let targetDisplay = displays.find((display) => {
-      return display.id !== primaryDisplay.id && display.bounds.height > display.bounds.width;
-    });
-
-    // If no vertical secondary display found, try any secondary display
-    if (!targetDisplay) {
-      targetDisplay = displays.find((display) => display.id !== primaryDisplay.id);
-    }
-
-    if (targetDisplay) {
-      windowOptions.x = targetDisplay.bounds.x;
-      windowOptions.y = targetDisplay.bounds.y;
-    }
-  }
-
   mainWindow = new BrowserWindow(windowOptions);
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
@@ -502,7 +666,9 @@ const createWindow = () => {
 
 
 
-  mainWindow.setAspectRatio(9 / 16);
+  if (!isProduction) {
+    mainWindow.setAspectRatio(9 / 16);
+  }
 
   if (isDev) {
     mainWindow.webContents.openDevTools({ mode: 'detach' });
@@ -513,6 +679,7 @@ app.whenReady().then(() => {
   registerUpdateIpcHandlers();
   registerAnalyticsIpcHandlers();
   registerUiScaleIpcHandlers();
+  registerCacheIpcHandlers();
   createWindow();
   initAutoUpdater();
 

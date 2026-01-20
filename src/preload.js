@@ -47,4 +47,5 @@ contextBridge.exposeInMainWorld('kioskBridge', {
 contextBridge.exposeInMainWorld('eptaUi', {
   getScale: () => ipcRenderer.invoke('ui:get-scale'),
   setScale: (scale) => ipcRenderer.invoke('ui:set-scale', scale),
+  cacheFile: (url) => ipcRenderer.invoke('cache:fetch', url),
 });
