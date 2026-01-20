@@ -13,7 +13,7 @@ import './style.css';
 
 const DEFAULT_IDLE_MINUTES = 2;
 const UI_SCALE_MIN = 0.8;
-const UI_SCALE_MAX = 1.6;
+const UI_SCALE_MAX = 2.0;
 const UI_SCALE_STEP = 0.05;
 const DEFAULT_UPDATE_INFO = {
   status: 'idle',

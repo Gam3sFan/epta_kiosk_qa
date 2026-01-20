@@ -29,7 +29,7 @@ const StatsPanel = ({
   onIdleChange,
   uiScale,
   uiScaleMin = 0.8,
-  uiScaleMax = 1.6,
+  uiScaleMax = 2.0,
   uiScaleStep = 0.05,
   onUiScaleChange,
   onUiScaleReset,
