@@ -48,4 +48,6 @@ contextBridge.exposeInMainWorld('eptaUi', {
   getScale: () => ipcRenderer.invoke('ui:get-scale'),
   setScale: (scale) => ipcRenderer.invoke('ui:set-scale', scale),
   cacheFile: (url) => ipcRenderer.invoke('cache:fetch', url),
+  printEssentialTrail: () => ipcRenderer.invoke('print:essential-trail'),
+  getLocalPdfUrl: () => ipcRenderer.invoke('pdf:get-local-url'),
 });

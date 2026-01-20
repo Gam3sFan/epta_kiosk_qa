@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import qrIconAsset from '../../assets/qrcode.svg';
 import printerIconAsset from '../../assets/printer.fill.svg';
@@ -25,7 +25,7 @@ const resultMaps = {
 };
 const cloudPathsBase = 'https://eptamedias.z6.web.core.windows.net/paths';
 const essentialTrailImage = `${cloudPathsBase}/essential_trail.png`;
-const essentialTrailPdf = `${cloudPathsBase}/essential_trail.pdf`;
+const essentialTrailPdfDownload = `${cloudPathsBase}/essential_trail.pdf`;
 
 const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
   const headline = result?.title || copy?.title || 'Your personalized map!';
@@ -36,8 +36,7 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
   const [showQrModal, setShowQrModal] = useState(false);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
-  const [cachedPdfUrl, setCachedPdfUrl] = useState('');
-  const cacheAttemptedRef = useRef(false);
+  const [localPdfUrl, setLocalPdfUrl] = useState('');
   const normalizedResultId = resultId ? String(resultId) : null;
   const isEssentialTrail = normalizedResultId === '1';
   const mapSrc = normalizedResultId ? (isEssentialTrail ? essentialTrailImage : resultMaps[Number(normalizedResultId)]) : null;
@@ -46,28 +45,23 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
   useEffect(() => {
     let cancelled = false;
     if (!isEssentialTrail) {
-      setCachedPdfUrl('');
-      cacheAttemptedRef.current = false;
+      setLocalPdfUrl('');
       return () => {
         cancelled = true;
       };
     }
-    if (cacheAttemptedRef.current) {
-      return () => {
-        cancelled = true;
-      };
-    }
-    cacheAttemptedRef.current = true;
-    if (window?.eptaUi?.cacheFile) {
+    if (window?.eptaUi?.getLocalPdfUrl) {
       window.eptaUi
-        .cacheFile(essentialTrailPdf)
+        .getLocalPdfUrl()
         .then((url) => {
           if (!cancelled && url) {
-            setCachedPdfUrl(url);
-            console.info('[print] Cached PDF ready', url);
+            setLocalPdfUrl(url);
+            console.info('[print] Local PDF URL', url);
           }
         })
-        .catch(() => {});
+        .catch((error) => {
+          console.warn('[print] Failed to resolve local PDF', error);
+        });
     }
     return () => {
       cancelled = true;
@@ -84,7 +78,7 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
       };
     }
 
-    QRCode.toDataURL(essentialTrailPdf, { width: 320, margin: 1 })
+    QRCode.toDataURL(essentialTrailPdfDownload, { width: 320, margin: 1 })
       .then((dataUrl) => {
         if (!isCancelled) {
           setQrCodeDataUrl(dataUrl);
@@ -103,81 +97,23 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
 
   const handlePrint = () => {
     if (isEssentialTrail) {
-      console.info('[print] Start PDF print', {
-        cachedPdfUrl,
-        cloudUrl: essentialTrailPdf,
-      });
-      const targetUrls = [cachedPdfUrl, essentialTrailPdf]
-        .filter(Boolean)
-        .filter((value, index, list) => list.indexOf(value) === index);
-      const printFrame = document.createElement('iframe');
-      printFrame.style.position = 'fixed';
-      printFrame.style.right = '0';
-      printFrame.style.bottom = '0';
-      printFrame.style.width = '0';
-      printFrame.style.height = '0';
-      printFrame.style.border = '0';
-      let attemptIndex = 0;
-      let loadTimeoutId = null;
-      let printed = false;
-
-      const cleanup = () => {
-        if (loadTimeoutId) {
-          clearTimeout(loadTimeoutId);
-          loadTimeoutId = null;
-        }
-        printFrame.remove();
-      };
-
-      const tryNextUrl = () => {
-        if (attemptIndex >= targetUrls.length) {
-          console.warn('[print] PDF print failed, no URLs left');
-          cleanup();
-          return;
-        }
-        const nextUrl = targetUrls[attemptIndex];
-        attemptIndex += 1;
-        console.info('[print] Loading PDF for print', nextUrl);
-        printFrame.src = nextUrl;
-        loadTimeoutId = setTimeout(() => {
-          console.warn('[print] PDF load timeout, trying next');
-          tryNextUrl();
-        }, 8000);
-      };
-
-      printFrame.onload = () => {
-        if (printed) return;
-        if (loadTimeoutId) {
-          clearTimeout(loadTimeoutId);
-          loadTimeoutId = null;
-        }
-        const frameWindow = printFrame.contentWindow;
-        if (frameWindow) {
-          printed = true;
-          frameWindow.focus();
-          frameWindow.print();
-          const finalize = () => {
-            frameWindow.removeEventListener('afterprint', finalize);
-            cleanup();
-          };
-          frameWindow.addEventListener('afterprint', finalize);
-          setTimeout(finalize, 2000);
-        } else {
-          console.warn('[print] Missing iframe window, retrying');
-          tryNextUrl();
-        }
-      };
-
-      printFrame.onerror = () => {
-        if (loadTimeoutId) {
-          clearTimeout(loadTimeoutId);
-          loadTimeoutId = null;
-        }
-        console.warn('[print] PDF iframe load error, retrying');
-        tryNextUrl();
-      };
-      document.body.appendChild(printFrame);
-      tryNextUrl();
+      console.info('[print] Request print from main process');
+      if (window?.eptaUi?.printEssentialTrail) {
+        window.eptaUi
+          .printEssentialTrail()
+          .then((result) => {
+            if (!result?.ok) {
+              console.warn('[print] Print failed', result);
+            } else {
+              console.info('[print] Print succeeded');
+            }
+          })
+          .catch((error) => {
+            console.warn('[print] Print failed', error);
+          });
+      } else {
+        console.warn('[print] Missing print bridge');
+      }
       return;
     }
 
@@ -258,7 +194,7 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
             <iframe
               title="PDF preview"
               className="pdf-modal__frame"
-              src={cachedPdfUrl || essentialTrailPdf}
+              src={localPdfUrl || essentialTrailPdfDownload}
             />
           </div>
         </div>

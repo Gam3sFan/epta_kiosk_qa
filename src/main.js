@@ -25,6 +25,7 @@ const UPDATE_INSTALL_RETRY_MS = 1000 * 60 * 30;
 const UI_SCALE_MIN = 0.8;
 const UI_SCALE_MAX = 1.6;
 const CACHE_TTL_MS = 1000 * 60 * 60 * 24;
+const ESSENTIAL_TRAIL_PDF_RELATIVE = path.join('public', 'paths', 'essential_trail.pdf');
 const isDev = process.env.NODE_ENV === 'development';
 const allowDevAutoUpdate = process.env.AUTO_UPDATE_ENABLE_DEV === 'true';
 const customFeedUrl = process.env.AUTO_UPDATE_FEED_URL;
@@ -559,6 +560,100 @@ const registerCacheIpcHandlers = () => {
   });
 };
 
+const resolveEssentialTrailPdfPath = () => {
+  const candidates = [
+    path.join(app.getAppPath(), ESSENTIAL_TRAIL_PDF_RELATIVE),
+    path.join(process.resourcesPath, ESSENTIAL_TRAIL_PDF_RELATIVE),
+    path.join(__dirname, '..', ESSENTIAL_TRAIL_PDF_RELATIVE),
+  ];
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return null;
+};
+
+const printPdfAtPath = (pdfPath) =>
+  new Promise((resolve) => {
+    if (!pdfPath) {
+      resolve({ ok: false, reason: 'file-not-found' });
+      return;
+    }
+    if (!existsSync(pdfPath)) {
+      resolve({ ok: false, reason: 'file-not-found', path: pdfPath });
+      return;
+    }
+
+    const printWindow = new BrowserWindow({
+      show: false,
+      width: 800,
+      height: 600,
+      backgroundColor: '#ffffff',
+      webPreferences: {
+        contextIsolation: true,
+        nodeIntegration: false,
+        plugins: true,
+        sandbox: true,
+      },
+    });
+
+    const cleanup = () => {
+      if (!printWindow.isDestroyed()) {
+        printWindow.close();
+      }
+    };
+
+    const timeoutId = setTimeout(() => {
+      console.warn('[print] PDF print timeout');
+      cleanup();
+      resolve({ ok: false, reason: 'timeout' });
+    }, 20000);
+
+    printWindow.webContents.once('did-fail-load', (_event, code, description) => {
+      clearTimeout(timeoutId);
+      console.warn('[print] PDF load failed', code, description);
+      cleanup();
+      resolve({ ok: false, reason: 'load-failed', code, description });
+    });
+
+    printWindow.webContents.once('did-finish-load', () => {
+      setTimeout(() => {
+        printWindow.webContents.print({ printBackground: true }, (success, failureReason) => {
+          clearTimeout(timeoutId);
+          if (!success) {
+            console.warn('[print] Print failed', failureReason);
+          } else {
+            console.info('[print] Print completed');
+          }
+          cleanup();
+          resolve({ ok: success, reason: failureReason });
+        });
+      }, 750);
+    });
+
+    const fileUrl = pathToFileURL(pdfPath).toString();
+    console.info('[print] Loading PDF for print', fileUrl);
+    printWindow.loadURL(fileUrl).catch((error) => {
+      clearTimeout(timeoutId);
+      console.warn('[print] Load URL error', error);
+      cleanup();
+      resolve({ ok: false, reason: 'load-failed', error: error?.message || 'load-error' });
+    });
+  });
+
+const registerPrintIpcHandlers = () => {
+  ipcMain.handle('print:essential-trail', async () => {
+    const pdfPath = resolveEssentialTrailPdfPath();
+    console.info('[print] Resolved essential trail PDF', pdfPath);
+    return printPdfAtPath(pdfPath);
+  });
+  ipcMain.handle('pdf:get-local-url', () => {
+    const pdfPath = resolveEssentialTrailPdfPath();
+    return pdfPath ? pathToFileURL(pdfPath).toString() : null;
+  });
+};
+
 const initAutoUpdater = () => {
   if (!shouldAutoUpdate) {
     console.info('[auto-updater] Auto update disabled for this build');
@@ -680,6 +775,7 @@ app.whenReady().then(() => {
   registerAnalyticsIpcHandlers();
   registerUiScaleIpcHandlers();
   registerCacheIpcHandlers();
+  registerPrintIpcHandlers();
   createWindow();
   initAutoUpdater();
 
