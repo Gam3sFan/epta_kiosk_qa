@@ -719,7 +719,7 @@ const createWindow = () => {
     show: false,
     kiosk: isProduction,
     useContentSize: true,
-    resizable: true,
+    resizable: false,
     fullscreen: isProduction,
     autoHideMenuBar: true,
     fullscreenable: isProduction,

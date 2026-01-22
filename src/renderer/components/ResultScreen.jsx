@@ -27,12 +27,13 @@ const cloudPathsBase = 'https://eptamedias.z6.web.core.windows.net/paths';
 const essentialTrailImage = `${cloudPathsBase}/essential_trail.png`;
 const essentialTrailPdfDownload = `${cloudPathsBase}/essential_trail.pdf`;
 
-const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
+const ResultScreen = ({ result, copy, stepLabel, resultId, onQrDone }) => {
   const headline = result?.title || copy?.title || 'Your personalized map!';
   const description = result?.description || '';
   const subtitle = copy?.subtitle || 'Scan your map QR code to download it on your device.';
   const scanLabel = copy?.scanLabel || 'Show QR';
   const printLabel = copy?.printLabel || 'Print here';
+  const doneLabel = copy?.doneLabel || 'Done';
   const [showQrModal, setShowQrModal] = useState(false);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
@@ -135,6 +136,11 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
     }, 50);
   };
 
+  const handleQrDone = () => {
+    setShowQrModal(false);
+    onQrDone?.();
+  };
+
   return (
     <section className="result-screen">
       <div className="result-screen__header">
@@ -163,14 +169,14 @@ const ResultScreen = ({ result, copy, stepLabel, resultId }) => {
             onClick={(event) => event.stopPropagation()}
             role="presentation"
           >
-            <button type="button" className="qr-modal__close" onClick={() => setShowQrModal(false)} aria-label="Chiudi QR">
-              x
-            </button>
             <div className="qr-modal__content">
               <img src={qrCodeSrc} alt="QR code" className="qr-modal__qr" />
               <p className="qr-modal__caption">{subtitle}</p>
             </div>
           </div>
+          <button type="button" className="bottom-bar__back" onClick={handleQrDone}>
+                {doneLabel}
+          </button>
         </div>
       )}
 

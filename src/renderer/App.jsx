@@ -5,6 +5,7 @@ import ResultScreen from './components/ResultScreen';
 import { BottomBar } from './components/LanguageControls';
 import StatsPanel from './components/StatsPanel';
 import BrandStoryScreen from './components/BrandStoryScreen';
+import ThanksScreen from './components/ThanksScreen';
 import { SCREENS, TIME_OPTIONS_BASE, EXPERIENCE_OPTIONS_BASE, LANGUAGES, TEXTS } from './data/copy';
 import eptaTaglineImage from '../assets/logos.png';
 import payoffButtonImage from '../assets/epta_payoff_btn.svg';
@@ -168,6 +169,7 @@ const App = () => {
   const questionAVisible = screen === SCREENS.QUESTION_A;
   const questionBVisible = screen === SCREENS.QUESTION_B;
   const resultVisible = screen === SCREENS.RESULT;
+  const thankYouVisible = screen === SCREENS.THANK_YOU;
   const showLogo = !questionAVisible && !questionBVisible && !brandStoryVisible;
 
   const updateStatusLabel = useMemo(() => {
@@ -371,6 +373,11 @@ const App = () => {
       return;
     }
 
+    if (thankYouVisible) {
+      resetFlow();
+      return;
+    }
+
     if (questionBVisible) {
       setScreen(SCREENS.QUESTION_A);
       return;
@@ -381,7 +388,7 @@ const App = () => {
     }
   };
 
-  const backEnabled = brandStoryVisible || questionAVisible || questionBVisible || resultVisible;
+  const backEnabled = brandStoryVisible || questionAVisible || questionBVisible || resultVisible || thankYouVisible;
 
   useEffect(() => {
     resetIdleTimer();
@@ -544,6 +551,14 @@ const App = () => {
                 resultId={resultId}
                 copy={strings.result}
                 stepLabel={strings.stepLabel}
+                onQrDone={() => setScreen(SCREENS.THANK_YOU)}
+              />
+            )}
+
+            {thankYouVisible && (
+              <ThanksScreen
+                language={language}
+                onComplete={resetFlow}
               />
             )}
           </div>

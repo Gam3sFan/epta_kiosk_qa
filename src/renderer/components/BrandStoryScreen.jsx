@@ -1,16 +1,6 @@
 import React from 'react';
 import eptaTaglineImage from '../../assets/logo_epta_payoff.png';
-
-const EUROSHOP_AREAS = [
-  { title: 'GOOD PRESERVES', subtitle: 'Lasting Freshness' },
-  { title: 'GOOD SHAPES', subtitle: 'Perfect Experiences' },
-  { title: 'GOOD FITS', subtitle: 'Every tech need' },
-  { title: 'GOOD BOOSTS', subtitle: 'Store Satisfaction' },
-  { title: 'GOOD POWERS', subtitle: 'Service Innovation' },
-  { title: 'GOOD DELIVERS', subtitle: 'Full solutions' },
-  { title: 'GOOD SPARKS', subtitle: 'In smart spaces' },
-  { title: 'GOOD SHOWS', subtitle: 'Local care in global reach' },
-];
+import aresTextsImage from '../../assets/ares_texts.svg';
 
 const BrandStoryScreen = ({ title, description }) => (
   <section className="brand-story-screen">
@@ -21,12 +11,9 @@ const BrandStoryScreen = ({ title, description }) => (
       <div className="brand-story__areas">
         <h5 className="brand-story__areas-title">EPTA Euroshop Areas</h5>
         <ul className="brand-story__areas-grid">
-          {EUROSHOP_AREAS.map((area) => (
-            <li key={area.title} className="brand-story__area-pill">
-              <span className="brand-story__area-heading">{area.title}</span>
-              <span className="brand-story__area-subtitle">{area.subtitle}</span>
-            </li>
-          ))}
+          <li className="brand-story__areas-image">
+            <img src={aresTextsImage} alt="EPTA Euroshop Areas" className="brand-story__areas-illustration" />
+          </li>
         </ul>
       </div>
     </div>

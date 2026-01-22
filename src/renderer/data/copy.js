@@ -10,6 +10,7 @@ export const SCREENS = {
   QUESTION_A: 'question-a',
   QUESTION_B: 'question-b',
   RESULT: 'result',
+  THANK_YOU: 'thank-you',
 };
 
 export const TIME_OPTIONS_BASE = [
@@ -83,6 +84,7 @@ export const TEXTS = {
       subtitle: 'Scan or print your map.',
       scanLabel: 'Scan QR',
       printLabel: 'Print Map',
+      doneLabel: 'Done',
       emptyTitle: 'Pick an experience first',
       emptyBody: 'Return to the previous step and let us know which journey you want to focus on.',
     },
@@ -181,6 +183,7 @@ export const TEXTS = {
       subtitle: 'Scansiona o stampa la tua mappa',
       scanLabel: 'Scansiona',
       printLabel: 'Stampa',
+      doneLabel: 'Fine',
       emptyTitle: "Seleziona prima un'esperienza",
       emptyBody: 'Torna al passo precedente e raccontaci quale percorso vuoi prioritizzare.',
     },
@@ -281,6 +284,7 @@ export const TEXTS = {
       subtitle: 'Escanea o imprime tu mapa',
       scanLabel: 'Escanee',
       printLabel: 'Imprime',
+      doneLabel: 'Listo',
       emptyTitle: 'Elige antes una experiencia',
       emptyBody: 'Regresa al paso anterior y cuéntanos qué recorrido deseas priorizar.',
     },
@@ -381,6 +385,7 @@ export const TEXTS = {
       subtitle: 'Scannez ou imprimez votre carte',
       scanLabel: 'Scannez',
       printLabel: 'Imprimer',
+      doneLabel: 'Terminé',
       emptyTitle: "Choisissez d'abord une expérience",
       emptyBody: "Retournez à l'étape précédente et dites-nous quel parcours vous voulez privilégier.",
     },
@@ -483,6 +488,7 @@ export const TEXTS = {
       subtitle: 'Scannen oder drucken Sie Ihre Karte',
       scanLabel: 'Hier scannen',
       printLabel: 'Hier drucken',
+      doneLabel: 'Fertig',
       emptyTitle: 'Wähle zuerst ein Erlebnis',
       emptyBody: 'Gehe einen Schritt zurück und sag uns, welcher Pfad prioritisiert werden soll.',
     },
