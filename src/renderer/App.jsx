@@ -84,6 +84,7 @@ const App = () => {
   const [idleMinutes, setIdleMinutes] = useState(DEFAULT_IDLE_MINUTES);
   const [updateInfo, setUpdateInfo] = useState(DEFAULT_UPDATE_INFO);
   const [uiScale, setUiScale] = useState(1);
+  const [printEnabled, setPrintEnabled] = useState(true);
   const idleTimerRef = useRef(null);
 
   const strings = TEXTS[language.code] || TEXTS.en;
@@ -171,6 +172,7 @@ const App = () => {
   const resultVisible = screen === SCREENS.RESULT;
   const thankYouVisible = screen === SCREENS.THANK_YOU;
   const showLogo = !questionAVisible && !questionBVisible && !brandStoryVisible;
+  const printingCopy = strings.printing || TEXTS.en.printing;
 
   const updateStatusLabel = useMemo(() => {
     switch (updateInfo.status) {
@@ -244,6 +246,13 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (typeof localStorage === 'undefined') return;
+    const storedPrint = localStorage.getItem('printEnabled');
+    if (storedPrint === null) return;
+    setPrintEnabled(storedPrint !== 'false');
+  }, []);
+
+  useEffect(() => {
     let cancelled = false;
     if (typeof localStorage !== 'undefined') {
       const stored = Number(localStorage.getItem('uiScale'));
@@ -278,6 +287,11 @@ const App = () => {
       localStorage.setItem('idleMinutes', String(idleMinutes));
     }
   }, [idleMinutes]);
+
+  useEffect(() => {
+    if (typeof localStorage === 'undefined') return;
+    localStorage.setItem('printEnabled', String(printEnabled));
+  }, [printEnabled]);
 
   useEffect(() => {
     const preventKeyZoom = (event) => {
@@ -552,6 +566,8 @@ const App = () => {
                 copy={strings.result}
                 stepLabel={strings.stepLabel}
                 onQrDone={() => setScreen(SCREENS.THANK_YOU)}
+                printingCopy={printingCopy}
+                printEnabled={printEnabled}
               />
             )}
 
@@ -611,6 +627,8 @@ const App = () => {
               uiScaleStep={UI_SCALE_STEP}
               onUiScaleChange={applyUiScale}
               onUiScaleReset={handleUiScaleReset}
+              printEnabled={printEnabled}
+              onPrintEnabledChange={setPrintEnabled}
               errorMessage={statsError}
               updateInfo={updateInfo}
               updateStatusLabel={updateStatusLabel}

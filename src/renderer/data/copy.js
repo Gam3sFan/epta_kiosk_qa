@@ -88,6 +88,10 @@ export const TEXTS = {
       emptyTitle: 'Pick an experience first',
       emptyBody: 'Return to the previous step and let us know which journey you want to focus on.',
     },
+    printing: {
+      title: 'Printing your map',
+      subtitle: 'Please wait while we send it to the printer.',
+    },
     timeOptions: {
       essentials: { label: 'Just the essentials - quick and impactful' },
       balanced: { label: 'A balanced visit - key topics and solutions' },
@@ -186,6 +190,10 @@ export const TEXTS = {
       doneLabel: 'Fine',
       emptyTitle: "Seleziona prima un'esperienza",
       emptyBody: 'Torna al passo precedente e raccontaci quale percorso vuoi prioritizzare.',
+    },
+    printing: {
+      title: 'Stampa in corso',
+      subtitle: 'Attendi mentre inviamo la mappa alla stampante.',
     },
     timeOptions: {
       essentials: { label: "Solo l'essenziale - veloce e di grande impatto" },
@@ -288,6 +296,10 @@ export const TEXTS = {
       emptyTitle: 'Elige antes una experiencia',
       emptyBody: 'Regresa al paso anterior y cuéntanos qué recorrido deseas priorizar.',
     },
+    printing: {
+      title: 'Imprimiendo tu mapa',
+      subtitle: 'Espera mientras lo enviamos a la impresora.',
+    },
     timeOptions: {
       essentials: { label: 'Solo lo esencial: rápido y eficaz.' },
       balanced: { label: 'Una visita equilibrada: temas clave y soluciones' },
@@ -388,6 +400,10 @@ export const TEXTS = {
       doneLabel: 'Terminé',
       emptyTitle: "Choisissez d'abord une expérience",
       emptyBody: "Retournez à l'étape précédente et dites-nous quel parcours vous voulez privilégier.",
+    },
+    printing: {
+      title: 'Impression en cours',
+      subtitle: "Veuillez patienter pendant l'envoi à l’imprimante.",
     },
     timeOptions: {
       essentials: { label: "L'essentiel seulement - Rapide & Percutant" },
@@ -491,6 +507,10 @@ export const TEXTS = {
       doneLabel: 'Fertig',
       emptyTitle: 'Wähle zuerst ein Erlebnis',
       emptyBody: 'Gehe einen Schritt zurück und sag uns, welcher Pfad prioritisiert werden soll.',
+    },
+    printing: {
+      title: 'Druckvorgang läuft',
+      subtitle: 'Bitte warten, wir senden die Karte an den Drucker.',
     },
     timeOptions: {
       essentials: { label: 'Nur das Wesentliche – schnell und wirkungsvoll' },

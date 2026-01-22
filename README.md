@@ -65,6 +65,15 @@ npx electron .
 ```
 Per un pacchetto distribuibile puoi integrare `@electron/packager` o `electron-builder` usando la config in `package.json` (`config.autoUpdate`).
 
+## 🖨️ Stampa PDF (Windows)
+La stampa del PDF “essential_trail.pdf” avviene dal processo main. Per evitare il popup di stampa:
+- **Default:** Electron prova la stampa silenziosa (`silent: true`) sul printer di default.
+- **Workaround consigliato:** aggiungi un helper esterno come `resources/print/print-helper.exe` oppure `resources/print/PDFtoPrinter.exe` e configura le variabili:
+  - `PRINT_HELPER_ARGS="-silent -print-to \"{printer}\" {pdf}"`
+  - `PRINT_DEVICE_NAME="Nome Stampante"` (opzionale; se omesso usa la stampante di default)
+
+Il pacchetto include automaticamente la cartella `resources/print` grazie a `extraResources`.
+
 ## 🤝 Contributi
 Issue e PR sono benvenuti. Mantieni l’aspetto kiosk (fullscreen, touch-friendly) e usa i loader già configurati in esbuild per asset video/srt/png/svg.
 

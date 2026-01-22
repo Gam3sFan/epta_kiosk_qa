@@ -1,6 +1,6 @@
 {
   "name": "epta_kiosk_qa",
-  "version": "1.0.13",
+  "version": "1.1.0",
   "description": "Electron kiosk Q&A experience inspired by epta_kiosk_content.",
   "main": "src/main.js",
   "scripts": {
@@ -33,6 +33,12 @@
       "src/**/*",
       "public/**/*",
       "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/print",
+        "to": "print"
+      }
     ],
     "asar": true,
     "publish": [

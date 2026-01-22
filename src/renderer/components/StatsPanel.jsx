@@ -33,6 +33,8 @@ const StatsPanel = ({
   uiScaleStep = 0.05,
   onUiScaleChange,
   onUiScaleReset,
+  printEnabled = true,
+  onPrintEnabledChange,
   errorMessage,
   updateInfo,
   updateStatusLabel,
@@ -153,6 +155,17 @@ const StatsPanel = ({
             </button>
           </div>
           <p className="stat-help">Applies global UI zoom to the kiosk window.</p>
+          <div className="stat-settings-row">
+            <label className="stat-field stat-field--checkbox">
+              <span>Print button</span>
+              <input
+                type="checkbox"
+                checked={printEnabled}
+                onChange={(e) => onPrintEnabledChange?.(e.target.checked)}
+              />
+            </label>
+          </div>
+          <p className="stat-help">Disable to remove printing from the result screen.</p>
         </div>
 
         {updateInfo ? (

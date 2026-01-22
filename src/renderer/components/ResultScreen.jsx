@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
 import qrIconAsset from '../../assets/qrcode.svg';
 import printerIconAsset from '../../assets/printer.fill.svg';
@@ -27,17 +27,31 @@ const cloudPathsBase = 'https://eptamedias.z6.web.core.windows.net/paths';
 const essentialTrailImage = `${cloudPathsBase}/essential_trail.png`;
 const essentialTrailPdfDownload = `${cloudPathsBase}/essential_trail.pdf`;
 
-const ResultScreen = ({ result, copy, stepLabel, resultId, onQrDone }) => {
+const ResultScreen = ({
+  result,
+  copy,
+  stepLabel,
+  resultId,
+  onQrDone,
+  printingCopy,
+  printEnabled = true,
+}) => {
   const headline = result?.title || copy?.title || 'Your personalized map!';
   const description = result?.description || '';
   const subtitle = copy?.subtitle || 'Scan your map QR code to download it on your device.';
   const scanLabel = copy?.scanLabel || 'Show QR';
   const printLabel = copy?.printLabel || 'Print here';
   const doneLabel = copy?.doneLabel || 'Done';
+  const printingTitle = printingCopy?.title || 'Printing...';
+  const printingSubtitle = printingCopy?.subtitle || 'Please wait.';
   const [showQrModal, setShowQrModal] = useState(false);
+  const [showPrintModal, setShowPrintModal] = useState(false);
+  const [showPrintCompleteModal, setShowPrintCompleteModal] = useState(false);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
   const [localPdfUrl, setLocalPdfUrl] = useState('');
+  const printTimeoutRef = useRef(null);
+  const printResponseTimeoutRef = useRef(null);
   const normalizedResultId = resultId ? String(resultId) : null;
   const isEssentialTrail = normalizedResultId === '1';
   const mapSrc = normalizedResultId ? (isEssentialTrail ? essentialTrailImage : resultMaps[Number(normalizedResultId)]) : null;
@@ -96,10 +110,43 @@ const ResultScreen = ({ result, copy, stepLabel, resultId, onQrDone }) => {
     };
   }, [isEssentialTrail]);
 
+  useEffect(() => () => {
+    if (printTimeoutRef.current) {
+      clearTimeout(printTimeoutRef.current);
+      printTimeoutRef.current = null;
+    }
+    if (printResponseTimeoutRef.current) {
+      clearTimeout(printResponseTimeoutRef.current);
+      printResponseTimeoutRef.current = null;
+    }
+  }, []);
+
+  const clearPrintResponseTimer = () => {
+    if (printResponseTimeoutRef.current) {
+      clearTimeout(printResponseTimeoutRef.current);
+      printResponseTimeoutRef.current = null;
+    }
+  };
+
+  const startPrintResponseTimer = () => {
+    clearPrintResponseTimer();
+    printResponseTimeoutRef.current = setTimeout(() => {
+      setShowPrintModal(false);
+      setShowPrintCompleteModal(false);
+      setShowQrModal(true);
+      printResponseTimeoutRef.current = null;
+    }, 15000);
+  };
+
   const handlePrint = () => {
+    if (!printEnabled) return;
     if (isEssentialTrail) {
       console.info('[print] Request print from main process');
       if (window?.eptaUi?.printEssentialTrail) {
+        setShowPrintModal(true);
+        setShowPrintCompleteModal(false);
+        setShowQrModal(false);
+        startPrintResponseTimer();
         window.eptaUi
           .printEssentialTrail()
           .then((result) => {
@@ -108,12 +155,29 @@ const ResultScreen = ({ result, copy, stepLabel, resultId, onQrDone }) => {
             } else {
               console.info('[print] Print succeeded');
             }
+            clearPrintResponseTimer();
+            if (result?.ok) {
+              setShowPrintModal(false);
+              setShowPrintCompleteModal(true);
+            } else {
+              setShowPrintModal(false);
+              setShowPrintCompleteModal(false);
+              setShowQrModal(true);
+            }
           })
           .catch((error) => {
             console.warn('[print] Print failed', error);
+            clearPrintResponseTimer();
+            setShowPrintModal(false);
+            setShowPrintCompleteModal(false);
+            setShowQrModal(true);
           });
       } else {
         console.warn('[print] Missing print bridge');
+        setShowPrintModal(true);
+        setShowPrintCompleteModal(false);
+        setShowQrModal(false);
+        startPrintResponseTimer();
       }
       return;
     }
@@ -141,6 +205,16 @@ const ResultScreen = ({ result, copy, stepLabel, resultId, onQrDone }) => {
     onQrDone?.();
   };
 
+  const handleQrPrint = () => {
+    setShowQrModal(false);
+    handlePrint();
+  };
+
+  const handleShowQr = () => {
+    setShowPrintCompleteModal(false);
+    setShowQrModal(true);
+  };
+
   return (
     <section className="result-screen">
       <div className="result-screen__header">
@@ -156,7 +230,7 @@ const ResultScreen = ({ result, copy, stepLabel, resultId, onQrDone }) => {
           <img src={qrIcon} alt="" aria-hidden="true" />
           <span>{scanLabel}</span>
         </button>
-        <button type="button" className="result-action" onClick={handlePrint}>
+        <button type="button" className="result-action" onClick={handlePrint} disabled={!printEnabled}>
           <img src={printerIcon} alt="" aria-hidden="true" />
           <span>{printLabel}</span>
         </button>
@@ -177,6 +251,30 @@ const ResultScreen = ({ result, copy, stepLabel, resultId, onQrDone }) => {
           <button type="button" className="bottom-bar__back" onClick={handleQrDone}>
                 {doneLabel}
           </button>
+          <button type="button" className="qr-modal__print" onClick={handleQrPrint}>
+            {printLabel}
+          </button>
+        </div>
+      )}
+
+      {showPrintModal && (
+        <div className="print-modal-overlay" role="dialog" aria-modal="true" aria-label={printingTitle}>
+          <div className="print-modal" role="status" aria-live="polite">
+            <div className="print-modal__spinner" aria-hidden="true" />
+            <p className="print-modal__title">{printingTitle}</p>
+            <p className="print-modal__subtitle">{printingSubtitle}</p>
+          </div>
+        </div>
+      )}
+
+      {showPrintCompleteModal && (
+        <div className="print-modal-overlay" role="dialog" aria-modal="true" aria-label={printingTitle}>
+          <div className="print-modal" role="status" aria-live="polite">
+            <p className="print-modal__title">{printingTitle}</p>
+            <button type="button" className="print-modal__link" onClick={handleShowQr}>
+              {scanLabel}
+            </button>
+          </div>
         </div>
       )}
 

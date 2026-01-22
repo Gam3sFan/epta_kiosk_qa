@@ -1,4 +1,5 @@
 const path = require('path');
+const { spawn } = require('child_process');
 const { app, BrowserWindow, ipcMain, screen } = require('electron');
 const http = require('http');
 const https = require('https');
@@ -26,6 +27,7 @@ const UI_SCALE_MIN = 0.8;
 const UI_SCALE_MAX = 2.0;
 const CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const ESSENTIAL_TRAIL_PDF_RELATIVE = path.join('public', 'paths', 'essential_trail.pdf');
+const PRINT_HELPER_FILENAMES = ['print-helper.exe', 'PDFtoPrinter.exe'];
 const isDev = process.env.NODE_ENV === 'development';
 const allowDevAutoUpdate = process.env.AUTO_UPDATE_ENABLE_DEV === 'true';
 const customFeedUrl = process.env.AUTO_UPDATE_FEED_URL;
@@ -35,6 +37,11 @@ const UPDATE_CHANNEL = 'app:autoUpdate';
 const UPDATER_STATUS_CHANNEL = 'updater:status';
 const isProduction = app.isPackaged;
 const shouldAutoUpdate = (isProduction || allowDevAutoUpdate) && process.platform === 'win32';
+const PRINT_DEVICE_NAME = process.env.PRINT_DEVICE_NAME?.trim() || null;
+const PRINT_SILENT = process.env.PRINT_SILENT !== 'false';
+const PRINT_HELPER_PATH = process.env.PRINT_HELPER_PATH?.trim() || null;
+const PRINT_HELPER_ARGS_RAW = process.env.PRINT_HELPER_ARGS || '';
+const PRINT_HELPER_TIMEOUT_MS = Number.parseInt(process.env.PRINT_HELPER_TIMEOUT_MS, 10) || 20000;
 
 // Configuration for window positioning
 // Set to true to attempt opening on a secondary vertical screen
@@ -574,17 +581,121 @@ const resolveEssentialTrailPdfPath = () => {
   return null;
 };
 
-const printPdfAtPath = (pdfPath) =>
-  new Promise((resolve) => {
-    if (!pdfPath) {
-      resolve({ ok: false, reason: 'file-not-found' });
-      return;
+const resolvePrintHelperPath = () => {
+  if (PRINT_HELPER_PATH) {
+    return PRINT_HELPER_PATH;
+  }
+
+  const candidates = [];
+  for (const filename of PRINT_HELPER_FILENAMES) {
+    candidates.push(
+      path.join(process.resourcesPath, 'print', filename),
+      path.join(app.getAppPath(), 'resources', 'print', filename),
+      path.join(__dirname, '..', 'resources', 'print', filename),
+    );
+  }
+
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate;
     }
-    if (!existsSync(pdfPath)) {
-      resolve({ ok: false, reason: 'file-not-found', path: pdfPath });
+  }
+
+  return null;
+};
+
+const parsePrintHelperArgs = () => {
+  if (!PRINT_HELPER_ARGS_RAW) return [];
+  try {
+    const parsed = JSON.parse(PRINT_HELPER_ARGS_RAW);
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) => String(item));
+    }
+  } catch (_error) {
+    // Fall back to whitespace split.
+  }
+
+  return PRINT_HELPER_ARGS_RAW.split(/\s+/).filter(Boolean);
+};
+
+const buildPrintHelperArgs = (pdfPath, printerName) => {
+  const templateArgs = parsePrintHelperArgs();
+  if (!templateArgs.length) return [];
+
+  const replacements = {
+    '{pdf}': pdfPath,
+    '{printer}': printerName || '',
+  };
+
+  const resolvedArgs = [];
+  for (const arg of templateArgs) {
+    let resolved = arg;
+    for (const [token, value] of Object.entries(replacements)) {
+      resolved = resolved.split(token).join(value);
+    }
+    if (resolved.trim()) {
+      resolvedArgs.push(resolved);
+    }
+  }
+
+  return resolvedArgs;
+};
+
+const resolveDefaultPrinterName = async (webContents) => {
+  if (PRINT_DEVICE_NAME) return PRINT_DEVICE_NAME;
+  try {
+    const printers = await webContents.getPrintersAsync();
+    const defaultPrinter = printers.find((printer) => printer.isDefault);
+    return defaultPrinter?.name || null;
+  } catch (_error) {
+    return null;
+  }
+};
+
+const printPdfViaHelper = (pdfPath, printerName) =>
+  new Promise((resolve) => {
+    const helperPath = resolvePrintHelperPath();
+    if (!helperPath) {
+      resolve({ ok: false, reason: 'helper-not-found' });
       return;
     }
 
+    const args = buildPrintHelperArgs(pdfPath, printerName);
+    if (!args.length) {
+      resolve({ ok: false, reason: 'helper-args-missing' });
+      return;
+    }
+
+    let settled = false;
+    const child = spawn(helperPath, args, {
+      windowsHide: true,
+      stdio: 'ignore',
+    });
+
+    const timeoutId = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      child.kill();
+      resolve({ ok: false, reason: 'helper-timeout' });
+    }, PRINT_HELPER_TIMEOUT_MS);
+
+    child.once('error', (error) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      resolve({ ok: false, reason: 'helper-error', error: error?.message || 'spawn-error' });
+    });
+
+    child.once('exit', (code) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      resolve({ ok: code === 0, reason: code === 0 ? 'ok' : 'helper-exit', code });
+    });
+  });
+
+const printPdfViaElectron = (pdfPath) =>
+  new Promise((resolve) => {
     const printWindow = new BrowserWindow({
       show: false,
       width: 800,
@@ -618,8 +729,17 @@ const printPdfAtPath = (pdfPath) =>
     });
 
     printWindow.webContents.once('did-finish-load', () => {
-      setTimeout(() => {
-        printWindow.webContents.print({ printBackground: true }, (success, failureReason) => {
+      setTimeout(async () => {
+        const deviceName = await resolveDefaultPrinterName(printWindow.webContents);
+        const options = {
+          printBackground: true,
+          silent: PRINT_SILENT,
+        };
+        if (deviceName) {
+          options.deviceName = deviceName;
+        }
+
+        printWindow.webContents.print(options, (success, failureReason) => {
           clearTimeout(timeoutId);
           if (!success) {
             console.warn('[print] Print failed', failureReason);
@@ -641,6 +761,28 @@ const printPdfAtPath = (pdfPath) =>
       resolve({ ok: false, reason: 'load-failed', error: error?.message || 'load-error' });
     });
   });
+
+const printPdfAtPath = async (pdfPath) => {
+  if (!pdfPath) {
+    return { ok: false, reason: 'file-not-found' };
+  }
+  if (!existsSync(pdfPath)) {
+    return { ok: false, reason: 'file-not-found', path: pdfPath };
+  }
+
+  if (process.platform === 'win32') {
+    const helperPath = resolvePrintHelperPath();
+    if (helperPath) {
+      const helperResult = await printPdfViaHelper(pdfPath, PRINT_DEVICE_NAME);
+      if (helperResult.ok) {
+        return helperResult;
+      }
+      console.warn('[print] Helper failed, falling back to Electron', helperResult);
+    }
+  }
+
+  return printPdfViaElectron(pdfPath);
+};
 
 const registerPrintIpcHandlers = () => {
   ipcMain.handle('print:essential-trail', async () => {
