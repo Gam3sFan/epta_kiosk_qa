@@ -160,7 +160,7 @@ export const TEXTS = {
     questions: {
       q0: {
         eyebrow: 'Domanda 01',
-        title: 'Quale tipo di esperienza di vendita ti incuriosisce di più?',
+        title: 'Quale esperienza retail ti incuriosisce di più oggi?',
         subtitle: 'Seleziona un\'opzione.',
       },
       q2: {
@@ -198,10 +198,10 @@ export const TEXTS = {
     timeOptions: {
       essentials: { label: "Solo l'essenziale - veloce e di grande impatto" },
       balanced: { label: 'Una visita equilibrata: argomenti chiave' },
-      deep: { label: "Mostrami tutto - un'esperienza completa e coinvolgente" },
+      deep: { label: "Un'esperienza completa – coinvolgente e approfondita" },
     },
     experienceOptions: {
-      highlights: { label: 'Da non perdere' },
+      highlights: { label: 'Highlights dello stand' },
       retail: { label: 'Soluzioni integrate per il Retail' },
       tech: { label: 'Tecnologie e sistemi per la refrigerazione' },
       convenience: { label: 'Soluzioni per Convenience e gli acquisti di impulso' },
@@ -412,13 +412,13 @@ export const TEXTS = {
     },
     experienceOptions: {
       highlights: { label: 'Les incontournables' },
-      retail: { label: 'Solutions intégrées pour le Retail' },
-      tech: { label: 'Technologies et leviers d’efficacité pour le Retail' },
-      convenience: { label: 'Proximité Snacking Vente à emporter' },
-      specialty: { label: 'Commerce spécialisé premium' },
-      fresh: { label: 'Expériences culinaires fraîches' },
-      prepacked: { label: 'Frais LS et Surgelés LS' },
-      immersive: { label: "Tout m'intéresse" },
+      retail: { label: 'Solutions Intégrées pour le Retail' },
+      tech: { label: 'Technologie Meubles et Centrales en magasin' },
+      convenience: { label: 'Solutions pour Snacking  et ventes à emporter, Petite Proxi' },
+      specialty: { label: 'Boutiques Premium spécialisées' },
+      fresh: { label: 'Zone Marché Frais' },
+      prepacked: { label: 'Frais LS , Surgelés LS' },
+      immersive: { label: "Je veux tout voir" },
     },
     results: {
       1: {

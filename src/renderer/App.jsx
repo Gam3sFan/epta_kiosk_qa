@@ -142,6 +142,10 @@ const App = () => {
     setSelectedTime(null);
     setHasLoggedSession(false);
     setTimeout(() => {
+      if (optionId === 'highlights') {
+        setScreen(SCREENS.RESULT);
+        return;
+      }
       setScreen(SCREENS.QUESTION_B);
     }, 350);
   };
