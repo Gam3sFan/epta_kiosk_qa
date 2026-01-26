@@ -46,7 +46,6 @@ const ResultScreen = ({
   const printingSubtitle = printingCopy?.subtitle || 'Please wait.';
   const [showQrModal, setShowQrModal] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
-  const [showPrintCompleteModal, setShowPrintCompleteModal] = useState(false);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
   const [localPdfUrl, setLocalPdfUrl] = useState('');
@@ -132,7 +131,6 @@ const ResultScreen = ({
     clearPrintResponseTimer();
     printResponseTimeoutRef.current = setTimeout(() => {
       setShowPrintModal(false);
-      setShowPrintCompleteModal(false);
       setShowQrModal(true);
       printResponseTimeoutRef.current = null;
     }, 15000);
@@ -144,7 +142,6 @@ const ResultScreen = ({
       console.info('[print] Request print from main process');
       if (window?.eptaUi?.printEssentialTrail) {
         setShowPrintModal(true);
-        setShowPrintCompleteModal(false);
         setShowQrModal(false);
         startPrintResponseTimer();
         window.eptaUi
@@ -158,10 +155,9 @@ const ResultScreen = ({
             clearPrintResponseTimer();
             if (result?.ok) {
               setShowPrintModal(false);
-              setShowPrintCompleteModal(true);
+              onQrDone?.();
             } else {
               setShowPrintModal(false);
-              setShowPrintCompleteModal(false);
               setShowQrModal(true);
             }
           })
@@ -169,13 +165,11 @@ const ResultScreen = ({
             console.warn('[print] Print failed', error);
             clearPrintResponseTimer();
             setShowPrintModal(false);
-            setShowPrintCompleteModal(false);
             setShowQrModal(true);
           });
       } else {
         console.warn('[print] Missing print bridge');
         setShowPrintModal(true);
-        setShowPrintCompleteModal(false);
         setShowQrModal(false);
         startPrintResponseTimer();
       }
@@ -191,6 +185,7 @@ const ResultScreen = ({
     const cleanup = () => {
       body.classList.remove('print-mode');
       window.onafterprint = null;
+      onQrDone?.();
     };
 
     window.onafterprint = cleanup;
@@ -208,11 +203,6 @@ const ResultScreen = ({
   const handleQrPrint = () => {
     setShowQrModal(false);
     handlePrint();
-  };
-
-  const handleShowQr = () => {
-    setShowPrintCompleteModal(false);
-    setShowQrModal(true);
   };
 
   return (
@@ -263,17 +253,6 @@ const ResultScreen = ({
             <div className="print-modal__spinner" aria-hidden="true" />
             <p className="print-modal__title">{printingTitle}</p>
             <p className="print-modal__subtitle">{printingSubtitle}</p>
-          </div>
-        </div>
-      )}
-
-      {showPrintCompleteModal && (
-        <div className="print-modal-overlay" role="dialog" aria-modal="true" aria-label={printingTitle}>
-          <div className="print-modal" role="status" aria-live="polite">
-            <p className="print-modal__title">{printingTitle}</p>
-            <button type="button" className="print-modal__link" onClick={handleShowQr}>
-              {scanLabel}
-            </button>
           </div>
         </div>
       )}

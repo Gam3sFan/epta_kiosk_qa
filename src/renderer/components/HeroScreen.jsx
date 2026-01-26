@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import avatarIdleVideoAsset from '../../assets/avatar/IDLE.webm';
+import avatarIdleVideoMovAsset from '../../assets/avatar/IDLE.mov';
 
 const avatarIdleVideo = new URL(avatarIdleVideoAsset, import.meta.url).href;
+const avatarIdleVideoMov = new URL(avatarIdleVideoMovAsset, import.meta.url).href;
 
 const HeroScreen = ({ copy, onStart, ctaLabel }) => {
   const idleVideoRef = useRef(null);
@@ -56,7 +58,10 @@ const HeroScreen = ({ copy, onStart, ctaLabel }) => {
   return (
     <section className="hero-screen">
       <div className="hero-avatar-video">
-        <video src={avatarIdleVideo} autoPlay loop muted playsInline preload="auto" ref={idleVideoRef} />
+        <video autoPlay loop muted playsInline preload="auto" ref={idleVideoRef}>
+          <source src={avatarIdleVideo} type="video/webm" />
+          <source src={avatarIdleVideoMov} type="video/quicktime" />
+        </video>
       </div>
       <div className="hero-center">
         <button type="button" className="primary-cta" onClick={onStart}>

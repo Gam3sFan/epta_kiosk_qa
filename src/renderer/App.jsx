@@ -535,7 +535,6 @@ const App = () => {
                 total={2}
                 questionId="q0"
                 stepLabel={strings.stepLabel}
-                eyebrow={strings.questions.q0.eyebrow}
                 title={strings.questions.q0.title}
                 subtitle={strings.questions.q0.subtitle}
                 options={experienceOptions}
@@ -552,7 +551,6 @@ const App = () => {
                 total={2}
                 questionId="q1"
                 stepLabel={strings.stepLabel}
-                eyebrow={strings.questions.q2.eyebrow}
                 title={strings.questions.q2.title}
                 subtitle={strings.questions.q2.subtitleSingle}
                 options={timeOptions}
@@ -579,6 +577,7 @@ const App = () => {
               <ThanksScreen
                 language={language}
                 onComplete={resetFlow}
+                copy={strings.thanks}
               />
             )}
           </div>

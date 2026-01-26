@@ -41,7 +41,6 @@ export const LANGUAGES = [
 export const TEXTS = {
   en: {
     hero: {
-      eyebrow: 'Welcome to EuroShop 2026',
       title: 'Shape your booth experience',
       subtitle:
         'A guided kiosk inspired by the Epta experience. Tap start and answer two quick questions to craft your visit.',
@@ -56,12 +55,10 @@ export const TEXTS = {
     stepLabel: 'Step',
     questions: {
       q0: {
-        eyebrow: 'Question 01',
         title: 'What kind of retail experience are you most curious about today?',
         subtitle: 'Tap one option.',
       },
       q2: {
-        eyebrow: 'Question 02',
         title: 'How much time do you want to spend exploring us?',
         subtitleSingle: 'Tap an option.',
         subtitleMulti: 'Tap an option.',
@@ -79,7 +76,6 @@ export const TEXTS = {
       restart: 'Restart flow',
     },
     result: {
-      eyebrow: 'Your tailored route',
       title: 'Your personalized map!',
       subtitle: 'Scan or print your map.',
       scanLabel: 'Scan QR',
@@ -91,6 +87,9 @@ export const TEXTS = {
     printing: {
       title: 'Printing your map',
       subtitle: 'Please wait while we send it to the printer.',
+    },
+    thanks: {
+      message: 'Thank you for your time. Enjoy your experience!',
     },
     timeOptions: {
       essentials: { label: 'Just the essentials - quick and impactful' },
@@ -144,7 +143,6 @@ export const TEXTS = {
   },
   it: {
     hero: {
-      eyebrow: 'Benvenuto a EuroShop 2026',
       title: 'Personalizza la tua esperienza allo stand',
       subtitle:
         "Un kiosk guidato ispirato all'esperienza Epta. Premi Start e rispondi a due domande veloci per progettare la tua visita.",
@@ -159,12 +157,10 @@ export const TEXTS = {
     stepLabel: 'Passo',
     questions: {
       q0: {
-        eyebrow: 'Domanda 01',
         title: 'Quale esperienza retail ti incuriosisce di più oggi?',
         subtitle: 'Seleziona un\'opzione.',
       },
       q2: {
-        eyebrow: 'Domanda 02',
         title: 'Quanto tempo vuoi dedicare alla scoperta della nostre soluzioni?',
         subtitleSingle: "Tocca un'opzione.",
         subtitleMulti: "Tocca un'opzione.",
@@ -182,7 +178,6 @@ export const TEXTS = {
       restart: 'Ricomincia il percorso',
     },
     result: {
-      eyebrow: 'Il tuo itinerario su misura',
       title: 'La tua mappa personalizzata!',
       subtitle: 'Scansiona o stampa la tua mappa',
       scanLabel: 'Scansiona',
@@ -194,6 +189,9 @@ export const TEXTS = {
     printing: {
       title: 'Stampa in corso',
       subtitle: 'Attendi mentre inviamo la mappa alla stampante.',
+    },
+    thanks: {
+      message: 'Grazie per il tuo tempo. Buona visita!',
     },
     timeOptions: {
       essentials: { label: "Solo l'essenziale - veloce e di grande impatto" },
@@ -249,7 +247,6 @@ export const TEXTS = {
   },
   es: {
     hero: {
-      eyebrow: 'Bienvenido a EuroShop 2026',
       title: 'Diseña tu experiencia en el stand',
       subtitle:
         'Un quiosco guiado inspirado en la experiencia Epta. Pulsa iniciar y responde dos preguntas rápidas para definir tu visita.',
@@ -264,12 +261,10 @@ export const TEXTS = {
     stepLabel: 'Paso',
     questions: {
       q0: {
-        eyebrow: 'Pregunta 01',
         title: '¿Qué tipo de experiencia en tienda te despierta más curiosidad hoy en día?',
         subtitle: 'Toca una opción.',
       },
       q2: {
-        eyebrow: 'Pregunta 02',
         title: '¿Cuánto tiempo quieres dedicar a conocernos?',
         subtitleSingle: 'Toca una opción.',
         subtitleMulti: 'Toca una opción.',
@@ -287,7 +282,6 @@ export const TEXTS = {
       restart: 'Reiniciar flujo',
     },
     result: {
-      eyebrow: 'Tu ruta a medida',
       title: '¡Tu mapa personalizado!',
       subtitle: 'Escanea o imprime tu mapa',
       scanLabel: 'Escanee',
@@ -299,6 +293,9 @@ export const TEXTS = {
     printing: {
       title: 'Imprimiendo tu mapa',
       subtitle: 'Espera mientras lo enviamos a la impresora.',
+    },
+    thanks: {
+      message: 'Gracias por su tiempo. ¡Disfrute de su experiencia!',
     },
     timeOptions: {
       essentials: { label: 'Solo lo esencial: rápido y eficaz.' },
@@ -354,7 +351,6 @@ export const TEXTS = {
   },
   fr: {
     hero: {
-      eyebrow: 'Bienvenue à EuroShop 2026',
       title: 'Composez votre expérience sur le stand',
       subtitle:
         "Un kiosque guidé inspiré par l'expérience Epta. Appuyez sur Start et répondez à deux questions rapides pour préparer votre visite.",
@@ -369,12 +365,10 @@ export const TEXTS = {
     stepLabel: 'Étape',
     questions: {
       q0: {
-        eyebrow: 'Question 01',
         title: "Quel type d'expérience Retail vous intéresse le plus aujourd'hui?",
         subtitle: 'Appuyez sur une option.',
       },
       q2: {
-        eyebrow: 'Question 02',
         title: 'Combien de temps voulez-vous prendre pour cette découverte ?',
         subtitleSingle: 'Touchez une option.',
         subtitleMulti: 'Touchez une option.',
@@ -392,7 +386,6 @@ export const TEXTS = {
       restart: 'Recommencer le parcours',
     },
     result: {
-      eyebrow: 'Votre parcours personnalisé',
       title: 'Votre carte personnalisée !',
       subtitle: 'Scannez ou imprimez votre carte',
       scanLabel: 'Scannez',
@@ -404,6 +397,9 @@ export const TEXTS = {
     printing: {
       title: 'Impression en cours',
       subtitle: "Veuillez patienter pendant l'envoi à l’imprimante.",
+    },
+    thanks: {
+      message: 'Merci pour votre temps. Profitez de votre expérience !',
     },
     timeOptions: {
       essentials: { label: "L'essentiel seulement - Rapide & Percutant" },
@@ -461,7 +457,6 @@ export const TEXTS = {
   },
   de: {
     hero: {
-      eyebrow: 'Willkommen auf der EuroShop 2026',
       title: 'Gestalte dein Booth-Erlebnis',
       subtitle:
         'Ein geführtes Kiosk inspiriert von der Epta Experience. Tippe auf Start und beantworte zwei kurze Fragen für deinen Rundgang.',
@@ -476,12 +471,10 @@ export const TEXTS = {
     stepLabel: 'Schritt',
     questions: {
       q0: {
-        eyebrow: 'Frage 01',
         title: 'Welche Art von Einkaufserlebnis interessiert Sie heute am meisten?',
         subtitle: 'Eine Option antippen.',
       },
       q2: {
-        eyebrow: 'Frage 02',
         title: 'Wie viel Zeit möchten Sie damit verbringen, unseren Stand zu erkunden?',
         subtitleSingle: 'Tippe auf eine Option.',
         subtitleMulti: 'Tippe auf eine Option.',
@@ -499,7 +492,6 @@ export const TEXTS = {
       restart: 'Flow neu starten',
     },
     result: {
-      eyebrow: 'Deine kuratierte Route',
       title: 'Dein personalisierter Lageplan!',
       subtitle: 'Scannen oder drucken Sie Ihre Karte',
       scanLabel: 'Hier scannen',
@@ -511,6 +503,9 @@ export const TEXTS = {
     printing: {
       title: 'Druckvorgang läuft',
       subtitle: 'Bitte warten, wir senden die Karte an den Drucker.',
+    },
+    thanks: {
+      message: 'Vielen Dank für Ihre Zeit. Genießen Sie Ihr Erlebnis!',
     },
     timeOptions: {
       essentials: { label: 'Nur das Wesentliche – schnell und wirkungsvoll' },

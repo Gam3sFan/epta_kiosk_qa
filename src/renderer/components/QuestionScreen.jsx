@@ -150,7 +150,6 @@ const QuestionScreen = ({
   step,
   total,
   stepLabel,
-  eyebrow,
   title,
   subtitle,
   options,
@@ -323,7 +322,6 @@ const QuestionScreen = ({
           step={step}
           total={total}
           stepLabel={stepLabel}
-          eyebrow={eyebrow}
           title={resolvedTitle}
           subtitle={subtitle}
         />
